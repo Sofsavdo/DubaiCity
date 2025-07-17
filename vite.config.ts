@@ -12,6 +12,11 @@ export default defineConfig({
   build: {
     outDir: path.resolve(__dirname, "dist"),
     emptyOutDir: true,
+    cssCodeSplit: false,
+    minify: 'esbuild',
+  },
+  css: {
+    devSourcemap: true,
   },
   resolve: {
     alias: {
