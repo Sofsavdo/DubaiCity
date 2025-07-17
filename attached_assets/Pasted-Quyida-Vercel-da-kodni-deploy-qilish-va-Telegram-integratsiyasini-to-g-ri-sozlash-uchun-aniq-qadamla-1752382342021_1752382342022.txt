@@ -1,0 +1,163 @@
+Quyida Vercel’da kodni deploy qilish va Telegram integratsiyasini to‘g‘ri sozlash uchun aniq qadamlar keltirilgan. Bu jarayonni bosqichma-bosqich bajaring:
+
+### 1. Loyiha Tuzilmasini Tayyorlash
+- Loyiha papkasi quyidagi tuzilma bo‘lishi kerak:
+  ```
+  /client (React frontend)
+  /server (Server kodlari)
+  /shared (Umumiy schema’lar)
+  /public (Bo‘sh, build natijasi uchun)
+  vite.config.ts
+  package.json
+  tsconfig.json
+  .gitignore
+  ```
+- `.gitignore` ga quyidagilarni qo‘shing:
+  ```
+  node_modules/
+  dist/
+  *.env
+  ```
+
+### 2. package.json ni Sozlash
+- `package.json` faylini quyidagicha yangilang:
+  ```json
+  {
+    "name": "dubaicity",
+    "version": "1.0.0",
+    "scripts": {
+      "build": "vite build",
+      "start": "node server/index.ts"
+    },
+    "dependencies": {
+      "express": "^4.18.2",
+      "node-telegram-bot-api": "^0.63.0",
+      "drizzle-orm": "^0.29.0",
+      "drizzle-zod": "^0.5.0",
+      "crypto": "^1.0.1",
+      "nanoid": "^5.0.0"
+    },
+    "devDependencies": {
+      "vite": "^5.0.0",
+      "@vitejs/plugin-react": "^4.0.0",
+      "typescript": "^5.0.0",
+      "@replit/vite-plugin-runtime-error-modal": "^0.1.0"
+    }
+  }
+  ```
+- `npm install` bilan barcha paketlarni o‘rnating.
+
+### 3. Server Kodini Vercel uchun Moslashtirish
+- `server/index.ts` ni quyidagicha o‘zgartiring:
+  ```typescript
+  import { VercelRequest, VercelResponse } from '@vercel/node';
+  import express from 'express';
+  import { registerRoutes } from './routes';
+
+  const app = express();
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: false }));
+
+  // Logging middleware
+  app.use((req, res, next) => {
+    const start = Date.now();
+    res.on('finish', () => {
+      const duration = Date.now() - start;
+      console.log(`${req.method} ${req.path} ${res.statusCode} in ${duration}ms`);
+    });
+    next();
+  });
+
+  registerRoutes(app);
+
+  export default (req: VercelRequest, res: VercelResponse) => {
+    app(req, res);
+  };
+  ```
+- `server/vite.ts` va `setupVite` funksiyasini Vercel’da ishlatmaslik uchun o‘chirib tashlang yoki shar bilan izolyatsiya qiling (`// @ts-ignore`).
+
+### 4. Vite Config ni Yangilash
+- `vite.config.ts` ni quyidagicha o‘zgartiring:
+  ```typescript
+  import { defineConfig } from 'vite';
+  import react from '@vitejs/plugin-react';
+  import path from 'path';
+
+  export default defineConfig({
+    plugins: [react()],
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'client', 'src'),
+        '@shared': path.resolve(__dirname, 'shared'),
+        '@assets': path.resolve(__dirname, 'attached_assets')
+      }
+    },
+    root: path.resolve(__dirname, 'client'),
+    build: {
+      outDir: 'public', // Vercel uchun statik papka
+      emptyOutDir: true
+    }
+  });
+  ```
+
+### 5. Environment Variables ni Sozlash
+- Vercel dashboard’da “Settings” > “Environment Variables” bo‘limiga o‘ting va quyidagi o‘zgaruvchilarni qo‘shing:
+  - `TELEGRAM_BOT_TOKEN`: `@BotFather` dan olingan token (masalan, `123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11`).
+  - `TON_WALLET_ADDRESS`: Sizning TON wallet manzilingiz (masalan, `UQCyQs9OCWvwYqwfcWE5rDkH0T9B4iJyp52_6Bv64_uNyVg6`).
+- Mahalliy sinov uchun `.env` faylini yarating va quyidagilarni qo‘shing:
+  ```
+  TELEGRAM_BOT_TOKEN=your_token_here
+  TON_WALLET_ADDRESS=your_wallet_address_here
+  ```
+
+### 6. Loyihani GitHub’ga Yuklash
+- GitHub’da yangi repozitoriya yarating.
+- Quyidagi buyruqlarni ishga tushiring:
+  ```bash
+  git init
+  git add .
+  git commit -m "Initial commit"
+  git remote add origin <your-github-repo-url>
+  git push -u origin main
+  ```
+
+### 7. Vercel’da Deploy Qilish
+- Vercel saytiga o‘ting va hisobingizga kiring.
+- “New Project” ni bosing va GitHub’dan loyihangizni tanlang.
+- “Build & Output Settings” da:
+  - `Framework Preset` ni “Other” qilib qoldiring.
+  - `OUTPUT_DIRECTORY` ni `public` qilib sozlang.
+- “Deploy” tugmasini bosing. Deploy URL’sini (masalan, `https://dubaicity-lilac.vercel.app`) eslab qoling.
+
+### 8. Telegram Botni Sozlash
+- **Bot Yaratish**:
+  - Telegram’da `@BotFather` bilan chat oching.
+  - `/newbot` buyrug‘ini yuboring va bot nomini (masalan, “Dubai City Bot”) va username’ni (`@DubaiCityBot`) kiriting.
+  - Tokenni oling va Vercel’da `TELEGRAM_BOT_TOKEN` sifatida saqlang.
+- **Mini App URL**:
+  - `@BotFather` da `/setdomain` yoki “Configure Mini App” ni tanlang.
+  - Vercel deploy URL’sini kiriting: `https://dubaicity-lilac.vercel.app`.
+- **Komandalar**:
+  - `/setcommands` buyrug‘i orqali quyidagi komandlarni qo‘shing:
+    ```
+    start - O'yinni boshlash
+    profile - Profilingizni ko'rish
+    help - Yordam
+    ```
+- **Web App Tugmasi**:
+  - Kodda `/start` va inline keyboard’da `web_app` URL’si avtomatik ishlaydi. Vercel URL’sini tekshiring.
+
+### 9. Sinov va Tekshirish
+- Telegram’da botni ishga tushiring va `/start` buyrug‘ini yuboring. Web App sahifasi ochilishi kerak.
+- Vercel dashboard’dan “Logs” ni ko‘ring. Agar xatolik bo‘lsa (masalan, `404`), deploy URL’sini yoki kodni tekshiring.
+- TON to‘lovlarini sinov uchun test wallet bilan tekshiring.
+
+### 10. Xatolarni Tuzatish
+- Agar `404: DEPLOYMENT_NOT_FOUND` chiqsa:
+  - Deploy loglarini tekshiring.
+  - GitHub’da yangi `git push` qilib qayta deploy qiling.
+- Agar Telegram’da Web App ochilmasa:
+  - URL’ni `@BotFather` da qayta kiring.
+  - Vercel URL’sining `https://` bilan boshlanganligiga ishonch hosil qiling.
+
+Bu qadamlarni bajaring va loyiha ishga tushgach, menga natijani yoki xatolarni xabar bering, shunda qo‘shimcha yordam bera olaman!
