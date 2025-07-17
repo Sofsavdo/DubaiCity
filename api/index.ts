@@ -23,4 +23,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
     const data = await response.json();
-    res.status(response.status).json(data
+    res.status(response.status).json(data);
+  } catch (error) {
+    res.status(500).json({ error: 'Backend connection failed' });
+  }
+}
