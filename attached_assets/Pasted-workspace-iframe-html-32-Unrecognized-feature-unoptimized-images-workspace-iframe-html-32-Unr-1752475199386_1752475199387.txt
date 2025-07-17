@@ -1,0 +1,43 @@
+workspace_iframe.html:32 Unrecognized feature: 'unoptimized-images'.
+
+workspace_iframe.html:32 Unrecognized feature: 'unoptimized-images'.
+workspace_iframe.html:32 Unrecognized feature: 'unsized-media'.
+workspace_iframe.html:32 Unrecognized feature: 'unsized-media'.
+workspace_iframe.html:32 Unrecognized feature: 'unsized-media'.
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowfullscreen'.
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowfullscreen'.
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowfullscreen'.
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowpaymentrequest'.
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowpaymentrequest'.
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowpaymentrequest'.
+10274314-eee2-4967-b…/Achievements.tsx:1 
+ Failed to load resource: net::ERR_CONNECTION_TIMED_OUT
+10274314-eee2-4967-b…/Achievements.tsx:1 
+ Failed to load resource: net::ERR_CONNECTION_TIMED_OUT
+10274314-eee2-4967-b…/Achievements.tsx:1 
+ Failed to load resource: net::ERR_CONNECTION_TIMED_OUT
+10274314-eee2-4967-b…y/Leaderboard.tsx:1 
+ Failed to load resource: net::ERR_CONNECTION_TIMED_OUT
+10274314-eee2-4967-b…y/Leaderboard.tsx:1 
+ Failed to load resource: net::ERR_CONNECTION_TIMED_OUT
+10274314-eee2-4967-b…y/Leaderboard.tsx:1 
+ Failed to load resource: net::ERR_CONNECTION_TIMED_OUT
+10274314-eee2-4967-b…Profile/index.tsx:1 
+ Failed to load resource: net::ERR_CONNECTION_TIMED_OUT
+10274314-eee2-4967-b…Profile/index.tsx:1 
+ Failed to load resource: net::ERR_CONNECTION_TIMED_OUT
+10274314-eee2-4967-b…Profile/index.tsx:1 
+ Failed to load resource: net::ERR_CONNECTION_TIMED_OUT
+10274314-eee2-4967-b…/Achievements.tsx:1 
+ Failed to load resource: net::ERR_CONNECTION_TIMED_OUT
+10274314-eee2-4967-b…/Achievements.tsx:1 
+ Failed to load resource: net::ERR_CONNECTION_TIMED_OUT
+10274314-eee2-4967-b…/Achievements.tsx:1 
+ Failed to load resource: net::ERR_CONNECTION_TIMED_OUT
+ WebSocket connection to 'wss://10274314-eee2-4967-b6fb-99f3b08ea74a-00-2cmgg0tzrgsr2.sisko.replit.dev/?token=5JKBvlffATlm' failed: 
+Network.js:227 WebSocket connection to 'wss://10274314-eee2-4967-b6fb-99f3b08ea74a-00-2cmgg0tzrgsr2.sisko.replit.dev/?token=5JKBvlffATlm' failed: 
+ WebSocket connection to 'wss://10274314-eee2-4967-b6fb-99f3b08ea74a-00-2cmgg0tzrgsr2.sisko.replit.dev/?token=5JKBvlffATlm' failed: 
+Network.js:227 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=5JKBvlffATlm' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
