@@ -1,0 +1,38 @@
+ailed to load resource: net::ERR_CONNECTION_RESETUnderstand this error
+/import/github:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+2content-all.js:1 Uncaught (in promise) Error: Could not establish connection. Receiving end does not exist.
+    at y (content-all.js:1:49937)Understand this error
+32Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.Understand this error
+framework-da242edc959c9548.js:1 Unrecognized feature: 'ambient-light-sensor'.
+_ @ framework-da242edc959c9548.js:1Understand this warning
+framework-da242edc959c9548.js:1 Unrecognized feature: 'battery'.
+_ @ framework-da242edc959c9548.js:1Understand this warning
+framework-da242edc959c9548.js:1 Unrecognized feature: 'execution-while-not-rendered'.
+_ @ framework-da242edc959c9548.js:1Understand this warning
+framework-da242edc959c9548.js:1 Unrecognized feature: 'execution-while-out-of-viewport'.
+_ @ framework-da242edc959c9548.js:1Understand this warning
+framework-da242edc959c9548.js:1 Unrecognized feature: 'layout-animations'.
+_ @ framework-da242edc959c9548.js:1Understand this warning
+framework-da242edc959c9548.js:1 Unrecognized feature: 'legacy-image-formats'.
+_ @ framework-da242edc959c9548.js:1Understand this warning
+framework-da242edc959c9548.js:1 Unrecognized feature: 'navigation-override'.
+_ @ framework-da242edc959c9548.js:1Understand this warning
+framework-da242edc959c9548.js:1 Unrecognized feature: 'oversized-images'.
+_ @ framework-da242edc959c9548.js:1Understand this warning
+framework-da242edc959c9548.js:1 Unrecognized feature: 'publickey-credentials'.
+_ @ framework-da242edc959c9548.js:1Understand this warning
+framework-da242edc959c9548.js:1 Unrecognized feature: 'speaker-selection'.
+_ @ framework-da242edc959c9548.js:1Understand this warning
+framework-da242edc959c9548.js:1 Unrecognized feature: 'unoptimized-images'.
+_ @ framework-da242edc959c9548.js:1Understand this warning
+framework-da242edc959c9548.js:1 Unrecognized feature: 'unsized-media'.
+_ @ framework-da242edc959c9548.js:1Understand this warning
+framework-da242edc959c9548.js:1 Unrecognized feature: 'pointer-lock'.
+_ @ framework-da242edc959c9548.js:1Understand this warning
+framework-da242edc959c9548.js:1 Allow attribute will take precedence over 'allowfullscreen'.
+_ @ framework-da242edc959c9548.js:1Understand this warning
+framework-da242edc959c9548.js:1 Allow attribute will take precedence over 'allowpaymentrequest'.
+_ @ framework-da242edc959c9548.js:1Understand this warning
+content-all.js:1 Uncaught (in promise) Error: Could not establish connection. Receiving end does not exist.
+    at y (content-all.js:1:49937)Understand this error
+/graphql:1  Failed to load resource: net::ERR_CONNECTION_CLOSED
