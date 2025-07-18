@@ -12,7 +12,7 @@ export interface ApiResponse<T = any> {
 }
 
 class ApiClient {
-  private baseUrl = '';
+  private baseUrl = import.meta.env.VITE_API_BASE_URL || '';
 
   async request<T = any>(
     endpoint: string,

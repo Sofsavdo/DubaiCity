@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
@@ -35,53 +35,53 @@ function App() {
 
   // If in game mode, show game interface
   if (isGameMode) {
-    return <GameInterface />;
+    return <Suspense fallback={<div>Loading...</div>}><GameInterface /></Suspense>;
   }
 
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <Dashboard />;
+        return <Suspense fallback={<div>Loading...</div>}><Dashboard /></Suspense>;
       case 'users':
-        return <UsersManagement />;
+        return <Suspense fallback={<div>Loading...</div>}><UsersManagement /></Suspense>;
       case 'empire':
-        return <EmpireManagement />;
+        return <Suspense fallback={<div>Loading...</div>}><EmpireManagement /></Suspense>;
       case 'skins':
-        return <SkinsManagement />;
+        return <Suspense fallback={<div>Loading...</div>}><SkinsManagement /></Suspense>;
       case 'tasks':
-        return <TasksManagement />;
+        return <Suspense fallback={<div>Loading...</div>}><TasksManagement /></Suspense>;
       case 'prices':
-        return <PricesManagement />;
+        return <Suspense fallback={<div>Loading...</div>}><PricesManagement /></Suspense>;
       case 'notifications':
-        return <NotificationsManagement />;
+        return <Suspense fallback={<div>Loading...</div>}><NotificationsManagement /></Suspense>;
       case 'market':
-        return <MarketManagement />;
+        return <Suspense fallback={<div>Loading...</div>}><MarketManagement /></Suspense>;
       case 'assets':
-        return <AssetsManagement />;
+        return <Suspense fallback={<div>Loading...</div>}><AssetsManagement /></Suspense>;
       case 'promocodes':
-        return <PromoCodesManagement />;
+        return <Suspense fallback={<div>Loading...</div>}><PromoCodesManagement /></Suspense>;
       case 'projects':
-        return <ProjectsManagement />;
+        return <Suspense fallback={<div>Loading...</div>}><ProjectsManagement /></Suspense>;
       case 'team':
-        return <TeamManagement />;
+        return <Suspense fallback={<div>Loading...</div>}><TeamManagement /></Suspense>;
       case 'profile':
-        return <ProfileManagement />;
+        return <Suspense fallback={<div>Loading...</div>}><ProfileManagement /></Suspense>;
       case 'reports':
-        return <ReportsManagement />;
+        return <Suspense fallback={<div>Loading...</div>}><ReportsManagement /></Suspense>;
       case 'statistics':
-        return <StatisticsManagement />;
+        return <Suspense fallback={<div>Loading...</div>}><StatisticsManagement /></Suspense>;
       case 'settings':
-        return <Settings />;
+        return <Suspense fallback={<div>Loading...</div>}><Settings /></Suspense>;
       default:
-        return <Dashboard />;
+        return <Suspense fallback={<div>Loading...</div>}><Dashboard /></Suspense>;
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Suspense fallback={<div>Loading...</div>}><Sidebar activeTab={activeTab} setActiveTab={setActiveTab} /></Suspense>
       <div className="ml-64">
-        <Header />
+        <Suspense fallback={<div>Loading...</div>}><Header /></Suspense>
         <main className="p-6">
           {renderContent()}
         </main>

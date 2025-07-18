@@ -1,6 +1,6 @@
 import type { User, Task, Skin, Business, PromoCode, Notification, Team, Project } from '@shared/schema';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 class GameAPI {
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<{ success: boolean; data: T; error?: string }> {

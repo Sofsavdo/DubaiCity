@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useTransition } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useTransition, Suspense, lazy } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNotifier } from './context/NotificationContext';
 import { loadDataAndCalculateOffline } from './services/gameService';
@@ -14,13 +14,13 @@ import {
 } from './utils/helpers';
 import initialData, { levelThresholds, levelNames, ADMIN_WALLET_ADDRESS, youtubeTasks } from './data/initialData';
 import type { GameData, GameUser, InputModalConfig, PaymentModalConfig } from './types/game';
-import MyCity from './pages/MyCity';
-import Marketplace from './pages/Marketplace';
-import Projects from './pages/Projects';
 
-import AssetsPage from './pages/Assets';
-import CommunityPage from './pages/Community';
-import Profile from './pages/Profile';
+const MyCity = lazy(() => import('./pages/MyCity'));
+const Marketplace = lazy(() => import('./pages/Marketplace'));
+const Projects = lazy(() => import('./pages/Projects'));
+const AssetsPage = lazy(() => import('./pages/Assets'));
+const CommunityPage = lazy(() => import('./pages/Community'));
+const Profile = lazy(() => import('./pages/Profile'));
 import Nav from './components/Nav/Nav';
 import InputModal from './components/Common/InputModal';
 import PaymentModal from './components/Common/PaymentModal';
@@ -982,22 +982,26 @@ const AppContent: React.FC = () => {
             className="h-full"
           >
             {({
-              Imperiya: <MyCity {...props} />,
-              Bozor: <Marketplace {...props} />,
-              Loyihalar: <Projects {...props} />,
+              Imperiya: <Suspense fallback={<div>Loading...</div>}><MyCity {...props} /></Suspense>,
+              Bozor: <Suspense fallback={<div>Loading...</div>}><Marketplace {...props} /></Suspense>,
+              Loyihalar: <Suspense fallback={<div>Loading...</div>}><Projects {...props} /></Suspense>,
 
-              Aktivlar: <AssetsPage {...props} selectedGame={selectedGame} setSelectedGame={setSelectedGame} />,
-              Jamoa: <CommunityPage {...props} />,
-              Profil: <Profile {...props} leaderboard={data.leaderboard} notifier={notifier} />,
+              Aktivlar: <Suspense fallback={<div>Loading...</div>}><AssetsPage {...props} selectedGame={selectedGame} setSelectedGame={setSelectedGame} /></Suspense>,
+              Jamoa: <Suspense fallback={<div>Loading...</div>}><CommunityPage {...props} /></Suspense>,
+              Profil: <Suspense fallback={<div>Loading...</div>}><Profile {...props} leaderboard={data.leaderboard} notifier={notifier} /></Suspense>,
             })[activeTab] || <MyCity {...props} />}
           </motion.div>
         </AnimatePresence>
       </div>
       {selectedGame === 'scratch' && (
-        <AssetsPage {...props} selectedGame={selectedGame} setSelectedGame={setSelectedGame} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <AssetsPage {...props} selectedGame={selectedGame} setSelectedGame={setSelectedGame} />
+        </Suspense>
       )}
       {(selectedGame === 'casino-slots' || selectedGame === 'roulette' || selectedGame === 'crash') && (
-        <AssetsPage {...props} selectedGame={selectedGame} setSelectedGame={setSelectedGame} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <AssetsPage {...props} selectedGame={selectedGame} setSelectedGame={setSelectedGame} />
+        </Suspense>
       )}
       {!selectedGame && (
         <Nav activeTab={activeTab} setActiveTab={(tab) => startTransition(() => setActiveTab(tab))} />
