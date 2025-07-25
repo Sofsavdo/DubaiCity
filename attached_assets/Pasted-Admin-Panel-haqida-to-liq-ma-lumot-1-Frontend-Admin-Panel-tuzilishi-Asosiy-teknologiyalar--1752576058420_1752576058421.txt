@@ -1,0 +1,87 @@
+Admin Panel haqida to'liq ma'lumot:
+1. Frontend (Admin Panel) tuzilishi:
+Asosiy teknologiyalar:
+
+React 18.3.1 + TypeScript 5.8.3
+Vite 5.4.19 (build tool)
+Tailwind CSS 3.4.17
+Lucide React 0.344.0 (icons)
+Port va server:
+
+Development: http://0.0.0.0:5000
+Production: Static files (Vercel deployment)
+2. Backend API Integration:
+API Base URL: https://fibof53495.repl.co
+
+Admin API Endpoints (frontenddan foydalaniladi):
+
+/api/admin/users - User management
+/api/admin/tasks - Task management
+/api/admin/businesses - Business management
+/api/admin/notifications - Notification system
+/api/admin/promocodes - Promo codes
+/api/admin/empire-levels - Empire levels
+/api/admin/dashboard - Dashboard statistics
+Public API Endpoints (frontenddan foydalaniladi):
+
+/api/empire-levels - Empire levels public data
+/api/businesses - Business items public data
+/api/health - Health check
+3. Environment Variables (admin panel uchun):
+VITE_API_URL=https://fibof53495.repl.co
+VITE_ADMIN_API_URL=https://fibof53495.repl.co/api/admin
+VITE_BOT_TOKEN=7550271169:AAEOtlJGVARG4zUftlh69hwQX6xUZab3zXc
+VITE_BOT_USERNAME=DubaiCITY_robot
+VITE_CHANNEL_URL=https://t.me/DubaiCity_live
+VITE_TON_WALLET=UQCyQs9OCWvwYqwfcWE5rDkH0T9B4iJyp52_6Bv64_uNyVg6
+4. Database schema (admin panel database):
+PostgreSQL tables:
+
+users - Admin panel user management
+tasks - Task management for admin
+skins - Skin management
+empire_levels - Empire level configuration
+market_items - Market item management
+notifications - Notification system
+promo_codes - Promo code management
+projects, teams, team_members - Team management
+user_tasks, user_purchases - User activity tracking
+5. CORS Configuration kerak:
+Backend (o'yin qismida) CORS sozlash kerak:
+
+// Admin panel URLlarini CORS da qo'shish kerak
+const corsOptions = {
+  origin: [
+    'http://localhost:5000',
+    'https://your-admin-panel.vercel.app', // Vercel deployment URL
+    'https://fibof53495.repl.co' // Backend URL
+  ],
+  credentials: true
+};
+6. Admin Panel Features:
+Real-time backend connection monitoring
+Complete user management system
+Task creation and management
+Business/Market item management
+Notification system
+Promo code system
+Empire level configuration
+Dashboard with statistics
+Team management
+Report generation
+7. Deployment Requirements:
+Frontend (Vercel):
+
+Build command: npm run build
+Environment variables yuqoridagi ro'yxat
+Static files deployment
+Backend Integration:
+
+Admin paneldan backend API ga so'rovlar yuboriladi
+Authentication system kerak (admin access)
+CORS sozlamalari kerak
+8. Security:
+Environment variables orqali bot token va API URLs
+Admin authentication kerak backend da
+HTTPS connection zarur
+Bu ma'lumotlarni o'yin qismi backend developeriga yuboring - ular admin panel bilan to'g'ri integratsiya qilish uchun CORS va admin authentication endpointlarini sozlashlari kerak.

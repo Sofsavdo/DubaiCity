@@ -1,0 +1,39 @@
+# Dubai City Bot API Documentation
+
+## Base URL
+```
+https://your-replit-domain.replit.app
+```
+
+## Authentication
+Most endpoints don't require authentication, but admin endpoints should be protected in production.
+
+## Frontend Game API Endpoints
+
+### 1. User Registration/Login
+```http
+POST /api/auth/register
+Content-Type: application/json
+
+{
+  "telegramId": "123456789",
+  "username": "user123",
+  "firstName": "John",
+  "lastName": "Doe",
+  "referralCode": "REF123", // optional
+  "language": "en" // optional, defaults to "en"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "telegramId": "123456789",
+    "username": "user123",
+    "firstName": "John",
+    "lastName": "Doe",
+    "coins": 0,
+```
