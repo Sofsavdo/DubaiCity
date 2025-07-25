@@ -1,0 +1,33 @@
+anner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+content-all.js:1 Uncaught (in promise) Error: Could not establish connection. Receiving end does not exist.
+    at y (content-all.js:1:49937)Understand this error
+32Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.Understand this error
+5Unrecognized feature: 'ambient-light-sensor'.Understand this warning
+5Unrecognized feature: 'battery'.Understand this warning
+5Unrecognized feature: 'execution-while-not-rendered'.Understand this warning
+5Unrecognized feature: 'execution-while-out-of-viewport'.Understand this warning
+5Unrecognized feature: 'layout-animations'.Understand this warning
+5Unrecognized feature: 'legacy-image-formats'.Understand this warning
+5Unrecognized feature: 'navigation-override'.Understand this warning
+5Unrecognized feature: 'oversized-images'.Understand this warning
+5Unrecognized feature: 'publickey-credentials'.Understand this warning
+5Unrecognized feature: 'speaker-selection'.Understand this warning
+5Unrecognized feature: 'unoptimized-images'.Understand this warning
+5Unrecognized feature: 'unsized-media'.Understand this warning
+framework-3398caaee76c3414.js:1 Unrecognized feature: 'pointer-lock'.
+_ @ framework-3398caaee76c3414.js:1Understand this warning
+5Allow attribute will take precedence over 'allowfullscreen'.Understand this warning
+5Allow attribute will take precedence over 'allowpaymentrequest'.Understand this warning
+attached_assets/image_1753442075668.png:1  Failed to load resource: the server responded with a status of 404 ()Understand this error
+8efb72f2-1ce8-4be5-b5df-ccac1ddf5eed-00-1a1oggbc8v98l.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 426 (Upgrade Required)Understand this error
+8efb72f2-1ce8-4be5-b5df-ccac1ddf5eed-00-1a1oggbc8v98l.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 426 (Upgrade Required)Understand this error
+8efb72f2-1ce8-4be5-b5df-ccac1ddf5eed-00-1a1oggbc8v98l.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 426 (Upgrade Required)Understand this error
+8efb72f2-1ce8-4be5-b5df-ccac1ddf5eed-00-1a1oggbc8v98l.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 426 (Upgrade Required)Understand this error
+8efb72f2-1ce8-4be5-b5df-ccac1ddf5eed-00-1a1oggbc8v98l.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 426 (Upgrade Required)Understand this error
+8efb72f2-1ce8-4be5-b5df-ccac1ddf5eed-00-1a1oggbc8v98l.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 426 (Upgrade Required)Understand this error
+8efb72f2-1ce8-4be5-b5df-ccac1ddf5eed-00-1a1oggbc8v98l.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 426 (Upgrade Required)Understand this error
+8efb72f2-1ce8-4be5-b5df-ccac1ddf5eed-00-1a1oggbc8v98l.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 426 (Upgrade Required)Understand this error
+8efb72f2-1ce8-4be5-b5df-ccac1ddf5eed-00-1a1oggbc8v98l.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 404 (Not Found)Understand this error
+8efb72f2-1ce8-4be5-b5df-ccac1ddf5eed-00-1a1oggbc8v98l.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 404 (Not Found)Understand this error
+8efb72f2-1ce8-4be5-b5df-ccac1ddf5eed-00-1a1oggbc8v98l.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 404 (Not Found)Understand this error
+8efb72f2-1ce8-4be5-b5df-ccac1ddf5eed-00-1a1oggbc8v98l.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 404 (Not Found)

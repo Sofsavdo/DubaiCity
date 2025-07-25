@@ -1,0 +1,470 @@
+import { pgTable, text, serial, integer, boolean, timestamp, decimal, json } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
+
+// Users table - main user data
+export const users = pgTable('users', {
+  id: serial('id').primaryKey(),
+  telegramId: text('telegram_id').unique().notNull(),
+  username: text('username'),
+  firstName: text('first_name'),
+  lastName: text('last_name'),
+  profileImage: text('profile_image'),
+  language: text('language').default('en'),
+  referralCode: text('referral_code').unique(),
+  referredBy: text('referred_by'),
+  isActive: boolean('is_active').default(true),
+  isPremium: boolean('is_premium').default(false),
+  coins: integer('coins').default(1000),
+  dubaiCoin: integer('dubai_coin').default(1000),
+  empireLevel: integer('empire_level').default(1),
+  energyLevel: integer('energy_level').default(1000),
+  maxEnergy: integer('max_energy').default(1000),
+  coinsPerTap: integer('coins_per_tap').default(1),
+  lastEnergyUpdate: timestamp('last_energy_update').defaultNow(),
+  teamId: integer('team_id'),
+  totalTapsCount: integer('total_taps_count').default(0),
+  totalCoinsEarned: integer('total_coins_earned').default(0),
+  lastActiveAt: timestamp('last_active_at').defaultNow(),
+  registrationBonus: boolean('registration_bonus').default(false),
+  dailyRewardDay: integer('daily_reward_day').default(0),
+  lastDailyReward: timestamp('last_daily_reward'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+});
+
+// Empire levels configuration
+export const empireLevels = pgTable("empire_levels", {
+  id: serial("id").primaryKey(),
+  level: integer("level").notNull().unique(),
+  name: text("name").notNull(),
+  nameUz: text("name_uz"),
+  nameRu: text("name_ru"),
+  requiredCoins: integer("required_coins").notNull(),
+  hourlyIncome: integer("hourly_income").default(0),
+  description: text("description"),
+  icon: text("icon"),
+});
+
+// Tasks table
+export const tasks = pgTable("tasks", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  titleUz: text("title_uz"),
+  titleRu: text("title_ru"),
+  description: text("description"),
+  descriptionUz: text("description_uz"),
+  descriptionRu: text("description_ru"),
+  type: text("type").notNull(), // 'telegram', 'youtube', 'instagram', 'twitter'
+  url: text("url"),
+  reward: integer("reward").notNull(),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// User tasks completion
+export const userTasks = pgTable("user_tasks", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  taskId: integer("task_id").references(() => tasks.id).notNull(),
+  completedAt: timestamp("completed_at").defaultNow(),
+  rewardClaimed: boolean("reward_claimed").default(false),
+});
+
+// Skins table
+export const skins = pgTable("skins", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  nameUz: text("name_uz"),
+  nameRu: text("name_ru"),
+  description: text("description"),
+  price: integer("price").notNull(),
+  rarity: text("rarity").notNull(), // 'common', 'rare', 'epic', 'legendary'
+  imageUrl: text("image_url"),
+  isActive: boolean("is_active").default(true),
+  category: text("category"), // 'character', 'weapon', 'background'
+});
+
+// User skins
+export const userSkins = pgTable("user_skins", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  skinId: integer("skin_id").references(() => skins.id).notNull(),
+  purchasedAt: timestamp("purchased_at").defaultNow(),
+  isEquipped: boolean("is_equipped").default(false),
+});
+
+// Businesses/Market assets
+export const businesses = pgTable("businesses", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  nameUz: text("name_uz"),
+  nameRu: text("name_ru"),
+  description: text("description"),
+  price: integer("price").notNull(),
+  hourlyProfit: integer("hourly_profit").notNull(),
+  category: text("category").notNull(), // 'cafe', 'restaurant', 'office', 'factory'
+  imageUrl: text("image_url"),
+  requiredLevel: integer("required_level").default(1),
+  isActive: boolean("is_active").default(true),
+});
+
+// User businesses
+export const userBusinesses = pgTable("user_businesses", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  businessId: integer("business_id").references(() => businesses.id).notNull(),
+  purchasedAt: timestamp("purchased_at").defaultNow(),
+  lastCollected: timestamp("last_collected").defaultNow(),
+  level: integer("level").default(1),
+});
+
+// Promo codes
+export const promoCodes = pgTable("promo_codes", {
+  id: serial("id").primaryKey(),
+  code: text("code").notNull().unique(),
+  reward: integer("reward").notNull(),
+  usageLimit: integer("usage_limit"),
+  usedCount: integer("used_count").default(0),
+  expiresAt: timestamp("expires_at"),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Promo code usage
+export const promoCodeUsage = pgTable("promo_code_usage", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  promoCodeId: integer("promo_code_id").references(() => promoCodes.id).notNull(),
+  usedAt: timestamp("used_at").defaultNow(),
+});
+
+// Notifications/Messages
+export const notifications = pgTable("notifications", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  titleUz: text("title_uz"),
+  titleRu: text("title_ru"),
+  message: text("message").notNull(),
+  messageUz: text("message_uz"),
+  messageRu: text("message_ru"),
+  type: text("type").notNull(), // 'broadcast', 'personal', 'system'
+  targetUsers: json("target_users"), // array of user IDs for targeted messages
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// User notifications
+export const userNotifications = pgTable("user_notifications", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  notificationId: integer("notification_id").references(() => notifications.id).notNull(),
+  isRead: boolean("is_read").default(false),
+  readAt: timestamp("read_at"),
+});
+
+// Teams/Groups
+export const teams = pgTable("teams", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  ownerId: integer("owner_id").references(() => users.id).notNull(),
+  maxMembers: integer("max_members").default(50),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Team members
+export const teamMembers = pgTable("team_members", {
+  id: serial("id").primaryKey(),
+  teamId: integer("team_id").references(() => teams.id).notNull(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  role: text("role").default("member"), // 'owner', 'admin', 'member'
+  joinedAt: timestamp("joined_at").defaultNow(),
+});
+
+// Projects/Daily missions
+export const projects = pgTable("projects", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  nameUz: text("name_uz"),
+  nameRu: text("name_ru"),
+  description: text("description"),
+  reward: integer("reward").notNull(),
+  type: text("type").notNull(), // 'daily', 'weekly', 'special'
+  requirements: json("requirements"), // task requirements
+  isActive: boolean("is_active").default(true),
+  startDate: timestamp("start_date"),
+  endDate: timestamp("end_date"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// User projects completion
+export const userProjects = pgTable("user_projects", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  projectId: integer("project_id").references(() => projects.id).notNull(),
+  completedAt: timestamp("completed_at").defaultNow(),
+  rewardClaimed: boolean("reward_claimed").default(false),
+});
+
+// System settings
+export const settings = pgTable("settings", {
+  id: serial("id").primaryKey(),
+  key: text("key").notNull().unique(),
+  value: text("value").notNull(),
+  description: text("description"),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Create schemas
+export const insertUserSchema = createInsertSchema(users).pick({
+  telegramId: true,
+  username: true,
+  firstName: true,
+  lastName: true,
+  profileImage: true,
+  language: true,
+  referralCode: true,
+  referredBy: true,
+  isActive: true,
+  isPremium: true,
+  coins: true,
+  dubaiCoin: true,
+  empireLevel: true,
+  energyLevel: true,
+  maxEnergy: true,
+  coinsPerTap: true,
+  teamId: true,
+});
+
+export const insertTaskSchema = createInsertSchema(tasks).pick({
+  title: true,
+  titleUz: true,
+  titleRu: true,
+  description: true,
+  descriptionUz: true,
+  descriptionRu: true,
+  type: true,
+  url: true,
+  reward: true,
+  isActive: true,
+});
+
+export const insertSkinSchema = createInsertSchema(skins).pick({
+  name: true,
+  nameUz: true,
+  nameRu: true,
+  description: true,
+  price: true,
+  rarity: true,
+  imageUrl: true,
+  category: true,
+});
+
+export const insertBusinessSchema = createInsertSchema(businesses).pick({
+  name: true,
+  nameUz: true,
+  nameRu: true,
+  description: true,
+  price: true,
+  hourlyProfit: true,
+  category: true,
+  imageUrl: true,
+  requiredLevel: true,
+});
+
+export const insertPromoCodeSchema = createInsertSchema(promoCodes).pick({
+  code: true,
+  reward: true,
+  usageLimit: true,
+  expiresAt: true,
+});
+
+export const insertNotificationSchema = createInsertSchema(notifications).pick({
+  title: true,
+  titleUz: true,
+  titleRu: true,
+  message: true,
+  messageUz: true,
+  messageRu: true,
+  type: true,
+  targetUsers: true,
+});
+
+export const insertTeamSchema = createInsertSchema(teams).pick({
+  name: true,
+  description: true,
+  ownerId: true,
+  maxMembers: true,
+});
+
+export const insertProjectSchema = createInsertSchema(projects).pick({
+  name: true,
+  nameUz: true,
+  nameRu: true,
+  description: true,
+  reward: true,
+  type: true,
+  requirements: true,
+  startDate: true,
+  endDate: true,
+});
+
+// Export types
+export type InsertUser = z.infer<typeof insertUserSchema>;
+export type User = {
+  id?: number;
+  telegramId: string;
+  username?: string;
+  firstName?: string;
+  lastName?: string;
+  languageCode?: string;
+  isPremium?: boolean;
+  dubaiCoin: number;
+  totalEarned: number;
+  energy: number;
+  maxEnergy: number;
+  energyRegenTime: Date;
+  lastActive: Date;
+  level: number;
+  referredBy?: string;
+  referralCode: string;
+  referralCount: number;
+  profilePictureUrl?: string;
+  completedTasks: string[];
+  ownedSkins: string[];
+  selectedSkin?: string;
+  businesses: Business[];
+  walletAddress?: string;
+  nftCollection: NFT[];
+  allianceId?: number;
+}
+export type InsertTask = z.infer<typeof insertTaskSchema>;
+export type Task = typeof tasks.$inferSelect;
+export type InsertSkin = z.infer<typeof insertSkinSchema>;
+export type Skin = typeof skins.$inferSelect;
+export type InsertBusiness = z.infer<typeof insertBusinessSchema>;
+export type Business = {
+  id: string;
+  name: string;
+  level: number;
+  baseIncome: number;
+  upgradePrice: number;
+  lastCollected: Date;
+  isNFT?: boolean;
+  nftTokenId?: string;
+}
+export type InsertPromoCode = z.infer<typeof insertPromoCodeSchema>;
+export type PromoCode = typeof promoCodes.$inferSelect;
+export type InsertNotification = z.infer<typeof insertNotificationSchema>;
+export type Notification = typeof notifications.$inferSelect;
+export type InsertTeam = z.infer<typeof insertTeamSchema>;
+export type Team = typeof teams.$inferSelect;
+export type InsertProject = z.infer<typeof insertProjectSchema>;
+export type Project = typeof projects.$inferSelect;
+export type EmpireLevel = typeof empireLevels.$inferSelect;
+export type UserTask = typeof userTasks.$inferSelect;
+export type UserSkin = typeof userSkins.$inferSelect;
+export type UserBusiness = typeof userBusinesses.$inferSelect;
+export type PromoCodeUsage = typeof promoCodeUsage.$inferSelect;
+export type UserNotification = typeof userNotifications.$inferSelect;
+export type TeamMember = typeof teamMembers.$inferSelect;
+export type UserProject = typeof userProjects.$inferSelect;
+export type Setting = typeof settings.$inferSelect;
+
+export interface Payment {
+  id: string;
+  userId: string;
+  amount: number;
+  currency: string;
+  usdAmount: number;
+  status: 'pending' | 'completed' | 'failed';
+  transactionHash?: string;
+  walletAddress: string;
+  description: string;
+  createdAt: Date;
+  completedAt?: Date;
+}
+
+export interface NFT {
+  id: string;
+  tokenId: string;
+  name: string;
+  description: string;
+  imageUrl: string;
+  category: 'business' | 'skin' | 'premium';
+  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+  attributes: Record<string, any>;
+  mintedAt: Date;
+  currentPrice?: number;
+  isForSale: boolean;
+}
+
+export interface Alliance {
+  id: number;
+  name: string;
+  description: string;
+  ownerId: string;
+  members: User[];
+  totalAssets: number;
+  level: number;
+  createdAt: Date;
+}
+
+export interface SeasonalEvent {
+  id: string;
+  name: string;
+  description: string;
+  startDate: Date;
+  endDate: Date;
+  rewards: EventReward[];
+  isActive: boolean;
+}
+
+export interface EventReward {
+  id: string;
+  eventId: string;
+  name: string;
+  description: string;
+  requiredAction: string;
+  rewardType: 'coins' | 'nft' | 'premium';
+  rewardAmount: number;
+  claimed: boolean;
+}
+
+export interface Leaderboard {
+  personalLeaderboard: LeaderboardEntry[];
+  companyLeaderboard: LeaderboardEntry[];
+  donatorLeaderboard: LeaderboardEntry[];
+  allianceLeaderboard: AllianceEntry[];
+}
+
+export interface LeaderboardEntry {
+  id: string;
+  name: string;
+  score: number;
+  level: number;
+  rank: number;
+  profilePictureUrl?: string;
+}
+
+export interface AllianceEntry {
+  id: number;
+  name: string;
+  totalAssets: number;
+  memberCount: number;
+  level: number;
+  rank: number;
+}
+
+export interface Analytics {
+  dailyActiveUsers: number;
+  totalUsers: number;
+  totalRevenue: number;
+  averageSessionTime: number;
+  retentionRate: number;
+  topCountries: string[];
+}
+
+// All tables are already exported individually above

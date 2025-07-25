@@ -1,0 +1,115 @@
+Replit Agent uchun Ko‘rsatmalar: DubaiCity Botini Yaxshilash
+Sizning vazifangiz "DubaiCity" Telegram botini umumiy holatini buzmasdan yaxshilash, foydalanuvchilarni jalb qilishga yordam beradigan xizmatlar qo‘shish va to‘lov tizimini soddalashtirishdir. Bot faqat Telegram Wallet orqali to‘lovlarni qabul qilishi kerak, unda mavjud bo‘lgan barcha valyutalar (TON, BTC, USDT, NOT, DOGS, HMSTR, X, MAJOR, CATI) ishlatilishi mumkin. To‘lovlar dollarga avtomatik konvertatsiya qilinadi, adminlar esa bot ichidan chiqmasdan to‘lovlarni o‘tkazma shaklida qabul qila olishi kerak. Quyidagi ko‘rsatmalar loyiha tuzilishiga rioya qilgan holda amalga oshirilishi kerak.
+1. Telegram Wallet Integratsiyasi
+
+Maqsad: Botni Telegram Wallet bilan integratsiyalashib, foydalanuvchilarga har qanday qo‘llab-quvvatlanadigan valyutada to‘lov qilish imkonini berish.
+Amallar:
+Telegram Wallet API yoki unga mos keladigan uchinchi tomon xizmatlaridan (masalan, CryptoCloud yoki OxaPay) foydalanib, to‘lov so‘rovlarini yaratish.
+Foydalanuvchi to‘lov qilishni xohlaganda, bot Telegram Wallet’dan to‘lovni amalga oshirish uchun havola yoki QR kod yuboradi.
+To‘lov tasdiqlanganda, bot tranzaksiyani blockchain orqali tekshiradi (masalan, TON blockchain API yordamida).
+
+
+Resurslar: Telegram Wallet hujjatlari (https://wallet.helpscoutdocs.com) va CryptoCloud API hujjatlari (https://cryptocloud.plus/en/docs).
+
+2. Dollarga Avtomatik Konversiya
+
+Maqsad: Barcha to‘lovlarni dollarga konvertatsiya qilish orqali hisob-kitobni soddalashtirish.
+Amallar:
+CoinGecko yoki CryptoCompare API’dan foydalanib, real vaqt kurslarini olish.
+Backendda (Node.js, Express.js) to‘lov qabul qilinganda valyutani dollarga konvertatsiya qilish logikasini joriy etish.
+Masalan, agar foydalanuvchi 1 TON to‘lov qilsa, bot uni joriy kurs bo‘yicha dollarga aylantiradi (masalan, 1 TON = $2.50).
+
+
+Resurslar: CoinGecko API (https://www.coingecko.com/en/api) yoki CryptoCompare API hujjatlari.
+
+3. Admin To‘lov Tizimi
+
+Maqsad: Adminlarga bot ichidan chiqmasdan Telegram Wallet orqali to‘lovlarni qabul qilish imkonini berish.
+Amallar:
+Botda /payadmin kabi maxsus buyruq qo‘shish, bu orqali foydalanuvchi adminning Telegram Wallet manziliga to‘lov yuborishi mumkin.
+To‘lov so‘rovi yaratilganda, bot foydalanuvchiga Telegram Wallet’dan to‘lovni amalga oshirish uchun havola yoki QR kod yuboradi.
+To‘lov tasdiqlanganda, admin bot ichida bildirishnoma oladi va to‘lov dollarga konvertatsiya qilinadi.
+
+
+Resurslar: Telegram Bot API (https://core.telegram.org/bots/api) va TON blockchain hujjatlari.
+
+4. NFT Integratsiyasi
+
+Maqsad: O‘yin ichidagi biznes assetlari va premium skinalarni NFT sifatida qo‘shish.
+Amallar:
+TON blockchainning TEP-62 va TEP-64 standartlaridan foydalanib, NFT mint qilish, sotish va treyd qilish imkoniyatini yarating.
+Foydalanuvchilar NFT’larni o‘yin ichida boshqarishi mumkin bo‘lgan tizim qo‘shing (masalan, restoran NFT’si bonus daromad keltiradi).
+Frontendda (React, Tailwind CSS) NFT galereyasi va savdo interfeysini yarating.
+
+
+Resurslar: TON NFT standartlari hujjatlari (https://ton.org/docs).
+
+5. Ijtimoiy Elementlar
+
+Maqsad: O‘yinni ko‘proq interaktiv va ijtimoiy qilish.
+Amallar:
+Liderlar jadvali: Eng yaxshi o‘yinchilarni ko‘rsatadigan jadval qo‘shing (coinlar yoki assetlar bo‘yicha).
+Allianslar: Foydalanuvchilar guruhlarga qo‘shilib, birgalikda biznes assetlarini boshqarishi mumkin.
+PvP Mexanikasi: O‘yinchilar o‘rtasida resurslar yoki hududlar uchun raqobat qilish imkonini qo‘shing.
+
+
+Resurslar: Telegram Bot API va PostgreSQL orqali real vaqt ma’lumotlarini boshqarish.
+
+6. Mavsumiy Tadbirlar
+
+Maqsad: Foydalanuvchilarni doimiy jalb qilish.
+Amallar:
+Mavsumiy tadbirlar (masalan, Navro‘z, mavludlar) va cheklangan vaqtli missiyalar tizimini yarating.
+Maxsus mukofotlar yoki NFT’lar qo‘shing.
+Backendda (Node.js) tadbirlar jadvalini avtomatik boshqarish tizimini joriy eting.
+
+
+Resurslar: Node.js va Express.js orqali vaqtga asoslangan kontent boshqaruvi.
+
+7. Analytics Vositalari
+
+Maqsad: Foydalanuvchi faoliyati va monetizatsiya metrikalarini kuzatish.
+Amallar:
+Foydalanuvchi faoliyati, retensiya va to‘lov metrikalarini yig‘ish uchun analytics vositasini integratsiya qiling (masalan, Google Analytics yoki maxsus logging).
+Drizzle ORM va PostgreSQL yordamida ma’lumotlarni saqlash va tahlil qilish tizimini yarating.
+
+
+Resurslar: Google Analytics hujjatlari va PostgreSQL tahlil so‘rovlari.
+
+8. Xavfsizlik Choralari
+
+Maqsad: To‘lovlar va foydalanuvchi ma’lumotlarini himoya qilish.
+Amallar:
+Telegram Wallet’ning ikki faktorli autentifikatsiyasi va shifrlash tizimlaridan foydalaning.
+Backendda xavfsiz kodlash amaliyotlarini qo‘llang (masalan, kirish ma’lumotlarini tekshirish).
+Regular xavfsizlik auditlarini rejalashtiring.
+
+
+Resurslar: OWASP xavfsizlik bo“yicha eng yaxshi amaliyotlar (https://owasp.org) va Node.js xavfsizlik hujjatlari.
+
+9. UI/UX Yaxshilanishlari
+
+Maqsad: Foydalanuvchi tajribasini oshirish.
+Amallar:
+React frontendda Tailwind CSS va Framer Motion yordamida to‘lov va o‘yin interfeysini intuitiv qiling.
+Telegram botda inline klaviaturalar va interaktiv elementlar qo‘shing (masalan, to‘lov tugmalari).
+
+
+Resurslar: Telegram Bot API va Shadcn/ui hujjatlari.
+
+10. Energiya Tizimini Ko‘rib Chiqish
+
+Maqsad: Foydalanuvchi tajribasini yaxshilash.
+Amallar:
+Hozirgi energiya tizimini tahlil qiling va cheklovlarni kamaytiradigan alternativ usullar (masalan, cooldown tizimi) qo‘shing.
+Backendda energiya tizimi logikasini yangilang.
+
+
+Resurslar: O‘yin dizayni bo‘yicha eng yaxshi amaliyotlarni o‘rganing.
+
+Qo‘shimcha Ko‘rsatmalar
+
+Loyiha tuzilishi: Hozirgi loyiha tuzilishiga (client/src/, server/, shared/, api/) rioya qiling.
+Versiya boshqaruvi: Har bir yangi funksiya uchun alohida branch yarating.
+Platforma moslashuvi: Barcha yangi funksiyalar Telegram bot va veb frontendda bir xil tajribani ta’minlashi kerak.
+Resurslar: Telegram Bot API (https://core.telegram.org/bots/api), TON Wallet hujjatlari, CryptoCloud yoki OxaPay API hujjatlari.

@@ -1,0 +1,144 @@
+Loyiha Manbasi: GitHub - Sofsavdo/DubaiCity
+
+Komponentlar:
+
+Telegram Web App (O'yin Frontend)
+
+Admin Panel (React)
+
+Backend (Node.js/Express)
+
+Muhit: Replit (Node.js)
+
+Zaruriyatlar:
+
+Barcha komponentlar bir-biri bilan muammosiz ulanadi.
+
+Xatoliklar 100% tekshiriladi va tuzatiladi.
+
+Replit muhitida ishlaydigan yakuniy konfiguratsiya.
+
+I. Dasturiy Ta'minotni Tayanch Sozlamalari:
+bash
+# 1. Replitda Yangi Node.js Loyihasi
+mkdir DubaiCity && cd DubaiCity
+git clone https://github.com/Sofsavdo/DubaiCity . --depth 1
+
+# 2. Paketlarni O'rnatish
+cd backend && npm install
+cd ../admin && npm install
+cd ../frontend && npm install
+
+# 3. Environment Variables (.env) - Replit Secrets
+# BACKEND/.env
+TOKEN="YOUR_TELEGRAM_BOT_TOKEN"
+MONGODB_URI="mongodb+srv://user:pass@cluster.mongodb.net/db"
+PORT=5000
+
+# ADMIN/.env
+REACT_APP_API_URL=https://your-replit-url.repl.co/api
+
+# FRONTEND/.env
+REACT_APP_API_URL=https://your-replit-url.repl.co/api
+II. Backend Sozlamalari (Node.js/Express):
+javascript
+// backend/server.js
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+require("dotenv").config();
+
+const app = express();
+app.use(cors({ origin: "*" }));
+app.use(express.json());
+
+// MongoDB ulanish
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log("MongoDB connected!"))
+  .catch(err => console.error("MongoDB error:", err));
+
+// API Routelar
+app.use("/api", require("./routes/userRoutes"));
+app.use("/api", require("./routes/gameRoutes"));
+
+// Static fayllar (Admin Panel uchun)
+app.use("/admin", express.static("../admin/build"));
+
+// Telegram Web App uchun
+app.use("/game", express.static("../frontend/build"));
+
+// Asosiy port
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
+III. Admin Panel Sozlamalari (React):
+javascript
+// admin/src/App.js
+import React, { useEffect } from "react";
+import axios from "axios";
+
+function App() {
+  useEffect(() => {
+    axios.get(`${process.env.REACT_APP_API_URL}/users`)
+      .then(res => console.log("Foydalanuvchilar:", res.data))
+      .catch(err => console.error("API xatosi:", err));
+  }, []);
+
+  return <div>Admin Panel</div>;
+}
+export default App;
+IV. Telegram Web App Sozlamalari (React):
+javascript
+// frontend/src/App.js
+import React, { useEffect } from "react";
+import axios from "axios";
+
+function App() {
+  useEffect(() => {
+    axios.post(`${process.env.REACT_APP_API_URL}/game/start`, { userId: "123" })
+      .then(res => console.log("O'yin boshlandi:", res.data))
+      .catch(err => console.error("O'yin xatosi:", err));
+  }, []);
+
+  return <div>Telegram O'yin</div>;
+}
+export default App;
+V. Replit Run Command (.replit fayli):
+bash
+# .replit fayl ichida:
+run = "cd backend && npm start"
+VI. Xatoliklarni Tekshirish va Tuzatish (QAT'IY TALAB):
+Backend Test:
+
+MongoDB ulanishini tekshirish (mongoose.connection.readyState === 1).
+
+API endpointlarni Postman bilan test qilish:
+GET /api/users
+POST /api/game/start
+
+Frontend Test:
+
+REACT_APP_API_URL to'g'ri sozlanganligini tekshirish.
+
+CORS xatolarini bartaraf etish (cors middleware).
+
+Admin Panel Test:
+
+/admin endpointi static fayllarni ko'rsatishi.
+
+Umumiy Tekshiruv:
+
+Replit konsolida xatoliklar (error) yo'qligiga ishonch hosil qilish.
+
+Har bir commitdan keyin git status bilan o'zgarishlarni tekshirish.
+
+VII. Yakuniy Bosqich (Replit Deploy):
+Replit Secrets ga quyidagilarni qo'shing:
+
+TOKEN (Telegram Bot Token)
+
+MONGODB_URI (MongoDB Connection String)
+
+"Run" tugmasini bosish.
+
+Webview URL manzilini Telegram botga ulash:
+https://your-replit-url.repl.co/game

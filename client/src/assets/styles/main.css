@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --gradient-gold: linear-gradient(90deg, #FFD700, #FFA500);
+  --gradient-blue: linear-gradient(90deg, #00FFFF, #1E90FF);
+}
+
+.text-gradient-gold {
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.emoji-large {
+  font-size: 2.5rem;
+  line-height: 1.2;
+}
+
+.emoji-medium {
+  font-size: 1.5rem;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+/* Firefox */
+.custom-scrollbar {
+  scrollbar-width: none;
+}

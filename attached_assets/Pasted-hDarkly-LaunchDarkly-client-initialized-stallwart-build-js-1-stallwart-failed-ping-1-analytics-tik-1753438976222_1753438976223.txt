@@ -1,0 +1,53 @@
+hDarkly] LaunchDarkly client initialized
+stallwart.build.js:1 stallwart: failed ping 1
+analytics.tiktok.com/i18n/pixel/events.js?sdkid=D004GE3C77U8PIVDSDJG&lib=ttq:1  Failed to load resource: net::ERR_CONNECTION_RESETUnderstand this error
+DubaiCity:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+59Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.Understand this error
+6Unrecognized feature: 'ambient-light-sensor'.Understand this warning
+6Unrecognized feature: 'battery'.Understand this warning
+6Unrecognized feature: 'execution-while-not-rendered'.Understand this warning
+6Unrecognized feature: 'execution-while-out-of-viewport'.Understand this warning
+6Unrecognized feature: 'layout-animations'.Understand this warning
+6Unrecognized feature: 'legacy-image-formats'.Understand this warning
+6Unrecognized feature: 'navigation-override'.Understand this warning
+6Unrecognized feature: 'oversized-images'.Understand this warning
+6Unrecognized feature: 'publickey-credentials'.Understand this warning
+6Unrecognized feature: 'speaker-selection'.Understand this warning
+6Unrecognized feature: 'unoptimized-images'.Understand this warning
+6Unrecognized feature: 'unsized-media'.Understand this warning
+framework-5d19c00ed2bb2898.js:1 Unrecognized feature: 'pointer-lock'.
+_ @ framework-5d19c00ed2bb2898.js:1Understand this warning
+6Allow attribute will take precedence over 'allowfullscreen'.Understand this warning
+6Allow attribute will take precedence over 'allowpaymentrequest'.Understand this warning
+attached_assets/image_1753422992437.png:1  Failed to load resource: the server responded with a status of 404 ()Understand this error
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A67430fa7&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=8c2d3e10-aa4b-4472-b850-a0b6c3bfc3ac:1  Failed to load resource: net::ERR_CONNECTION_CLOSEDUnderstand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 403 (Forbidden)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 403 (Forbidden)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 403 (Forbidden)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 403 (Forbidden)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 403 (Forbidden)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 403 (Forbidden)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 403 (Forbidden)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 403 (Forbidden)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 403 (Forbidden)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 403 (Forbidden)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 403 (Forbidden)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 403 (Forbidden)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 403 (Forbidden)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 403 (Forbidden)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 403 (Forbidden)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)Understand this error
+3982bb2e-2ad6-40e7-91bc-4fa7bc8acd24-00-18wzidisbil8.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)

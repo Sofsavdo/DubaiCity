@@ -1,0 +1,27 @@
+9Unchecked runtime.lastError: The message port closed before a response was received.Пояснение к ошибке
+sw_iframe.html:7 Unchecked runtime.lastError: The message port closed before a response was received.Пояснение к ошибке
+11411994397:1 Unchecked runtime.lastError: The message port closed before a response was received.Пояснение к ошибке
+m.stripe.network/inner.html#url=https%3A%2F%2Freplit.com%2F%40wevoxib877%2FDubaiCity&title=DubaiCity%20-%20Replit&referrer=https%3A%2F%2Freplit.com%2F%40wevoxib877%2FDubaiCity&muid=755a9b6c-d65f-44e0-8f82-dcfde5193720b46884&sid=5859c98f-6b86-44b9-b859-13edd65d17109a9d82&version=6&preview=false&__shared_params__[version]=acacia:1 Unchecked runtime.lastError: The message port closed before a response was received.Пояснение к ошибке
+js.stripe.com/v3/controller-with-preconnect-620774c5c1a6c7a30ce8bec0b203b350.html#__shared_params__[version]=acacia&apiKey=pk_live_515YpNsJAmnYVOvfnsBqRdATWS6SzbNAslOz1z2tujdKuvRMDAwWMeFXp6dJL1YKRrQjB0WAp0UDGwlFYL7hxw7Fc00QkfxBFsL&apiVersion=2025-01-27.acacia&stripeJsId=34e43794-0dea-4fd6-a1a2-8b81d019a12b&stripeObjId=sobj-87241048-9a0a-46e0-972e-a01088769776&firstStripeInstanceCreatedLatency=12&controllerCount=1&isCheckout=false&stripeJsLoadTime=1753414669505&manualBrowserDeprecationRollout=false&mids[guid]=NA&mids[muid]=755a9b6c-d65f-44e0-8f82-dcfde5193720b46884&mids[sid]=5859c98f-6b86-44b9-b859-13edd65d17109a9d82&referrer=https%3A%2F%2Freplit.com%2F%40wevoxib877%2FDubaiCity&controllerId=__privateStripeController3401:1 Unchecked runtime.lastError: The message port closed before a response was received.Пояснение к ошибке
+js.stripe.com/v3/m-outer-3437aaddcdf6922d623e172c2d6f9278.html#url=https%3A%2F%2Freplit.com%2F%40wevoxib877%2FDubaiCity&title=DubaiCity%20-%20Replit&referrer=https%3A%2F%2Freplit.com%2F%40wevoxib877%2FDubaiCity&muid=755a9b6c-d65f-44e0-8f82-dcfde5193720b46884&sid=5859c98f-6b86-44b9-b859-13edd65d17109a9d82&version=6&preview=false&__shared_params__[version]=acacia:1 Unchecked runtime.lastError: The message port closed before a response was received.Пояснение к ошибке
+anchor:180 Unchecked runtime.lastError: The message port closed before a response was received.Пояснение к ошибке
+js.stripe.com/v3/controller-with-preconnect-620774c5c1a6c7a30ce8bec0b203b350.html#__shared_params__[version]=acacia&apiKey=pk_live_515YpNsJAmnYVOvfnsBqRdATWS6SzbNAslOz1z2tujdKuvRMDAwWMeFXp6dJL1YKRrQjB0WAp0UDGwlFYL7hxw7Fc00QkfxBFsL&apiVersion=2025-01-27.acacia&stripeJsId=34e43794-0dea-4fd6-a1a2-8b81d019a12b&stripeObjId=sobj-87241048-9a0a-46e0-972e-a01088769776&firstStripeInstanceCreatedLatency=12&controllerCount=1&isCheckout=false&stripeJsLoadTime=1753414669505&manualBrowserDeprecationRollout=false&mids[guid]=NA&mids[muid]=755a9b6c-d65f-44e0-8f82-dcfde5193720b46884&mids[sid]=5859c98f-6b86-44b9-b859-13edd65d17109a9d82&referrer=https%3A%2F%2Freplit.com%2F%40wevoxib877%2FDubaiCity&controllerId=__privateStripeController3401:1 Unchecked runtime.lastError: The message port closed before a response was received.Пояснение к ошибке
+js.stripe.com/v3/m-outer-3437aaddcdf6922d623e172c2d6f9278.html#url=https%3A%2F%2Freplit.com%2F%40wevoxib877%2FDubaiCity&title=DubaiCity%20-%20Replit&referrer=https%3A%2F%2Freplit.com%2F%40wevoxib877%2FDubaiCity&muid=755a9b6c-d65f-44e0-8f82-dcfde5193720b46884&sid=5859c98f-6b86-44b9-b859-13edd65d17109a9d82&version=6&preview=false&__shared_params__[version]=acacia:1 Unchecked runtime.lastError: The message port closed before a response was received.Пояснение к ошибке
+DubaiCity:147 Unchecked runtime.lastError: The message port closed before a response was received.Пояснение к ошибке
+_app-1267f43acce5c8d0.js:18 
+      /////////////////////
+   ///////////////////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////        Curious and driven?
+  ///////////////@@@@@@@///////        Work with us!
+  ///////////////@@@@@@@///////
+  ///////////////@@@@@@@///////        https://join.replit.com/hack.with.us
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@#//////////////
+   ///////////////////////////
+      /////////////////////
+      
+_app-1267f43acce5c8d0.js:18 [LaunchDarkly] LaunchDarkly client initialized
+DubaiCity:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
