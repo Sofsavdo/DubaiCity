@@ -1,0 +1,72 @@
+framework-3696f0681438c975.js:1 Unrecognized feature: 'unoptimized-images'.
+_ @ framework-3696f0681438c975.js:1Пояснение к предупреждению
+framework-3696f0681438c975.js:1 Unrecognized feature: 'unsized-media'.
+_ @ framework-3696f0681438c975.js:1Пояснение к предупреждению
+framework-3696f0681438c975.js:1 Unrecognized feature: 'pointer-lock'.
+_ @ framework-3696f0681438c975.js:1Пояснение к предупреждению
+framework-3696f0681438c975.js:1 Allow attribute will take precedence over 'allowfullscreen'.
+_ @ framework-3696f0681438c975.js:1Пояснение к предупреждению
+framework-3696f0681438c975.js:1 Allow attribute will take precedence over 'allowpaymentrequest'.
+_ @ framework-3696f0681438c975.js:1Пояснение к предупреждению
+2stallwart.build.js:1 stallwart: failed ping 1
+stallwart.build.js:1 stallwart: failed ping 2
+stallwart.build.js:1 stallwart: failed ping 3
+/attached_assets/image_1753455326441.png:1  Failed to load resource: the server responded with a status of 404 ()Пояснение к ошибке
+8153-3354e9c497198d7c.js:1 Uncaught (in promise) CompletionError: Observable completed without emitting a value
+    at Object.complete (8153-3354e9c497198d7c.js:1:62384)
+    at Object.complete (8153-3354e9c497198d7c.js:1:65505)
+    at e.complete (8153-3354e9c497198d7c.js:1:65006)
+    at v (_app-fa2bbf2ef2a04535.js:23:7109)
+    at y (_app-fa2bbf2ef2a04535.js:23:7537)
+    at t.complete (_app-fa2bbf2ef2a04535.js:23:8145)
+    at Object.complete (8153-3354e9c497198d7c.js:1:65505)
+    at e.complete (8153-3354e9c497198d7c.js:1:65006)
+    at v (_app-fa2bbf2ef2a04535.js:23:7109)
+    at y (_app-fa2bbf2ef2a04535.js:23:7537)
+    at t.complete (_app-fa2bbf2ef2a04535.js:23:8145)
+    at 8153-3354e9c497198d7c.js:1:148471
+    at t.notify (8153-3354e9c497198d7c.js:1:67782)
+    at t.dispose (8153-3354e9c497198d7c.js:1:151662)
+    at Object.next (8153-3354e9c497198d7c.js:1:150658)
+    at v (_app-fa2bbf2ef2a04535.js:23:7015)
+    at y (_app-fa2bbf2ef2a04535.js:23:7537)
+    at t.next (_app-fa2bbf2ef2a04535.js:23:8038)
+    at 8153-3354e9c497198d7c.js:1:69031
+    at t.notify (8153-3354e9c497198d7c.js:1:67782)
+    at n.set (8153-3354e9c497198d7c.js:1:69204)
+    at t.close (8153-3354e9c497198d7c.js:1:50294)
+    at 8153-3354e9c497198d7c.js:1:176777Пояснение к ошибке
+2content-all.js:1 Uncaught (in promise) Error: Could not establish connection. Receiving end does not exist.
+    at y (content-all.js:1:49937)Пояснение к ошибке
+workspace_iframe.html:32 Unrecognized feature: 'ambient-light-sensor'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'ambient-light-sensor'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'battery'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'battery'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'execution-while-not-rendered'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'execution-while-not-rendered'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'execution-while-out-of-viewport'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'execution-while-out-of-viewport'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'layout-animations'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'layout-animations'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'legacy-image-formats'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'legacy-image-formats'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'navigation-override'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'navigation-override'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'oversized-images'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'oversized-images'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'publickey-credentials'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'publickey-credentials'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'speaker-selection'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'speaker-selection'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'unoptimized-images'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'unoptimized-images'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'unsized-media'.Пояснение к предупреждению
+workspace_iframe.html:32 Unrecognized feature: 'unsized-media'.Пояснение к предупреждению
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowfullscreen'.Пояснение к предупреждению
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowfullscreen'.Пояснение к предупреждению
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowpaymentrequest'.Пояснение к предупреждению
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowpaymentrequest'.Пояснение к предупреждению
+d949d127-ba31-4b1a-8572-2b0e212ebf7c-00-5lbmf5x2bu6p.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 404 (Not Found)Пояснение к ошибке
+d949d127-ba31-4b1a-8572-2b0e212ebf7c-00-5lbmf5x2bu6p.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 404 (Not Found)Пояснение к ошибке
+d949d127-ba31-4b1a-8572-2b0e212ebf7c-00-5lbmf5x2bu6p.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 404 (Not Found)Пояснение к ошибке
+d949d127-ba31-4b1a-8572-2b0e212ebf7c-00-5lbmf5x2bu6p.pike.replit.dev/:1  Failed to load resource: the server responded with a status of 404 (Not Found)
