@@ -1,0 +1,43 @@
+import type { ListeningTest } from './types';
+
+export const listening3: ListeningTest = {
+  id: 'listening-3',
+  title: 'Listening mini-test 3: Research project tutorial',
+  minutes: 9,
+  names: { A: 'Tutor', B: 'Maria' },
+  context: 'Tutor va talaba Maria: tadqiqot loyihasi haqida suhbat.',
+  script: [
+    { speaker: 'A', text: 'So, Maria, how is your research project going?' },
+    { speaker: 'B', text: "Quite well, thank you. I've decided to focus on plastic recycling in our city, rather than the whole country." },
+    { speaker: 'A', text: "Good. That's more realistic. And what methods are you planning to use?" },
+    { speaker: 'B', text: "I was going to send a questionnaire, but a friend suggested interviews, because they would give me more detail." },
+    { speaker: 'A', text: 'Interviews take longer, though. How many people are you thinking of?' },
+    { speaker: 'B', text: "Fifteen in total. Ten residents and five shop owners." },
+    { speaker: 'A', text: 'That sounds manageable. When do you need to finish collecting the data?' },
+    { speaker: 'B', text: "By the end of March. Then I'll analyse the results in April." },
+    { speaker: 'A', text: 'Remember that the final report must be three thousand words, and the deadline is the twelfth of May.' },
+    { speaker: 'B', text: 'Yes. Can I include graphs? Do they count towards the word limit?' },
+    { speaker: 'A', text: "No, graphs don't count, but you must label them clearly." },
+    { speaker: 'B', text: 'Great. And where can I find statistics on recycling?' },
+    { speaker: 'A', text: "The city council website has figures, but check the university library as well. The council data is only updated every two years, so it may be out of date." },
+    { speaker: 'B', text: 'Thanks. One last thing: my presentation.' },
+    { speaker: 'A', text: "It's on the fifth of June. Ten minutes, plus questions, and please use no more than eight slides." },
+    { speaker: 'B', text: 'Eight slides. Understood. Thank you very much.' },
+  ],
+  groups: [
+    { instruction: 'Questions 1–2 and 8–9: Choose the correct letter.', questionIds: [1, 2, 8, 9] },
+    { instruction: 'Questions 3–7 and 10: Complete the notes. Write ONE WORD AND/OR A NUMBER for each answer.', questionIds: [3, 4, 5, 6, 7, 10] },
+  ],
+  questions: [
+    { id: 1, type: 'mcq', text: 'Why did Maria narrow her topic?', options: ['She did not have enough time', 'To make the project more realistic', 'Her tutor told her to'], answer: 1, evidence: 'Tutor: "That’s more realistic".' },
+    { id: 2, type: 'mcq', text: 'Why did Maria choose interviews?', options: ['They are cheaper', 'They give more detail', 'They are quicker'], answer: 1, evidence: '"they would give me more detail".' },
+    { id: 3, type: 'fill', text: 'Number of residents to interview: ______', answers: ['10', 'ten'], evidence: '"Ten residents and five shop owners".' },
+    { id: 4, type: 'fill', text: 'Number of shop owners to interview: ______', answers: ['5', 'five'], evidence: '"five shop owners".' },
+    { id: 5, type: 'fill', text: 'Data collection ends at the end of ______', answers: ['march'], evidence: '"By the end of March".' },
+    { id: 6, type: 'fill', text: 'Report length: ______ words', answers: ['3000', 'threethousand'], evidence: '"three thousand words".' },
+    { id: 7, type: 'fill', text: 'Report deadline: ______ May', answers: ['12', '12th', 'twelfth'], evidence: '"the twelfth of May".' },
+    { id: 8, type: 'mcq', text: 'What does the tutor say about graphs?', options: ['They count towards the word limit', 'They do not count but must be labelled', 'They are not allowed'], answer: 1, evidence: '"graphs don’t count, but you must label them clearly".' },
+    { id: 9, type: 'mcq', text: 'How often is the council data updated?', options: ['Every year', 'Every two years', 'Every month'], answer: 1, evidence: '"only updated every two years".' },
+    { id: 10, type: 'fill', text: 'Presentation: no more than ______ slides', answers: ['8', 'eight'], evidence: '"no more than eight slides".' },
+  ],
+};

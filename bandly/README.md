@@ -20,7 +20,7 @@ npm run build    # statik fayllar: dist/
 |---|---|---|
 | **Imtihon tayyorgarligi** (`#/exam`) | IELTS: Reading, Listening, Writing, Speaking. SAT va CEFR | IELTS bor; SAT/CEFR "tez orada" |
 | **Grammar** (`#/grammar`) | 50 savol, 10 mavzu (artikl, zamon, shart gap, predlog, majhul nisbat, modal, nisbiy gap, gerund, taqqoslash...), o'zbekcha izoh, "Xatolarim" takrorlash | Bepul: faqat "Artikllar" |
-| **Mock testlar** (`#/mocks`) | Taymerli test, avtomatik baho, tahlil | 2 ta mini-mock (to'liq mocklar keyin) |
+| **Mock testlar** (`#/mocks`) | Taymerli test, avtomatik baho, tahlil, eng yaxshi natija | 4 Reading + 4 Listening mini-mock (to'liq 40 savollik mocklar keyin) |
 
 Foydalanuvchi faqat kerakli yo'nalish uchun to'laydi. Istalgan obuna so'z o'yinlarini cheksiz qiladi;
 obunasiz kuniga 2 ta bepul o'yin (`FREE_GAMES_PER_DAY`, `src/config.ts`).
@@ -43,7 +43,7 @@ faqat shu qurilmada ochiladi. Narxlar (`src/config.ts`) **namunaviy**, oldindan 
 
 ## Ma'lum cheklovlar
 
-- Kontent hali kichik: 1 Reading, 1 Listening, 50 Grammar, 152 so'z. Mini-test bandi 40 ballik shkalaga keltirilgan, faqat taxminiy.
+- Kontent hali kichik: 4 Reading, 4 Listening (13/10 savoldan), 50 Grammar, 152 so'z. Savol turlari: True/False/Not Given, bo'sh joy, test, moslashtirish (sarlavha/harf). Mini-test bandi 40 ballik shkalaga keltirilgan, faqat taxminiy.
 - Parolli hisoblar, do'stlar bilan duel, to'lov yo'q. Reyting tokeni shu qurilmada saqlanadi (yo'qolsa, laqab qayta olinmaydi).
 - AI Writing/Speaking baholash yo'q (kalit kerak); Writing tekshiruvi qoidaviy.
 - Listening audiosi qurilmadagi ingliz ovoziga bog'liq.

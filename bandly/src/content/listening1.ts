@@ -5,6 +5,7 @@ export const listening1: ListeningTest = {
   id: 'listening-1',
   title: 'Listening mini-test 1: Joining a fitness centre',
   minutes: 8,
+  names: { A: 'Anna', B: 'Daniel' },
   context: 'Riverside Fitness Centre — New Member Form. Qo‘ng‘iroq: yangi a’zo va resepshn xodimi.',
   script: [
     { speaker: 'A', text: 'Good morning, Riverside Fitness Centre, Anna speaking. How can I help you?' },

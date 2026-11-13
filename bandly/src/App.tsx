@@ -13,6 +13,9 @@ import League from './pages/League';
 import DuelHub, { DuelRoom } from './pages/Duel';
 import Reading from './pages/Reading';
 import Listening from './pages/Listening';
+import TestList from './pages/TestList';
+import { listeningTests } from './content/listeningTests';
+import { readingTests } from './content/readingTests';
 import Grammar from './pages/Grammar';
 import Writing from './pages/Writing';
 import Speaking from './pages/Speaking';
@@ -25,14 +28,10 @@ import Spell from './pages/games/Spell';
 const routes: Record<string, () => ReactNode> = {
   '#/': () => <Home />,
   '#/exam': () => <Exam />,
-  '#/exam/reading': () => <Gate track="exam"><Reading /></Gate>,
-  '#/exam/listening': () => <Gate track="exam"><Listening /></Gate>,
   '#/exam/writing': () => <Gate track="exam"><Writing /></Gate>,
   '#/exam/speaking': () => <Gate track="exam"><Speaking /></Gate>,
   '#/grammar': () => <Grammar />,
   '#/mocks': () => <Mocks />,
-  '#/mocks/reading': () => <Gate track="mocks"><Reading /></Gate>,
-  '#/mocks/listening': () => <Gate track="mocks"><Listening /></Gate>,
   '#/games': () => <GamesHub />,
   '#/games/rush': () => <WordRush />,
   '#/games/pairs': () => <Pairs />,
@@ -57,10 +56,23 @@ const nav: [string, string][] = [
 
 const isActive = (hash: string, base: string): boolean => (base === '#/' ? hash === '#/' || hash === '' : hash === base || hash.startsWith(base + '/'));
 
+/** #/exam|mocks/reading|listening[/id] yo'nalishi: ro'yxat yoki bitta test, tegishli obuna bilan */
+function testRoute(hash: string): ReactNode | null {
+  const m = hash.match(/^#\/(exam|mocks)\/(reading|listening)(?:\/([\w-]+))?$/);
+  if (!m) return null;
+  const [, track, kind, id] = m as [string, 'exam' | 'mocks', 'reading' | 'listening', string | undefined];
+  let body: ReactNode;
+  if (!id) body = <TestList track={track} kind={kind} />;
+  else if (kind === 'reading') { const t = readingTests.find((x) => x.id === id); body = t ? <Reading test={t} /> : <TestList track={track} kind={kind} />; }
+  else { const t = listeningTests.find((x) => x.id === id); body = t ? <Listening test={t} /> : <TestList track={track} kind={kind} />; }
+  return <Gate track={track}>{body}</Gate>;
+}
+
 export default function App() {
   const hash = useHash();
   const duelCode = hash.match(/^#\/duel\/([A-Za-z0-9]{4,8})$/)?.[1];
-  const page = duelCode ? <DuelRoom key={duelCode} code={duelCode.toUpperCase()} /> : (routes[hash] ?? routes['#/'])();
+  const tr = testRoute(hash);
+  const page = tr ? tr : duelCode ? <DuelRoom key={duelCode} code={duelCode.toUpperCase()} /> : (routes[hash] ?? routes['#/'])();
   return (
     <>
       <header className="top">

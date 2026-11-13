@@ -1,8 +1,11 @@
 import { useProfile } from '../lib/store';
 
+import { listeningTests } from '../content/listeningTests';
+import { readingTests } from '../content/readingTests';
+
 const mocks = [
-  { href: '#/mocks/reading', icon: '📖', title: 'IELTS Reading mini-mock 1', meta: '13 savol · 15 daqiqa' },
-  { href: '#/mocks/listening', icon: '🎧', title: 'IELTS Listening mini-mock 1', meta: '10 savol · 8 daqiqa' },
+  { href: '#/mocks/reading', icon: '📖', title: 'IELTS Reading mini-mocklar', meta: `${readingTests.length} ta test · 13 savoldan` },
+  { href: '#/mocks/listening', icon: '🎧', title: 'IELTS Listening mini-mocklar', meta: `${listeningTests.length} ta test · 10 savoldan` },
 ];
 
 export default function Mocks() {

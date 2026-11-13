@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { MockTest } from '../components/MockTest';
-import { listening1 } from '../content/listening1';
+import type { ListeningTest } from '../content/types';
 import { LISTENING_TABLE } from '../lib/band';
 
 function useVoices(): SpeechSynthesisVoice[] {
@@ -15,7 +15,7 @@ function useVoices(): SpeechSynthesisVoice[] {
   return voices;
 }
 
-function Player({ submitted }: { submitted: boolean }) {
+function Player({ submitted, test }: { submitted: boolean; test: ListeningTest }) {
   const voices = useVoices();
   const [playing, setPlaying] = useState(false);
   const [plays, setPlays] = useState(0);
@@ -32,7 +32,7 @@ function Player({ submitted }: { submitted: boolean }) {
     setPlays((n) => n + 1);
     const vA = voices[0];
     const vB = voices.find((v) => v !== vA) ?? vA;
-    listening1.script.forEach((line, i, arr) => {
+    test.script.forEach((line, i, arr) => {
       const u = new SpeechSynthesisUtterance(line.text);
       const v = line.speaker === 'A' ? vA : vB;
       if (v) { u.voice = v; u.lang = v.lang; } else u.lang = 'en-GB';
@@ -49,7 +49,7 @@ function Player({ submitted }: { submitted: boolean }) {
   const locked = !practice && plays >= 1 && !playing;
   return (
     <div>
-      <p><b>{listening1.context}</b></p>
+      <p><b>{test.context}</b></p>
       {!supported && <p className="notice">Brauzeringiz ovoz sintezini qo‘llamaydi. Transkriptni quyida ko‘ring.</p>}
       {supported && voices.length === 0 && <p className="notice">Inglizcha ovoz topilmadi. Telefon/kompyuter sozlamalarida ingliz ovozini yoqing yoki mashq rejimida transkriptdan foydalaning.</p>}
       <div className="row">
@@ -61,8 +61,8 @@ function Player({ submitted }: { submitted: boolean }) {
       {(submitted || practice) && (
         <details open={submitted}>
           <summary>Transkript</summary>
-          {listening1.script.map((l, i) => (
-            <p key={i}><b>{l.speaker === 'A' ? 'Anna' : 'Daniel'}:</b> {l.text}</p>
+          {test.script.map((l, i) => (
+            <p key={i}><b>{l.speaker === 'A' ? test.names.A : test.names.B}:</b> {l.text}</p>
           ))}
         </details>
       )}
@@ -70,18 +70,18 @@ function Player({ submitted }: { submitted: boolean }) {
   );
 }
 
-export default function Listening() {
-  const t = listening1;
+export default function Listening({ test: t }: { test: ListeningTest }) {
   return (
     <MockTest
+      key={t.id}
       kind="listening"
       title={t.title}
       minutes={t.minutes}
       groups={t.groups}
       questions={t.questions}
       table={LISTENING_TABLE}
-      intro={<p>Suhbatni tinglab 10 ta savolga javob bering. Audio brauzerning ovoz sintezi bilan o‘qiladi (internet audio fayl emas), tezlik va ovoz qurilmaga bog‘liq.</p>}
-      left={({ submitted }) => <Player submitted={submitted} />}
+      intro={<p>Audioni tinglab {t.questions.length} ta savolga javob bering. Audio brauzerning ovoz sintezi bilan o‘qiladi (tayyor audio fayl emas), tezlik va ovoz qurilmaga bog‘liq.</p>}
+      left={({ submitted }) => <Player submitted={submitted} test={t} />}
     />
   );
 }
