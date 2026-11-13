@@ -3,6 +3,7 @@ import type { Question } from '../content/types';
 import { gradeAll, type Answer } from '../lib/grade';
 import { scaledBand } from '../lib/band';
 import { saveResult } from '../lib/storage';
+import { addXp } from '../lib/store';
 import { fmt, useCountdown } from './hooks';
 import { QuestionList } from './QuestionList';
 
@@ -28,6 +29,7 @@ export function MockTest({ kind, title, minutes, groups, questions, table, left,
     setSubmitted(true);
     const correct = gradeAll(questions, answers);
     saveResult({ kind, title, correct, total: questions.length, band: scaledBand(correct, questions.length, table) });
+    addXp(correct * 5 + (correct / questions.length >= 0.8 ? 20 : 0));
   };
 
   const [left_, reset] = useCountdown(minutes * 60, started && !submitted, submit);

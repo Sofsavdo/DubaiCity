@@ -7,7 +7,7 @@
     "dev": "vite --host 0.0.0.0 --port 3100",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 0.0.0.0 --port 3100",
-    "test": "tsx src/lib/band.test.ts && tsx src/lib/grade.test.ts"
+    "test": "tsx src/lib/band.test.ts && tsx src/lib/grade.test.ts && tsx src/lib/game.test.ts && tsx src/lib/vocabGame.test.ts"
   },
   "dependencies": {
     "react": "18.3.1",

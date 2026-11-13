@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { part1Topics, part2Cards } from '../content/speaking';
 import { fmt, useCountdown } from '../components/hooks';
+import { addXp } from '../lib/store';
 
 const pick = <T,>(a: T[], not?: T): T => {
   let x = a[Math.floor(Math.random() * a.length)];
@@ -25,6 +26,7 @@ function Recorder() {
       m.onstop = () => {
         stream.getTracks().forEach((t) => t.stop());
         setUrl(URL.createObjectURL(new Blob(chunks.current, { type: m.mimeType })));
+        addXp(10);
       };
       m.start();
       mr.current = m;

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { writingPrompts } from '../content/writing';
 import { analyzeWriting, type WritingReport } from '../lib/writingCheck';
 import { fmt, useCountdown } from '../components/hooks';
+import { addXp } from '../lib/store';
 
 export default function Writing() {
   const [id, setId] = useState(writingPrompts[2].id);
@@ -41,7 +42,7 @@ export default function Writing() {
         <textarea className="essay" value={text} onChange={(e) => setText(e.target.value)} placeholder="Javobingizni inglizcha yozing..." />
         <div className="row" style={{ justifyContent: 'space-between' }}>
           <span className={words >= p.minWords ? 'ok' : 'pill'}>{words} so‘z</span>
-          <button className="btn primary" onClick={() => setReport(analyzeWriting(text, p.minWords))} disabled={words === 0}>Oddiy tekshiruv</button>
+          <button className="btn primary" onClick={() => { const r = analyzeWriting(text, p.minWords); setReport(r); if (r.words >= p.minWords) addXp(20); }} disabled={words === 0}>Oddiy tekshiruv</button>
         </div>
         <p className="notice" style={{ marginTop: 12 }}>
           Bu <b>AI baholash emas</b>: faqat so‘zlar soni, abzatslar, bog‘lovchilar va takrorlarni tekshiradi, band bermaydi. AI bilan batafsil baho (4 mezon bo‘yicha) keyingi versiyada, AI xizmati ulanganda qo‘shiladi.

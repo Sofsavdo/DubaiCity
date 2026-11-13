@@ -1,7 +1,7 @@
-# Bandly: IELTS tayyorgarlik platformasi (MVP 0.1)
+# Bandly: IELTS / SAT / CEFR tayyorgarlik platformasi (MVP 0.2)
 
-Vaqtinchalik brend nomi: **Bandly** (faqat `src/brand.ts` da; almashtirish uchun shu fayl yetarli).
-"IELTS" so'zi brend nomida ishlatilmaydi (savdo belgisi); materiallar rasmiy emasligi haqidagi ogohlantirish `BRAND.disclaimer` da.
+Vaqtinchalik brend nomi: **Bandly** (`src/brand.ts`). "IELTS" so'zi brend nomida ishlatilmaydi (savdo belgisi);
+rasmiy emasligi haqidagi ogohlantirish `BRAND.disclaimer` da.
 
 ## Ishga tushirish
 
@@ -9,40 +9,51 @@ Vaqtinchalik brend nomi: **Bandly** (faqat `src/brand.ts` da; almashtirish uchun
 cd bandly
 npm install
 npm run dev      # http://localhost:3100
-npm test         # ball hisoblash va baholash mantiqi testlari
-npm run build    # statik fayllar: dist/ (istalgan hostingga qo'yiladi)
+npm test         # ball hisoblash, baholash, o'yin/XP, takrorlash tizimi, lug'at yaxlitligi
+npm run build    # statik fayllar: dist/
 ```
 
-## Hozir nima bor (AI kalitisiz ishlaydi)
+## Mahsulot tuzilishi: 3 ta mustaqil obuna
 
-| Bo'lim | Holat |
-|---|---|
-| Reading mock | 1 matn, 13 savol (T/F/NG, bo'sh joy, test), taymer, avtomatik baholash, dalil izohlari |
-| Listening mock | 1 suhbat, 10 savol; audio brauzer ovoz sintezi (TTS) bilan; transkript |
-| Grammar | 25 savol, 5 mavzu, o'zbekcha tushuntirish |
-| Writing | 2 ta Task 1 va 5 ta Task 2 mavzu, taymer, so'z hisoblagich, **qoidaviy** tekshiruv (AI emas) |
-| Speaking | Part 1/2/3 savollari, Part 2 taymeri (1 daq. tayyorgarlik + 2 daq.), qurilmada ovoz yozish |
-| Asboblar | Umumiy band kalkulyatori (IELTS yaxlitlash qoidasi), to'g'ri javoblar → band |
-| Natijalarim | Natijalar `localStorage` da (faqat shu qurilmada) |
+| Yo'nalish | Tarkibi | Holat |
+|---|---|---|
+| **Imtihon tayyorgarligi** (`#/exam`) | IELTS: Reading, Listening, Writing, Speaking. SAT va CEFR | IELTS bor; SAT/CEFR "tez orada" |
+| **Grammar** (`#/grammar`) | 25 savol, 5 mavzu, o'zbekcha izoh, "Xatolarim" takrorlash | Bepul: faqat "Artikllar" |
+| **Mock testlar** (`#/mocks`) | Taymerli test, avtomatik baho, tahlil | 2 ta mini-mock (to'liq mocklar keyin) |
+
+Foydalanuvchi faqat kerakli yo'nalish uchun to'laydi. Istalgan obuna so'z o'yinlarini cheksiz qiladi;
+obunasiz kuniga 2 ta bepul o'yin (`FREE_GAMES_PER_DAY`, `src/config.ts`).
+
+**Muhim:** to'lov hali ulanmagan. Obuna holati **DEMO**: `localStorage` da saqlanadi va "Demo: yoqish" tugmasi bilan
+faqat shu qurilmada ochiladi. Narxlar (`src/config.ts`) **namunaviy**, oldindan sotuv sinovidan keyin belgilanadi.
+
+## O'yinlashtirish
+
+- **XP, daraja, kunlik maqsad, seriya (streak), yutuqlar** (`src/lib/game.ts`, sof funksiyalar, testlangan).
+- **Takrorlash tizimi (Leitner)** (`src/lib/srs.ts`): xato javob so'zni 0-qutiga qaytaradi, to'g'ri javob intervalni 1/3/7/14/30 kunga oshiradi.
+  O'yinlar har sessiyada muddati kelgan so'zlarni birinchi navbatda beradi, kamida 30% yangi so'z bilan.
+- **3 ta so'z o'yini** (50 ta IELTS so'zi, 5 mavzu): So'z poygasi (60 soniya, 3 jon, kombo), Juftlik, Imlo sinovi (eshitish tugmasi bilan).
+- **Mascot "Bandi"** (original SVG, 5 kayfiyat). **Qattiq rejim (18+)** o'zi yoqilganda xatoga hazil bilan javob beradi; haqorat yo'q.
+- Mock test, Grammar, Writing, Speaking tugaganda ham XP beriladi.
 
 ## Ma'lum cheklovlar
 
-- Mini-testlar 40 ballik shkalaga keltiriladi, shuning uchun band faqat taxminiy. 13 savoldan 13 tasi to'g'ri bo'lsa 9.0 chiqadi; haqiqiy 40 savollik testda bu boshqacha.
-- Listening audiosi qurilmadagi ingliz ovoziga bog'liq (ovoz yo'q bo'lsa transkript ko'rsatiladi). Keyin oldindan yaratilgan audio fayllar bilan almashtiriladi.
-- Hisoblar, serversiz saqlash va to'lov yo'q.
-- AI Writing/Speaking baholash yo'q (kalit kerak).
+- Kontent kichik: 1 Reading, 1 Listening, 25 Grammar, 50 so'z. Mini-test bandi 40 ballik shkalaga keltirilgan, faqat taxminiy.
+- Hisoblar, serverda saqlash, **do'stlar bilan duel va reyting jadvali** (backend kerak), to'lov yo'q.
+- AI Writing/Speaking baholash yo'q (kalit kerak); Writing tekshiruvi qoidaviy.
+- Listening audiosi qurilmadagi ingliz ovoziga bog'liq.
+- SAT va CEFR hali yo'q.
 
 ## Keyingi bosqichlar
 
-1. **Kontent:** har ko'nikma uchun 10 ta test (original, AI yordamida yozilib, odam tekshirgan). Rasmiy Cambridge/IELTS materiallarini nusxalamaslik.
-2. **Backend** (Node + Postgres): hisoblar, natijalar, obuna.
-3. **AI provayder qatlami:** Writing va Speaking baholash uchun bitta interfeys (kalit `.env` da, hech qachon chatga yozilmaydi). Nutq → matn → LLM → ovoz. Xarajat hisoblagichi.
-4. **To'lov:** Payme/Click/Uzum (so'm), obuna.
-5. **O'zbekcha SEO qo'llanmalar** va bepul asboblar sahifalari.
-6. **Kreator/affiliate** dasturi (sotuvdan komissiya).
+1. **Kontent:** har ko'nikmaga 10 ta test, 500+ so'z, 100+ grammar savol (original, dalil izohlari bilan).
+2. **Backend** (hisoblar, obuna, reyting jadvali, duellar, bir nechta qurilmada sinxron).
+3. **To'lov** (Payme/Click/Uzum) va haqiqiy obuna tekshiruvi (hozirgi demo o'rniga serverdagi huquqlar).
+4. **AI qatlami:** Writing va Speaking baholash (kalit `.env` da, hech qachon chatga yozilmaydi), xarajat hisoblagichi.
+5. **SAT va CEFR** yo'nalishlari; o'zbekcha SEO qo'llanmalar; kreator/affiliate dasturi.
 
 ## Kontent qoidalari
 
-- Faqat original matnlar. Mashq ma'lumotlari xayoliy bo'lishi mumkin.
-- Har bir javob uchun `evidence` (dalil) yoziladi.
-- Band ko'rsatilganda doim "taxminiy" belgisi bo'lishi shart.
+- Faqat original matnlar (xayoliy ma'lumotlar mumkin); rasmiy Cambridge/IELTS materiallarini nusxalamang.
+- Har bir javob uchun `evidence` (dalil). Band doim "taxminiy" deb ko'rsatiladi.
+- Lug'atda o'zbekcha ma'nolar takrorlanmasin (variantlar adashmasligi uchun, testda tekshiriladi).
