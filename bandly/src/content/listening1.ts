@@ -1,0 +1,45 @@
+import type { ListeningTest } from './types';
+
+// Original mashq skripti. Audio brauzerning ovoz sintezi bilan o'qiladi.
+export const listening1: ListeningTest = {
+  id: 'listening-1',
+  title: 'Listening mini-test 1: Joining a fitness centre',
+  minutes: 8,
+  context: 'Riverside Fitness Centre — New Member Form. Qo‘ng‘iroq: yangi a’zo va resepshn xodimi.',
+  script: [
+    { speaker: 'A', text: 'Good morning, Riverside Fitness Centre, Anna speaking. How can I help you?' },
+    { speaker: 'B', text: "Hello, I'd like to ask about joining the centre." },
+    { speaker: 'A', text: "Of course. Let me take your details first. What's your full name?" },
+    { speaker: 'B', text: 'Daniel Harper.' },
+    { speaker: 'A', text: 'Could you spell your surname for me?' },
+    { speaker: 'B', text: 'Sure. H, A, R, P, E, R.' },
+    { speaker: 'A', text: "Thank you. And what's your phone number?" },
+    { speaker: 'B', text: "It's oh seven seven four nine, three eight one, two six five." },
+    { speaker: 'A', text: 'Which membership are you interested in? We have standard, which includes the gym and the pool, and premium, which also includes classes.' },
+    { speaker: 'B', text: "I think premium. I'd like to try the yoga class on Tuesday evenings, and I don't really mind about the pool." },
+    { speaker: 'A', text: "Good choice. Premium is forty-five pounds a month. There's a joining fee of twenty-five pounds, but it's reduced to twenty this month." },
+    { speaker: 'B', text: "That's fine. Can I start next Monday? That's the fourteenth of April, I think." },
+    { speaker: 'A', text: "Yes, the fourteenth. Now, do you have any medical conditions we should know about?" },
+    { speaker: 'B', text: 'Yes, I have a weak knee from playing football, so I have to be careful.' },
+    { speaker: 'A', text: "I'll make a note of that. Your free induction session is included. Would Wednesday at six o'clock suit you?" },
+    { speaker: 'B', text: 'Yes, Wednesday is perfect.' },
+    { speaker: 'A', text: "Great. Please bring photo identification, such as a passport or driving licence. Towels are provided, so you don't need to bring one." },
+    { speaker: 'B', text: 'Thank you very much. See you then.' },
+  ],
+  groups: [
+    { instruction: 'Questions 1–8: Complete the form. Write NO MORE THAN TWO WORDS AND/OR A NUMBER for each answer.', questionIds: [1, 2, 3, 4, 5, 6, 7, 8] },
+    { instruction: 'Questions 9–10: Choose the correct letter.', questionIds: [9, 10] },
+  ],
+  questions: [
+    { id: 1, type: 'fill', text: 'Surname: ______', answers: ['harper'], evidence: 'Daniel Harper, spelled H-A-R-P-E-R.' },
+    { id: 2, type: 'fill', text: 'Phone number: ______', answers: ['07749381265'], evidence: '"oh seven seven four nine, three eight one, two six five".' },
+    { id: 3, type: 'fill', text: 'Membership type: ______', answers: ['premium'], evidence: '"I think premium."' },
+    { id: 4, type: 'fill', text: 'Monthly fee: £ ______', answers: ['45'], evidence: '"forty-five pounds a month".' },
+    { id: 5, type: 'fill', text: 'Joining fee this month: £ ______', answers: ['20'], evidence: 'Twenty-five is the normal fee; this month it is reduced to twenty.' },
+    { id: 6, type: 'fill', text: 'Start date: ______ April', answers: ['14', '14th', 'fourteenth'], evidence: '"the fourteenth of April".' },
+    { id: 7, type: 'fill', text: 'Medical note: weak ______', answers: ['knee'], evidence: '"a weak knee from playing football".' },
+    { id: 8, type: 'fill', text: 'Induction session: ______ at 6 pm', answers: ['wednesday'], evidence: '"Wednesday at six o’clock".' },
+    { id: 9, type: 'mcq', text: 'Why does Daniel choose premium membership?', options: ['He wants to use the pool', 'He wants to attend classes', 'It is cheaper'], answer: 1, evidence: 'He wants to try the yoga class; he does not mind about the pool.' },
+    { id: 10, type: 'mcq', text: 'What must Daniel bring to the induction session?', options: ['A towel', 'Photo identification', 'A doctor’s letter'], answer: 1, evidence: '"Please bring photo identification". Towels are provided.' },
+  ],
+};
