@@ -37,6 +37,10 @@ faqat shu qurilmada ochiladi. Narxlar (`src/config.ts`) **namunaviy**, oldindan 
 - **Mascot "Bandi"** (original SVG, 5 kayfiyat). **Qattiq rejim (18+)** o'zi yoqilganda xatoga hazil bilan javob beradi; haqorat yo'q.
 - Mock test, Grammar, Writing, Speaking tugaganda ham XP beriladi.
 - **Duel** (`#/duel`): havola/kod orqali do'st bilan bir xil 10 ta so'zda raqobat (har savolga 12 soniya, tezlik ball beradi, ball teng bo'lsa tezroq tugatgan yutadi). Server natijani tekshiradi (ball va vaqt chegaralari), duel 48 soat amal qiladi, 8 tagacha o'yinchi.
+- **Speaking: jonli ovozli suhbat** (`#/exam/speaking`): ustoz Bandi IELTS tartibida (tanishuv, Part 1, Part 2 tayyorgarlik+monolog, Part 3) gapiradi, siz ovoz bilan javob berasiz.
+  Ovoz **yozib olinmaydi va yuborilmaydi**: brauzer nutqni tanish (SpeechRecognition) va ovoz sintezi (speechSynthesis) ishlatiladi
+  (Chrome/Edge/Safari; nutqni tanishni brauzer xizmati bajaradi). Nutqni tanish yo'q brauzerlarda yozma rejim.
+  Ustozning "miyasi" hozircha qoidaviy (`src/lib/examiner.ts`); AI ulanganda shu interfeys almashtiriladi. Hisobot faqat tezlik, to'xtashlar va so'z xilma-xilligi bo'yicha taxminiy.
 - **Reyting** (`#/league`): laqab bilan qo'shilish (parolsiz), haftalik va umumiy jadval. Server XP o'sishini cheklaydi
   (bir so'rovda 400, soatiga 1500), lekin XP hozircha mijoz tomonidan yuboriladi, shuning uchun to'liq aldovdan himoya emas.
   Keyingi qadam: XP ni serverda o'yin hodisalaridan hisoblash.

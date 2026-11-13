@@ -1,6 +1,6 @@
 export interface ResultRecord {
   id: string;
-  kind: 'reading' | 'listening' | 'grammar';
+  kind: 'reading' | 'listening' | 'grammar' | 'speaking';
   title: string;
   correct: number;
   total: number;

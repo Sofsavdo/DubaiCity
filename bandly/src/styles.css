@@ -87,3 +87,7 @@ footer { color: var(--muted); font-size: 12px; padding: 24px 16px 48px; }
 .plan { display: flex; flex-direction: column; gap: 6px; } .price { font-size: 26px; font-weight: 800; }
 .plan ul { margin: 6px 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
 .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.mascot-wrap { position: relative; display: inline-block; border-radius: 50%; }
+.mascot-wrap.listening::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 3px solid var(--ok); animation: pulse 1.2s ease-out infinite; }
+.mascot-wrap.speaking::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 3px solid var(--brand); animation: pulse 1s ease-out infinite; }
+@keyframes pulse { from { transform: scale(.92); opacity: .9; } to { transform: scale(1.12); opacity: 0; } }
