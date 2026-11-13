@@ -1,9 +1,14 @@
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { ApiError, createDb, createDuel, getDuel, join, leaderboard, submitDuel, sync, useAi } from './db';
+import { fileURLToPath } from 'node:url';
+import { serveStatic } from './static';
 import { AiError, configFromEnv, evaluateSpeaking, evaluateWriting, followUp, followUpPersona } from './ai';
 
 const PORT = Number(process.env.PORT ?? 3101);
 const ai = configFromEnv();
+const HOST = process.env.HOST ?? (process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1');
+const DIST = fileURLToPath(new URL('../dist', import.meta.url));
+const TRUST_PROXY = process.env.TRUST_PROXY === '1';
 const db = createDb(process.env.DB_PATH ?? new URL('./data.sqlite', import.meta.url).pathname);
 
 // Oddiy so'rov tezligi cheklovi (IP bo'yicha, daqiqada 120 ta)
@@ -38,7 +43,9 @@ function readJson(req: IncomingMessage, limit = 2048): Promise<Record<string, un
 
 createServer(async (req, res) => {
   try {
-    const ip = req.socket.remoteAddress ?? 'x';
+    // Proksi (Railway va boshqalar) orqasida haqiqiy IP birinchi X-Forwarded-For qiymatida
+    const fwd = TRUST_PROXY ? String(req.headers['x-forwarded-for'] ?? '').split(',')[0].trim() : '';
+    const ip = fwd || (req.socket.remoteAddress ?? 'x');
     if (limited(ip)) return send(res, 429, { error: 'Juda ko‘p so‘rov' });
     const url = new URL(req.url ?? '/', 'http://x');
     if (req.method === 'POST' && url.pathname === '/api/join') {
@@ -90,10 +97,11 @@ createServer(async (req, res) => {
       return send(res, 404, { error: 'Topilmadi' });
     }
     if (url.pathname === '/api/health') return send(res, 200, { ok: true });
+    if (!url.pathname.startsWith('/api/') && serveStatic(req, res, DIST)) return;
     return send(res, 404, { error: 'Topilmadi' });
   } catch (e) {
     if (e instanceof ApiError || e instanceof AiError) return send(res, e.status, { error: e.message });
     console.error(e);
     return send(res, 500, { error: 'Server xatosi' });
   }
-}).listen(PORT, '127.0.0.1', () => console.log(`Bandly API: http://127.0.0.1:${PORT} (AI: ${ai.provider})`));
+}).listen(PORT, HOST, () => console.log(`Bandly: http://${HOST}:${PORT} (AI: ${ai.provider})`));
