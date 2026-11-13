@@ -7,7 +7,7 @@ assert.equal(countFillers('I like summer'), 0); // "like" to'ldiruvchi emas
 
 let seed = 7;
 const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
-const ex = new Examiner(rnd, false);
+const ex = new Examiner(rnd, 0);
 
 let s = ex.start();
 assert.equal(s.wait, 'answer');
@@ -66,13 +66,18 @@ assert.ok(sum.wpm !== null && sum.wpm > 0);
 assert.equal(summarize(ex.turns, false).wpm, null, 'yozma rejimda tezlik hisoblanmaydi');
 const weak = summarize([{ part: 1, q: 'q', text: 'um yes um uh', words: 4, seconds: 5, fillers: 3, latencyMs: 6000 }], true);
 assert.ok(weak.fluencyBand <= 4.5 && weak.notes.length > 0);
-// Qattiq rejim hazili
-const h = new Examiner(rnd, true); h.start(); h.answer('Ali', 1, 1);
-const hs = h.answer('Um, uh, um, er, well', 3, 1000);
-const hs2 = h.answer('Um, uh, um, er, well it is um fine', 3, 1000);
-assert.ok(hs.say && hs2.remark && /ums/.test(hs2.remark));
+// Shaxsiyat: 2-darajada to'ldiruvchilar va xatolar uchun reaksiya, 0-darajada yumshoq maslahat
+const h = new Examiner(rnd, 2); h.start(); h.answer('Ali', 1, 1);
+const hs = h.answer('Um, uh, um, er, well it is um fine because I am agree with it', 3, 1000);
+assert.ok(hs.reaction && hs.reaction.emotion !== undefined, 'xato uchun reaksiya');
+assert.ok(hs.reaction!.uz.includes('I am agree'), 'reaksiya xatoni ko‘rsatadi');
+const soft = new Examiner(rnd, 0); soft.start(); soft.answer('Ali', 1, 1);
+const ss = soft.answer('I am agree with this idea because it is good for everyone in the city', 5, 900);
+assert.ok(ss.reaction && /Kichik tuzatish/.test(ss.reaction.uz), 'yumshoq maslahat');
+const calm = new Examiner(rnd, 1); calm.start(); calm.answer('Ali', 1, 1);
+assert.equal(calm.answer('I like my city because it is warm and friendly and full of life', 5, 900).reaction, undefined, 'toza oddiy javobga reaksiya yo‘q');
 // AI savoli skriptdagi savolni almashtiradi
-const ai = new Examiner(rnd, false); ai.start(); ai.answer('Ali', 1, 1);
+const ai = new Examiner(rnd, 0); ai.start(); ai.answer('Ali', 1, 1);
 ai.answer('I live in a big city and I love it because it is full of life and people', 5, 500);
 ai.overrideQuestion('What do you enjoy most about it?');
 ai.answer('I enjoy the food and the markets, they are colourful and cheap and always busy', 5, 500);

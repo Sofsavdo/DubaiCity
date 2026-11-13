@@ -5,9 +5,12 @@ import { getAccount } from '../lib/account';
 import { aiEnabled, aiEvaluateSpeaking, aiFollowup, type Evaluation } from '../lib/ai';
 import { Mascot, type Mood } from '../components/Mascot';
 import { Examiner, summarize, type Summary, type TurnStat } from '../lib/examiner';
-import { listenTurn, say, stopSpeaking, sttSupported, type Signal, type TurnResult } from '../lib/speech';
+import { hasVoice, listenTurn, say, sayReaction, stopSpeaking, sttSupported, type Signal, type TurnResult } from '../lib/speech';
+import type { Reaction } from '../content/roasts';
+import { PersonaPicker } from '../components/PersonaPicker';
+import { detectSlip } from '../lib/roast';
 import { saveResult } from '../lib/storage';
-import { addXp, useProfile } from '../lib/store';
+import { addXp, personaLevel, useProfile } from '../lib/store';
 
 type Stage = 'intro' | 'live' | 'report';
 type Status = 'speaking' | 'listening' | 'prep' | 'thinking';
@@ -19,7 +22,9 @@ export default function Speaking() {
   const [stage, setStage] = useState<Stage>('intro');
   const [textMode, setTextMode] = useState(!supported);
   const [caption, setCaption] = useState('');
-  const [remark, setRemark] = useState('');
+  const [reaction, setReaction] = useState<Reaction | null>(null);
+  const [flash, setFlash] = useState(false);
+  const flashed = useRef(false);
   const [status, setStatus] = useState<Status>('thinking');
   const [part, setPart] = useState(0);
   const [interim, setInterim] = useState('');
@@ -60,7 +65,7 @@ export default function Speaking() {
     try {
       if (!textModeRef.current) {
         try {
-          return await listenTurn({ silenceMs: mono ? 6000 : 2300, maxMs: mono ? 125_000 : 60_000, noSpeechMs: 12_000, onInterim: setInterim, signal: sig.current, endRef });
+          return await listenTurn({ silenceMs: mono ? 6000 : 2300, maxMs: mono ? 125_000 : 60_000, noSpeechMs: 12_000, onInterim: (t) => { setInterim(t); if (personaLevel() >= 1 && !flashed.current && detectSlip(t)) { flashed.current = true; setFlash(true); } }, signal: sig.current, endRef });
         } catch (e) {
           setErr((e as Error).message + '. Yozma rejimga o‘tildi.');
           setTextMode(true); textModeRef.current = true; setTimed(false);
@@ -75,18 +80,19 @@ export default function Speaking() {
     const useAiNow = aiOn && !!getAccount();
     let aiAsked = 0;
     sig.current = { cancelled: false };
-    const ex = new Examiner(Math.random, profile.hardMode);
+    const ex = new Examiner(Math.random, personaLevel(profile));
     setStage('live');
     let step = ex.start();
     while (!sig.current.cancelled) {
-      setPart(step.part); setInterim(''); setTyped(''); setElapsed(0);
-      if (step.remark) { setRemark(step.remark); setStatus('speaking'); await say(step.remark, sig.current); setRemark(''); }
+      setPart(step.part); setInterim(''); setTyped(''); setElapsed(0); setFlash(false); flashed.current = false;
+      if (step.reaction) { setReaction(step.reaction); setStatus('speaking'); await sayReaction(step.reaction, sig.current); if (sig.current.cancelled) return; }
       setCaption(step.say); setStatus('speaking');
       await say(step.say, sig.current);
       if (sig.current.cancelled) return;
       if (step.wait === 'end') break;
       if (step.wait === 'prep') { await prep(); if (sig.current.cancelled) return; step = ex.beginMonologue(); continue; }
       setStatus('listening');
+      setReaction(null);
       const r = await getTurn(step.wait === 'monologue');
       if (sig.current.cancelled) return;
       setStatus('thinking');
@@ -94,10 +100,12 @@ export default function Speaking() {
       step = ex.answer(r.text, textModeRef.current ? 0 : r.seconds, r.latencyMs);
       // AI: yaxshi javobdan keyin skriptdagi savol o'rniga javobga bog'liq savol (xatoda skript davom etadi)
       const last = ex.turns.at(-1);
-      if (useAiNow && aiAsked < 3 && ex.turns.length > before && last && last.words >= 8 && step.wait === 'answer' && (step.part === 1 || step.part === 3)) {
-        const q = await aiFollowup(last.q, last.text);
+      if (useAiNow && aiAsked < 4 && ex.turns.length > before && last && last.words >= 8 && step.wait === 'answer' && (step.part === 1 || step.part === 3)) {
+        const r2 = await aiFollowup(last.q, last.text, personaLevel());
         if (sig.current.cancelled) return;
-        if (q) { aiAsked += 1; ex.overrideQuestion(q); step = { ...step, say: q }; }
+        if (r2.question) { aiAsked += 1; ex.overrideQuestion(r2.question); step = { ...step, say: r2.question }; }
+        // Aniq grammatik xato topilgan bo'lsa qoidaviy tuzatish qoladi, aks holda AI reaksiyasi
+        if (r2.reaction && !(step.reaction && detectSlip(last.text))) step = { ...step, reaction: r2.reaction };
       }
     }
     if (sig.current.cancelled) return;
@@ -127,7 +135,8 @@ export default function Speaking() {
             {aiOn && !acct && <JoinForm onJoined={setAcct} text="AI bilan suhbat va baho uchun laqab tanlang (parol shart emas). Laqabsiz ham qoidaviy ustoz bilan davom etish mumkin." />}
             {aiOn && acct && <p className="notice">AI yoqilgan: suhbatning <b>matni</b> (ovoz emas) javobingizga bog‘liq savol berish va baholash uchun AI provayderiga yuboriladi.</p>}
             <label><input type="checkbox" checked={textMode} disabled={!supported} onChange={(e) => setTextMode(e.target.checked)} /> Mikrofonsiz rejim (yozib javob berish)</label>
-            {profile.hardMode && <p className="evidence">Qattiq rejim yoqilgan: ustoz to‘ldiruvchi tovushlar va qisqa javoblarga hazil bilan e’tiroz bildiradi.</p>}
+            <PersonaPicker />
+            {personaLevel(profile) >= 1 && !hasVoice('uz') && <p className="evidence">Qurilmangizda o‘zbekcha ovoz topilmadi: ustoz reaksiyalarni inglizcha ovozda aytadi, o‘zbekcha matn ekranda ko‘rinadi.</p>}
             <div style={{ marginTop: 10 }}><button className="btn primary" onClick={() => void run()}>Suhbatni boshlash</button></div>
           </div>
         </div>
@@ -181,7 +190,8 @@ export default function Speaking() {
     );
   }
 
-  const mood: Mood = remark ? 'angry' : status === 'speaking' ? 'happy' : status === 'listening' ? 'idle' : 'think';
+  const EMO: Record<Reaction['emotion'], Mood> = { angry: 'angry', laugh: 'laugh', disappointed: 'sad', impressed: 'happy', happy: 'happy' };
+  const mood: Mood = reaction && status === 'speaking' ? EMO[reaction.emotion] : flash && status === 'listening' ? 'angry' : status === 'speaking' ? 'happy' : status === 'listening' ? 'idle' : 'think';
   return (
     <div>
       <div className="card">
@@ -193,7 +203,7 @@ export default function Speaking() {
         <div className="hero" style={{ margin: '12px 0' }}>
           <div className={`mascot-wrap ${status}`}><Mascot mood={mood} size={110} /></div>
           <div style={{ flex: 1 }}>
-            {remark && <div className="bubble" style={{ marginBottom: 8 }}>{remark}</div>}
+            {reaction && <div className="bubble" style={{ marginBottom: 8 }}><b>{reaction.uz}</b><div className="evidence">{reaction.en}</div></div>}
             <div className="bubble">{caption}</div>
           </div>
         </div>

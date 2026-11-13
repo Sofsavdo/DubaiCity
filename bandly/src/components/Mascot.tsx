@@ -1,4 +1,4 @@
-export type Mood = 'idle' | 'happy' | 'sad' | 'angry' | 'think';
+export type Mood = 'idle' | 'happy' | 'sad' | 'angry' | 'think' | 'laugh';
 
 /** Bandi: sariq yuz, qizil "band" (bosh bog'ichi). Original personaj. */
 export function Mascot({ mood = 'idle', size = 96 }: { mood?: Mood; size?: number }) {
@@ -10,7 +10,15 @@ export function Mascot({ mood = 'idle', size = 96 }: { mood?: Mood; size?: numbe
       <path d="M17 52 Q60 32 103 52 L103 64 Q60 44 17 64 Z" fill="#ff4d3d" stroke={eye} strokeWidth="2.5" />
       <path d="M100 56 L116 48 L112 62 Z" fill="#ff4d3d" stroke={eye} strokeWidth="2" />
       <path d="M100 60 L117 66 L108 74 Z" fill="#e63a2b" stroke={eye} strokeWidth="2" />
-      {mood === 'happy' ? (
+      {mood === 'laugh' ? (
+        <>
+          <path d="M34 78 Q44 64 54 78" stroke={eye} strokeWidth="4" fill="none" strokeLinecap="round" />
+          <path d="M66 78 Q76 64 86 78" stroke={eye} strokeWidth="4" fill="none" strokeLinecap="round" />
+          <path d="M38 86 Q60 116 82 86 Z" fill="#8b1d1d" stroke={eye} strokeWidth="2.5" strokeLinejoin="round" />
+          <path d="M48 92 Q60 100 72 92" stroke="#ff9aa0" strokeWidth="5" fill="none" strokeLinecap="round" />
+          <path className="tear" d="M30 84 Q26 94 32 98 M90 84 Q94 94 88 98" stroke="#4aa8ff" strokeWidth="3.5" fill="none" strokeLinecap="round" />
+        </>
+      ) : mood === 'happy' ? (
         <>
           <path d="M36 76 Q44 66 52 76" stroke={eye} strokeWidth="3.5" fill="none" strokeLinecap="round" />
           <path d="M68 76 Q76 66 84 76" stroke={eye} strokeWidth="3.5" fill="none" strokeLinecap="round" />

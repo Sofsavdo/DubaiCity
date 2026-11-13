@@ -34,7 +34,7 @@ faqat shu qurilmada ochiladi. Narxlar (`src/config.ts`) **namunaviy**, oldindan 
 - **Takrorlash tizimi (Leitner)** (`src/lib/srs.ts`): xato javob so'zni 0-qutiga qaytaradi, to'g'ri javob intervalni 1/3/7/14/30 kunga oshiradi.
   O'yinlar har sessiyada muddati kelgan so'zlarni birinchi navbatda beradi, kamida 30% yangi so'z bilan.
 - **3 ta so'z o'yini** (152 ta IELTS so'zi, 14 mavzu): So'z poygasi (60 soniya, 3 jon, kombo), Juftlik, Imlo sinovi (eshitish tugmasi bilan).
-- **Mascot "Bandi"** (original SVG, 5 kayfiyat). **Qattiq rejim (18+)** o'zi yoqilganda xatoga hazil bilan javob beradi; haqorat yo'q.
+- **Mascot "Bandi"** (original SVG, 6 kayfiyat, jumladan kulgi).
 - Mock test, Grammar, Writing, Speaking tugaganda ham XP beriladi.
 - **Duel** (`#/duel`): havola/kod orqali do'st bilan bir xil 10 ta so'zda raqobat (har savolga 12 soniya, tezlik ball beradi, ball teng bo'lsa tezroq tugatgan yutadi). Server natijani tekshiradi (ball va vaqt chegaralari), duel 48 soat amal qiladi, 8 tagacha o'yinchi.
 - **Speaking: jonli ovozli suhbat** (`#/exam/speaking`): ustoz Bandi IELTS tartibida (tanishuv, Part 1, Part 2 tayyorgarlik+monolog, Part 3) gapiradi, siz ovoz bilan javob berasiz.
@@ -44,6 +44,16 @@ faqat shu qurilmada ochiladi. Narxlar (`src/config.ts`) **namunaviy**, oldindan 
 - **Reyting** (`#/league`): laqab bilan qo'shilish (parolsiz), haftalik va umumiy jadval. Server XP o'sishini cheklaydi
   (bir so'rovda 400, soatiga 1500), lekin XP hozircha mijoz tomonidan yuboriladi, shuning uchun to'liq aldovdan himoya emas.
   Keyingi qadam: XP ni serverda o'yin hodisalaridan hisoblash.
+
+## Ustoz shaxsiyati (Speaking)
+
+4 daraja (profilda yoki Speaking boshida tanlanadi): **0 Yumshoq**, **1 Hazil** (kinoya), **2 Qattiq (18+)**, **3 Jallod (18+)**.
+- 2 va 3 daraja faqat foydalanuvchi "18 yoshdan oshganman va qattiq so'kishni xohlayman" belgisini qo'ygandan keyin ishlaydi (o'z-o'zini tasdiqlash, yosh tekshiruvi emas).
+- **Internetsiz (AI'siz) ham ishlaydi:** o'zbek tilida so'zlashuvchilarga xos ~13 ta odatiy xatoni (`I am agree`, `he go`, `more better`, `peoples`...) qoidalar bilan topib, xato va to'g'ri variantni ko'rsatib kuladi/so'kadi; shuningdek to'ldiruvchi tovushlar ("um"), qisqa javob, sustlik va jimlikka reaksiya, yaxshi javobga maqtov. Mascot javob davomida ham xatoni sezib "g'azablanadi".
+- **Hissiyot ovozda:** brauzer ovozi faqat ohang, tezlik va balandlik bilan hissiyot beradi (g'azab past/tez, kulgi baland, hafsalasizlik past/sekin; kulgi uchun avval "ha-ha-ha"). **Haqiqiy kulgi va jonli hissiyot emas.** Qurilmada o'zbekcha ovoz bo'lsa reaksiya o'zbekcha, bo'lmasa inglizcha aytiladi (o'zbekcha matn ekranda).
+- **AI yoqilganda** reaksiya va savol birga, hissiyat bilan keladi. Server har bir AI reaksiyasini tekshiradi.
+- **Hech qachon:** oila, ota-ona, din, millat, jins, tashqi ko'rinish, nogironlik, siyosat, jinsiy mazmun, tahdid. Bu ro'yxat (`FORBIDDEN`) kontent va AI javoblarida testlar bilan tekshiriladi.
+- Ilova do'konlari, reklama platformalari va mahalliy qonunlar so'kinish mazmuniga cheklov qo'yishi mumkin; chiqarishdan oldin tekshirilishi kerak.
 
 ## AI ulash (ixtiyoriy)
 

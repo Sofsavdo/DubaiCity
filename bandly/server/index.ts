@@ -1,6 +1,6 @@
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { ApiError, createDb, createDuel, getDuel, join, leaderboard, submitDuel, sync, useAi } from './db';
-import { AiError, configFromEnv, evaluateSpeaking, evaluateWriting, followUp } from './ai';
+import { AiError, configFromEnv, evaluateSpeaking, evaluateWriting, followUp, followUpPersona } from './ai';
 
 const PORT = Number(process.env.PORT ?? 3101);
 const ai = configFromEnv();
@@ -72,7 +72,11 @@ createServer(async (req, res) => {
       if (ai.provider === 'none') throw new AiError(503, 'AI yoqilmagan');
       const b = await readJson(req, 16_384);
       useAi(db, String(b.token ?? '')); // token va kunlik limit
-      if (url.pathname === '/api/ai/followup') return send(res, 200, { question: await followUp(ai, String(b.question ?? ''), String(b.answer ?? '')) });
+      if (url.pathname === '/api/ai/followup') {
+        const lv = Math.max(0, Math.min(3, Math.floor(Number(b.level) || 0)));
+        if (lv === 0) return send(res, 200, { question: await followUp(ai, String(b.question ?? ''), String(b.answer ?? '')), reaction: null });
+        return send(res, 200, await followUpPersona(ai, String(b.question ?? ''), String(b.answer ?? ''), lv as 1 | 2 | 3));
+      }
       if (url.pathname === '/api/ai/speaking') {
         const turns = Array.isArray(b.turns) ? b.turns.slice(0, 12).map((t) => ({ q: String((t as { q?: unknown }).q ?? ''), text: String((t as { text?: unknown }).text ?? '') })) : [];
         if (!turns.some((t) => t.text.trim().length > 10)) throw new ApiError(400, 'Baholash uchun javoblar yetarli emas');

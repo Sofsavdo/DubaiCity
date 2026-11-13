@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
-import { AiError, cleanQuestion, complete, configFromEnv, evaluateSpeaking, evaluateWriting, followUp, parseEvaluation, roundBand } from './ai';
+import { FORBIDDEN } from '../src/content/roasts';
+import { AiError, cleanQuestion, followUpPersona, safeReaction, complete, configFromEnv, evaluateSpeaking, evaluateWriting, followUp, parseEvaluation, roundBand } from './ai';
 import { ApiError, createDb, join, useAi } from './db';
 
 // ---- Sozlama ----
@@ -83,6 +84,30 @@ await assert.rejects(complete(configFromEnv({}), 's', 'u'), (e) => e instanceof 
   const bad = configFromEnv({ AI_PROVIDER: 'openai', AI_API_KEY: 'k', AI_MODEL: 'm', AI_BASE_URL: base + '/nope' });
   await assert.rejects(complete(bad, 's', 'u'), (e) => e instanceof AiError && e.status === 502);
 }
+// ---- Shaxsiyatli javob ----
+{
+  const cfg = configFromEnv({ AI_PROVIDER: 'openai', AI_API_KEY: 'k', AI_MODEL: 'm', AI_BASE_URL: base });
+  reply = '{"emotion":"laugh","uz":"Ha-ha, “I am agree”? Eshak ham bundan yaxshi gapiradi!","en":"Ha ha, “I am agree”? Even a donkey speaks better!","question":"What do you enjoy most about it?"}';
+  seen.length = 0;
+  const r = await followUpPersona(cfg, 'q?', 'I am agree', 2);
+  assert.equal(r.reaction?.emotion, 'laugh');
+  assert.equal(r.question, 'What do you enjoy most about it?');
+  assert.ok(JSON.stringify(seen[0].body).includes('mild insults'), '2-daraja ko‘rsatmasi');
+  assert.ok(JSON.stringify(seen[0].body).includes('never mention or insult family'), 'taqiqlar ko‘rsatmada');
+  // Taqiqlangan mavzu: reaksiya tashlanadi, savol saqlanadi
+  reply = '{"emotion":"angry","uz":"Onangni chaqir, tentak!","en":"Call your mother!","question":"Why do you think so?"}';
+  const bad = await followUpPersona(cfg, 'q?', 'x', 3);
+  assert.equal(bad.reaction, null);
+  assert.equal(bad.question, 'Why do you think so?');
+  // JSON bo'lmasa oddiy savol sifatida
+  reply = 'What is your favourite season?';
+  assert.deepEqual(await followUpPersona(cfg, 'q?', 'x', 1), { question: 'What is your favourite season?', reaction: null });
+}
+assert.equal(safeReaction({ uz: 'Zo‘r', en: 'Great', emotion: 'weird' })?.emotion, 'angry', 'noma’lum hissiyot angryga tushadi');
+assert.equal(safeReaction({ uz: 'a'.repeat(300), en: 'b' }), null);
+assert.equal(safeReaction({ uz: 'Kir: https://x.com', en: 'Visit' }), null);
+assert.equal(safeReaction({ uz: 'Dining nima', en: 'x' }), null);
+assert.ok(FORBIDDEN.test('onang'));
 srv.close();
 
 // ---- Kunlik limit ----

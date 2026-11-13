@@ -20,7 +20,8 @@ export const ttsSupported = (): boolean => 'speechSynthesis' in window;
 export interface Signal { cancelled: boolean }
 
 /** Ustoz gapirishi. onend ishlamaydigan qurilmalar uchun taxminiy vaqtdan keyin ham tugaydi. */
-export function say(text: string, signal: Signal, lang = 'en-GB'): Promise<void> {
+export interface Prosody { pitch: number; rate: number; volume: number }
+export function say(text: string, signal: Signal, lang = 'en-GB', prosody: Prosody = { pitch: 1, rate: 0.95, volume: 1 }): Promise<void> {
   return new Promise((resolve) => {
     const guard = setTimeout(done, Math.max(1500, text.length * 90 + 1500));
     let finished = false;
@@ -29,9 +30,10 @@ export function say(text: string, signal: Signal, lang = 'en-GB'): Promise<void>
     const synth = window.speechSynthesis;
     synth.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    const voice = synth.getVoices().find((v) => v.lang.toLowerCase().startsWith('en-gb')) ?? synth.getVoices().find((v) => v.lang.toLowerCase().startsWith('en'));
+    const want = lang.toLowerCase();
+    const voice = synth.getVoices().find((v) => v.lang.toLowerCase().startsWith(want)) ?? synth.getVoices().find((v) => v.lang.toLowerCase().startsWith(want.slice(0, 2)));
     if (voice) u.voice = voice;
-    u.lang = lang; u.rate = 0.95;
+    u.lang = lang; u.rate = prosody.rate; u.pitch = prosody.pitch; u.volume = prosody.volume;
     u.onend = done; u.onerror = done;
     synth.speak(u);
   });
@@ -93,4 +95,26 @@ export function listenTurn(o: TurnOptions): Promise<TurnResult> {
       else if (now - start > o.maxMs) finish();
     }, 200);
   });
+}
+
+// ---------------- Hissiyotli ovoz ----------------
+import type { Emotion, Reaction } from '../content/roasts';
+
+/** Brauzer ovozida hissiyot faqat ohang (pitch), tezlik va balandlik orqali beriladi. */
+export const PROSODY: Record<Emotion, Prosody> = {
+  happy: { pitch: 1.1, rate: 1, volume: 1 },
+  angry: { pitch: 0.7, rate: 1.2, volume: 1 },
+  laugh: { pitch: 1.35, rate: 1.1, volume: 1 },
+  disappointed: { pitch: 0.65, rate: 0.8, volume: 0.9 },
+  impressed: { pitch: 1.25, rate: 1, volume: 1 },
+};
+
+export const hasVoice = (prefix: string): boolean => ttsSupported() && window.speechSynthesis.getVoices().some((v) => v.lang.toLowerCase().startsWith(prefix));
+
+/** Reaksiyani aytadi: o'zbekcha ovoz bo'lsa o'zbekcha, bo'lmasa inglizcha variant. Kulgi uchun avval "ha-ha". */
+export async function sayReaction(r: Reaction, signal: Signal): Promise<'uz' | 'en'> {
+  if (r.emotion === 'laugh') await say('Ha, ha, ha, ha!', signal, 'en-GB', { pitch: 1.7, rate: 1.3, volume: 1 });
+  const uz = hasVoice('uz');
+  await say(uz ? r.uz : r.en, signal, uz ? 'uz-UZ' : 'en-GB', PROSODY[r.emotion]);
+  return uz ? 'uz' : 'en';
 }

@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from 'react';
 import { applyXp, dayKey } from './game';
 import { review } from './srs';
+import { effectiveLevel } from './roast';
 import { defaultProfile, type Profile, type TrackId } from './types';
 import { FREE_GAMES_PER_DAY } from '../config';
 
@@ -10,7 +11,7 @@ function load(): Profile {
   const base = defaultProfile(dayKey());
   try {
     const raw = localStorage.getItem(KEY);
-    if (raw) return { ...base, ...(JSON.parse(raw) as Partial<Profile>) };
+    if (raw) { const m = { ...base, ...(JSON.parse(raw) as Partial<Profile>) }; return { ...m, hardMode: effectiveLevel(m.roastLevel, m.adult) >= 2 }; }
   } catch {
     /* buzilgan yoki mavjud bo'lmagan saqlash: boshlang'ich holat */
   }
@@ -100,9 +101,12 @@ export function consumeGame(): boolean {
 export function setPlan(track: TrackId, on: boolean): void {
   commit({ ...state, plan: { ...state.plan, [track]: on } });
 }
-export function setHardMode(on: boolean): void {
-  commit({ ...state, hardMode: on });
+/** Ustoz xarakteri. 18+ tasdiqlanmasa 2–3 daraja tanlab bo'lmaydi. */
+export function setPersona(level: number, adult: boolean): void {
+  const lv = effectiveLevel(level, adult);
+  commit({ ...state, roastLevel: lv, adult, hardMode: lv >= 2 });
 }
+export const personaLevel = (p: Profile = state) => effectiveLevel(p.roastLevel, p.adult);
 export function setDailyGoal(goal: number): void {
   commit({ ...state, dailyGoal: goal });
 }

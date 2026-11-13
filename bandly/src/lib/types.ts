@@ -24,6 +24,10 @@ export interface Profile {
   gamesPlayed: number;
   freeGames: { day: string; n: number };
   hardMode: boolean;
+  /** Ustoz xarakteri 0–3 (2–3 faqat adult=true bo'lsa amal qiladi) */
+  roastLevel: number;
+  /** Foydalanuvchi 18 yoshdan oshganini o'zi tasdiqlagan */
+  adult: boolean;
 }
 
 export const defaultProfile = (today: string): Profile => ({
@@ -41,4 +45,6 @@ export const defaultProfile = (today: string): Profile => ({
   gamesPlayed: 0,
   freeGames: { day: today, n: 0 },
   hardMode: false,
+  roastLevel: 0,
+  adult: false,
 });

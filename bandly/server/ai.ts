@@ -1,6 +1,8 @@
 // AI provayder qatlami: Anthropic, OpenAI-mos (OpenAI, Groq, OpenRouter...) va Gemini.
 // Kalit faqat server muhitida (.env / hosting o'zgaruvchilari) turadi, mijozga hech qachon yuborilmaydi.
 
+import { FORBIDDEN, type Reaction } from '../src/content/roasts';
+
 export type Provider = 'anthropic' | 'openai' | 'gemini' | 'none';
 export interface AiConfig { provider: Provider; key: string; model: string; baseUrl: string }
 
@@ -123,4 +125,41 @@ export async function evaluateWriting(cfg: AiConfig, task: 1 | 2, prompt: string
   const system = `You are a careful IELTS Writing Task ${task} examiner. Score ${crit}, coherence, lexical, grammar from 0 to 9 in steps of 0.5; be realistic and strict, and penalise answers under the word limit. Reply with JSON only in this shape: {"${crit}":n,"coherence":n,"lexical":n,"grammar":n,"strengths":["..."],"improve":["..."],"corrections":[{"said":"exact phrase from the text","better":"corrected phrase"}]}. Write "strengths" and "improve" in Uzbek (Latin script), at most 3 short items each; "corrections" in English, at most 5. ${GUARD}`;
   const user = `Task prompt: ${clip(prompt, 600)}\n<candidate>${clip(text, 4000)}</candidate>`;
   return parseEvaluation(await complete(cfg, system, user, { maxTokens: 900, ...opts }), [crit, 'coherence', 'lexical', 'grammar']);
+}
+
+// ---------------- Shaxsiyatli suhbat (reaksiya + savol) ----------------
+const EMOTIONS = ['happy', 'angry', 'laugh', 'disappointed', 'impressed'];
+
+/** AI reaksiyasini tekshiradi: shakl, uzunlik, taqiqlangan mavzular, havolalar. Mos kelmasa null. */
+export function safeReaction(j: unknown): Reaction | null {
+  const o = j as { uz?: unknown; en?: unknown; emotion?: unknown };
+  if (typeof o?.uz !== 'string' || typeof o?.en !== 'string') return null;
+  const uz = o.uz.trim(), en = o.en.trim();
+  if (!uz || !en || uz.length > 200 || en.length > 200) return null;
+  if (FORBIDDEN.test(uz) || FORBIDDEN.test(en.replace(/donkey/gi, ''))) return null;
+  if (/https?:|www\.|@/i.test(uz + en)) return null;
+  const emotion = EMOTIONS.includes(String(o.emotion)) ? (o.emotion as Reaction['emotion']) : 'angry';
+  return { uz, en, emotion };
+}
+
+const STYLE: Record<1 | 2 | 3, string> = {
+  1: 'sarcastic, playful and teasing, but with NO insults',
+  2: 'short-tempered and mocking; mild insults are allowed (for example "tentak", "eshak", "ahmoq")',
+  3: 'dramatic, furious and harsh; stronger insults are allowed (for example "chumo", "miyasiz", "ahmoq") but nothing else',
+};
+
+export interface PersonaReply { question: string | null; reaction: Reaction | null }
+
+export async function followUpPersona(cfg: AiConfig, question: string, answer: string, level: 1 | 2 | 3, opts?: CompleteOpts): Promise<PersonaReply> {
+  const system = `You are Bandi, a comic IELTS Speaking examiner character in an entertainment app for adults who chose this style. You are ${STYLE[level]}. React to the candidate's answer in a funny way, mocking mistakes, hesitation or laziness. Also ask exactly ONE short follow-up question (max 20 words) in English that continues from the answer. STRICT LIMITS: never mention or insult family, parents, religion, ethnicity, nationality, gender, appearance, disability, politics or sex; no threats; no links. Reply with JSON only: {"emotion":"angry|laugh|disappointed|impressed","uz":"reaction in Uzbek Latin, max 18 words","en":"the same reaction in English","question":"follow-up question?"}. ${GUARD}`;
+  const user = `Examiner's previous question: ${clip(question, 200)}\n<candidate>${clip(answer, 800)}</candidate>`;
+  const raw = await complete(cfg, system, user, { maxTokens: 220, ...opts });
+  const m = raw.match(/\{[\s\S]*\}/);
+  if (m) {
+    try {
+      const j = JSON.parse(m[0]) as { question?: unknown };
+      return { question: typeof j.question === 'string' ? cleanQuestion(j.question) : null, reaction: safeReaction(j) };
+    } catch { /* quyidagi zaxira */ }
+  }
+  return { question: cleanQuestion(raw), reaction: null };
 }

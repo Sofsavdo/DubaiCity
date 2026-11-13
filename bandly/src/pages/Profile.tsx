@@ -1,6 +1,7 @@
 import { ACHIEVEMENTS, levelProgress } from '../lib/game';
 import { loadResults } from '../lib/storage';
-import { resetAll, setDailyGoal, setHardMode, useProfile } from '../lib/store';
+import { resetAll, setDailyGoal, useProfile } from '../lib/store';
+import { PersonaPicker } from '../components/PersonaPicker';
 import { vocab } from '../content/vocab';
 import { isMastered } from '../lib/srs';
 import { Mascot } from '../components/Mascot';
@@ -44,8 +45,7 @@ export default function Profile() {
             </select>
           </label>
         </div>
-        <p><label><input type="checkbox" checked={p.hardMode} onChange={(e) => setHardMode(e.target.checked)} /> Qattiq rejim (18+): mascot xatolarga hazil bilan o‘tkir javob beradi</label></p>
-        <p className="evidence">Qattiq rejim faqat xatolarga qaratilgan hazil; haqorat yo‘q. Faqat o‘zingiz yoqsangiz ishlaydi.</p>
+        <PersonaPicker />
         <button className="btn" onClick={() => { if (window.confirm('Barcha natijalar, XP va demo obunalar o‘chiriladi. Davom etasizmi?')) { resetAll(); try { localStorage.removeItem('bandly.results.v1'); } catch { /* */ } } }}>Hisobni tiklash</button>
       </div>
 

@@ -1,7 +1,9 @@
 import { part1Topics, part2Cards } from '../content/speaking';
+import type { Reaction } from '../content/roasts';
+import { reactTo, type Level } from './roast';
 
 export type Wait = 'answer' | 'prep' | 'monologue' | 'end';
-export interface Step { say: string; wait: Wait; part: 0 | 1 | 2 | 3; remark?: string }
+export interface Step { say: string; wait: Wait; part: 0 | 1 | 2 | 3; /** Oldingi javobga ustoz reaksiyasi (hissiyot bilan) */ reaction?: Reaction }
 export interface TurnStat { part: 1 | 2 | 3; q: string; text: string; words: number; seconds: number; fillers: number; latencyMs: number }
 
 const FILLERS = /\b(um+|uh+|er+|erm|hmm+|you know|i mean)\b/gi;
@@ -33,7 +35,7 @@ export class Examiner {
   private p2Extended = false;
   private rnd: () => number;
 
-  constructor(rnd: () => number = Math.random, public hardMode = false) {
+  constructor(rnd: () => number = Math.random, public level: Level = 0) {
     this.rnd = rnd;
     const topics = shuffle(part1Topics, rnd).slice(0, 2);
     this.p1Qs = topics.flatMap((t) => t.questions.slice(0, 3));
@@ -61,14 +63,10 @@ export class Examiner {
     };
   }
 
-  /** Qattiq rejimda xatolarga hazil (haqorat yo'q). */
-  private remark(): string | undefined {
-    if (!this.hardMode) return undefined;
-    const fillers = countFillers(this.pending.text);
-    const words = countWords(this.pending.text);
-    if (fillers >= 3) return `I counted ${fillers} ums and ers. Please stop collecting them.`;
-    if (words < 6) return 'That was short. Even my microphone fell asleep.';
-    return undefined;
+  /** Javobga shaxsiyat darajasiga mos reaksiya (to'ldiruvchilar, xatolar, qisqalik, sustlik). */
+  private react(): Reaction | null {
+    const { text, latency } = this.pending;
+    return reactTo({ text, words: countWords(text), fillers: countFillers(text), latencyMs: latency, level: this.level, rnd: this.rnd });
   }
 
   answer(text: string, seconds: number, latencyMs: number): Step {
@@ -86,21 +84,21 @@ export class Examiner {
           this.followed = true;
           return { say: 'Could you tell me a little more about that?', wait: 'answer', part };
         }
-        const remark = this.remark();
+        const reaction = this.react() ?? undefined;
         this.record(part, this.currentQ);
         this.qi += 1;
         const list = part === 1 ? this.p1Qs : this.p3Qs;
         if (this.qi < list.length) {
           this.currentQ = list[this.qi];
-          return { say: this.currentQ, wait: 'answer', part, remark };
+          return { say: this.currentQ, wait: 'answer', part, reaction };
         }
         if (part === 1) {
           this.phase = 'p2prep';
           const pts = this.card.points.map((p) => `You should say ${p}.`.replace('.,', '.')).join(' ');
-          return { say: `Thank you. Now I am going to give you a topic, and I would like you to talk about it for one to two minutes. You have one minute to think. Here is your topic. ${this.card.title} ${pts}`, wait: 'prep', part: 2, remark };
+          return { say: `Thank you. Now I am going to give you a topic, and I would like you to talk about it for one to two minutes. You have one minute to think. Here is your topic. ${this.card.title} ${pts}`, wait: 'prep', part: 2, reaction };
         }
         this.phase = 'done';
-        return { say: 'Thank you very much. That is the end of the speaking test.', wait: 'end', part: 3, remark };
+        return { say: 'Thank you very much. That is the end of the speaking test.', wait: 'end', part: 3, reaction };
       }
       case 'p2': {
         this.take(text, seconds, latencyMs);
@@ -108,11 +106,11 @@ export class Examiner {
           this.p2Extended = true;
           return { say: 'Please continue. You still have some time.', wait: 'monologue', part: 2 };
         }
-        const remark = this.remark();
+        const reaction = this.react() ?? undefined;
         this.record(2, this.card.title);
         this.phase = 'p2after';
         this.currentQ = ROUND_OFF[Math.floor(this.rnd() * ROUND_OFF.length)];
-        return { say: `Thank you. ${this.currentQ}`, wait: 'answer', part: 2, remark };
+        return { say: `Thank you. ${this.currentQ}`, wait: 'answer', part: 2, reaction };
       }
       case 'p2after': {
         this.take(text, seconds, latencyMs);

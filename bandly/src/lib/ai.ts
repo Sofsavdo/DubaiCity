@@ -1,4 +1,5 @@
 import { getAccount } from './account';
+import type { Reaction } from '../content/roasts';
 
 export interface Evaluation {
   bands: Record<string, number | null>;
@@ -32,8 +33,8 @@ async function post<T>(path: string, body: Record<string, unknown>, timeoutMs: n
 }
 
 /** Suhbat paytida: xato bo'lsa null qaytaradi, shunda skriptdagi savol ishlatiladi. */
-export async function aiFollowup(question: string, answer: string): Promise<string | null> {
-  try { return (await post<{ question: string | null }>('/api/ai/followup', { question, answer }, 6000)).question; } catch { return null; }
+export async function aiFollowup(question: string, answer: string, level = 0): Promise<{ question: string | null; reaction: Reaction | null }> {
+  try { return await post<{ question: string | null; reaction: Reaction | null }>('/api/ai/followup', { question, answer, level }, 7000); } catch { return { question: null, reaction: null }; }
 }
 export const aiEvaluateSpeaking = (turns: { q: string; text: string }[]): Promise<Evaluation> => post('/api/ai/speaking', { turns }, 30_000);
 export const aiEvaluateWriting = (task: 1 | 2, prompt: string, text: string): Promise<Evaluation> => post('/api/ai/writing', { task, prompt, text }, 30_000);
