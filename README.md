@@ -6,7 +6,6 @@ rasmiy emasligi haqidagi ogohlantirish `BRAND.disclaimer` da.
 ## Ishga tushirish
 
 ```bash
-cd bandly
 npm install
 npm run dev      # http://localhost:3100  (frontend)
 npm run server   # http://127.0.0.1:3101  (reyting API, SQLite; Node 22+, `node:sqlite`)
