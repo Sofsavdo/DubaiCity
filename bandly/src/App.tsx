@@ -9,6 +9,7 @@ import Exam from './pages/Exam';
 import Mocks from './pages/Mocks';
 import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
+import League from './pages/League';
 import Reading from './pages/Reading';
 import Listening from './pages/Listening';
 import Grammar from './pages/Grammar';
@@ -37,6 +38,7 @@ const routes: Record<string, () => ReactNode> = {
   '#/games/spell': () => <Spell />,
   '#/tools': () => <Tools />,
   '#/pricing': () => <Pricing />,
+  '#/league': () => <League />,
   '#/profile': () => <Profile />,
 };
 
@@ -46,6 +48,7 @@ const nav: [string, string][] = [
   ['#/grammar', 'Grammar'],
   ['#/mocks', 'Mock'],
   ['#/games', 'O‘yinlar'],
+  ['#/league', 'Reyting'],
   ['#/profile', 'Profil'],
 ];
 

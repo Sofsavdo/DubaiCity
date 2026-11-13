@@ -8,7 +8,8 @@ rasmiy emasligi haqidagi ogohlantirish `BRAND.disclaimer` da.
 ```bash
 cd bandly
 npm install
-npm run dev      # http://localhost:3100
+npm run dev      # http://localhost:3100  (frontend)
+npm run server   # http://127.0.0.1:3101  (reyting API, SQLite; Node 22+, `node:sqlite`)
 npm test         # ball hisoblash, baholash, o'yin/XP, takrorlash tizimi, lug'at yaxlitligi
 npm run build    # statik fayllar: dist/
 ```
@@ -35,11 +36,14 @@ faqat shu qurilmada ochiladi. Narxlar (`src/config.ts`) **namunaviy**, oldindan 
 - **3 ta so'z o'yini** (50 ta IELTS so'zi, 5 mavzu): So'z poygasi (60 soniya, 3 jon, kombo), Juftlik, Imlo sinovi (eshitish tugmasi bilan).
 - **Mascot "Bandi"** (original SVG, 5 kayfiyat). **Qattiq rejim (18+)** o'zi yoqilganda xatoga hazil bilan javob beradi; haqorat yo'q.
 - Mock test, Grammar, Writing, Speaking tugaganda ham XP beriladi.
+- **Reyting** (`#/league`): laqab bilan qo'shilish (parolsiz), haftalik va umumiy jadval. Server XP o'sishini cheklaydi
+  (bir so'rovda 400, soatiga 1500), lekin XP hozircha mijoz tomonidan yuboriladi, shuning uchun to'liq aldovdan himoya emas.
+  Keyingi qadam: XP ni serverda o'yin hodisalaridan hisoblash.
 
 ## Ma'lum cheklovlar
 
 - Kontent kichik: 1 Reading, 1 Listening, 25 Grammar, 50 so'z. Mini-test bandi 40 ballik shkalaga keltirilgan, faqat taxminiy.
-- Hisoblar, serverda saqlash, **do'stlar bilan duel va reyting jadvali** (backend kerak), to'lov yo'q.
+- Parolli hisoblar, do'stlar bilan duel, to'lov yo'q. Reyting tokeni shu qurilmada saqlanadi (yo'qolsa, laqab qayta olinmaydi).
 - AI Writing/Speaking baholash yo'q (kalit kerak); Writing tekshiruvi qoidaviy.
 - Listening audiosi qurilmadagi ingliz ovoziga bog'liq.
 - SAT va CEFR hali yo'q.
@@ -47,7 +51,7 @@ faqat shu qurilmada ochiladi. Narxlar (`src/config.ts`) **namunaviy**, oldindan 
 ## Keyingi bosqichlar
 
 1. **Kontent:** har ko'nikmaga 10 ta test, 500+ so'z, 100+ grammar savol (original, dalil izohlari bilan).
-2. **Backend** (hisoblar, obuna, reyting jadvali, duellar, bir nechta qurilmada sinxron).
+2. **Backend**: parolli/Telegram orqali kirish, obuna huquqlari, duellar, serverda XP hisoblash, Postgres, hostingga joylash.
 3. **To'lov** (Payme/Click/Uzum) va haqiqiy obuna tekshiruvi (hozirgi demo o'rniga serverdagi huquqlar).
 4. **AI qatlami:** Writing va Speaking baholash (kalit `.env` da, hech qachon chatga yozilmaydi), xarajat hisoblagichi.
 5. **SAT va CEFR** yo'nalishlari; o'zbekcha SEO qo'llanmalar; kreator/affiliate dasturi.
