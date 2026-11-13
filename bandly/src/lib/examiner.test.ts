@@ -71,4 +71,10 @@ const h = new Examiner(rnd, true); h.start(); h.answer('Ali', 1, 1);
 const hs = h.answer('Um, uh, um, er, well', 3, 1000);
 const hs2 = h.answer('Um, uh, um, er, well it is um fine', 3, 1000);
 assert.ok(hs.say && hs2.remark && /ums/.test(hs2.remark));
+// AI savoli skriptdagi savolni almashtiradi
+const ai = new Examiner(rnd, false); ai.start(); ai.answer('Ali', 1, 1);
+ai.answer('I live in a big city and I love it because it is full of life and people', 5, 500);
+ai.overrideQuestion('What do you enjoy most about it?');
+ai.answer('I enjoy the food and the markets, they are colourful and cheap and always busy', 5, 500);
+assert.equal(ai.turns.at(-1)?.q, 'What do you enjoy most about it?');
 console.log('examiner.test: OK');

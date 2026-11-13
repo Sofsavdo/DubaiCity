@@ -127,6 +127,9 @@ export class Examiner {
     }
   }
 
+  /** AI aytgan savol skriptdagi savol o'rnini egallaydi: keyingi javob shu savolga yoziladi. */
+  overrideQuestion(q: string): void { this.currentQ = q; }
+
   /** Tayyorgarlik tugagach (60 soniya yoki "Tayyorman" bosilganda). */
   beginMonologue(): Step {
     this.phase = 'p2';

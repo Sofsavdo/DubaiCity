@@ -1,4 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { EvalCard } from '../components/EvalCard';
+import { JoinForm } from '../components/JoinForm';
+import { getAccount } from '../lib/account';
+import { aiEnabled, aiEvaluateWriting, type Evaluation } from '../lib/ai';
 import { writingPrompts } from '../content/writing';
 import { analyzeWriting, type WritingReport } from '../lib/writingCheck';
 import { fmt, useCountdown } from '../components/hooks';
@@ -11,11 +15,17 @@ export default function Writing() {
   const [running, setRunning] = useState(false);
   const [report, setReport] = useState<WritingReport | null>(null);
   const [left, reset] = useCountdown(p.minutes * 60, running, () => setRunning(false));
+  const [aiOn, setAiOn] = useState(false);
+  const [acct, setAcct] = useState(getAccount());
+  const [aiEval, setAiEval] = useState<Evaluation | null>(null);
+  const [aiBusy, setAiBusy] = useState(false);
+  const [aiErr, setAiErr] = useState('');
+  useEffect(() => { void aiEnabled().then(setAiOn); }, []);
   const words = text.trim() ? text.trim().split(/\s+/).length : 0;
 
   const choose = (v: string) => {
     const np = writingPrompts.find((x) => x.id === v)!;
-    setId(v); setText(''); setReport(null); setRunning(false); reset(np.minutes * 60);
+    setId(v); setText(''); setReport(null); setAiEval(null); setAiErr(''); setRunning(false); reset(np.minutes * 60);
   };
 
   return (
@@ -42,11 +52,16 @@ export default function Writing() {
         <textarea className="essay" value={text} onChange={(e) => setText(e.target.value)} placeholder="Javobingizni inglizcha yozing..." />
         <div className="row" style={{ justifyContent: 'space-between' }}>
           <span className={words >= p.minWords ? 'ok' : 'pill'}>{words} so‘z</span>
+          {aiOn && acct && <button className="btn" disabled={aiBusy || words < 30} onClick={() => { setAiBusy(true); setAiErr(''); aiEvaluateWriting(p.task, p.prompt, text).then((e) => { setAiEval(e); addXp(10); }).catch((e: Error) => setAiErr(e.message)).finally(() => setAiBusy(false)); }}>{aiBusy ? 'AI baholayapti…' : 'AI baholash'}</button>}
           <button className="btn primary" onClick={() => { const r = analyzeWriting(text, p.minWords); setReport(r); if (r.words >= p.minWords) addXp(20); }} disabled={words === 0}>Oddiy tekshiruv</button>
         </div>
         <p className="notice" style={{ marginTop: 12 }}>
-          Bu <b>AI baholash emas</b>: faqat so‘zlar soni, abzatslar, bog‘lovchilar va takrorlarni tekshiradi, band bermaydi. AI bilan batafsil baho (4 mezon bo‘yicha) keyingi versiyada, AI xizmati ulanganda qo‘shiladi.
+          Bu <b>AI baholash emas</b>: faqat so‘zlar soni, abzatslar, bog‘lovchilar va takrorlarni tekshiradi, band bermaydi. AI bilan batafsil baho (4 mezon bo‘yicha) AI xizmati ulanganda “AI baholash” tugmasi orqali ishlaydi.
         </p>
+        {aiOn && !acct && <JoinForm onJoined={setAcct} text="AI baholash uchun laqab tanlang (parol shart emas)." />}
+        {aiOn && acct && <p className="evidence">AI baholashda insho matni AI provayderiga yuboriladi.</p>}
+        {aiErr && <p className="notice">{aiErr}</p>}
+        {aiEval && <EvalCard ev={aiEval} title="AI baho" />}
         {report && (
           <div>
             <h3>Natija</h3>

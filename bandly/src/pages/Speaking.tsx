@@ -1,4 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
+import { EvalCard } from '../components/EvalCard';
+import { JoinForm } from '../components/JoinForm';
+import { getAccount } from '../lib/account';
+import { aiEnabled, aiEvaluateSpeaking, aiFollowup, type Evaluation } from '../lib/ai';
 import { Mascot, type Mood } from '../components/Mascot';
 import { Examiner, summarize, type Summary, type TurnStat } from '../lib/examiner';
 import { listenTurn, say, stopSpeaking, sttSupported, type Signal, type TurnResult } from '../lib/speech';
@@ -26,6 +30,12 @@ export default function Speaking() {
   const [summary, setSummary] = useState<Summary | null>(null);
   const [turns, setTurns] = useState<TurnStat[]>([]);
   const [timed, setTimed] = useState(true);
+  const [aiOn, setAiOn] = useState(false);
+  const [acct, setAcct] = useState(getAccount());
+  const [aiEval, setAiEval] = useState<Evaluation | null>(null);
+  const [aiState, setAiState] = useState<'idle' | 'loading' | 'error'>('idle');
+  const [aiErr, setAiErr] = useState('');
+  useEffect(() => { void aiEnabled().then(setAiOn); }, []);
 
   const sig = useRef<Signal>({ cancelled: false });
   const endRef = useRef<(() => void) | null>(null);
@@ -61,7 +71,9 @@ export default function Speaking() {
   };
 
   const run = async () => {
-    setErr(''); setSummary(null); setTimed(!textMode);
+    setErr(''); setSummary(null); setAiEval(null); setAiState('idle'); setTimed(!textMode);
+    const useAiNow = aiOn && !!getAccount();
+    let aiAsked = 0;
     sig.current = { cancelled: false };
     const ex = new Examiner(Math.random, profile.hardMode);
     setStage('live');
@@ -78,12 +90,21 @@ export default function Speaking() {
       const r = await getTurn(step.wait === 'monologue');
       if (sig.current.cancelled) return;
       setStatus('thinking');
+      const before = ex.turns.length;
       step = ex.answer(r.text, textModeRef.current ? 0 : r.seconds, r.latencyMs);
+      // AI: yaxshi javobdan keyin skriptdagi savol o'rniga javobga bog'liq savol (xatoda skript davom etadi)
+      const last = ex.turns.at(-1);
+      if (useAiNow && aiAsked < 3 && ex.turns.length > before && last && last.words >= 8 && step.wait === 'answer' && (step.part === 1 || step.part === 3)) {
+        const q = await aiFollowup(last.q, last.text);
+        if (sig.current.cancelled) return;
+        if (q) { aiAsked += 1; ex.overrideQuestion(q); step = { ...step, say: q }; }
+      }
     }
     if (sig.current.cancelled) return;
     const useTimed = !textModeRef.current;
     const s = summarize(ex.turns, useTimed);
     setTurns(ex.turns); setSummary(s); setTimed(useTimed); setStage('report');
+    if (useAiNow) { setAiState('loading'); aiEvaluateSpeaking(ex.turns.map((t) => ({ q: t.q, text: t.text }))).then((e) => { setAiEval(e); setAiState('idle'); }).catch((e: Error) => { setAiErr(e.message); setAiState('error'); }); }
     saveResult({ kind: 'speaking', title: 'Speaking: jonli suhbat', correct: ex.turns.filter((t) => t.words >= 12).length, total: ex.turns.length });
     addXp(30);
   };
@@ -103,6 +124,8 @@ export default function Speaking() {
               Ovozingiz <b>yozib olinmaydi va saqlanmaydi</b>. Nutqni matnga o‘girishni brauzeringiz xizmati bajaradi (Chrome, Edge, Safari qo‘llaydi; bu xizmat ovozni o‘z serveriga yuborishi mumkin). Naushnik ishlatsangiz, ustoz ovozi mikrofonga kirmaydi.
             </p>
             {!supported && <p className="notice">Brauzeringiz nutqni tanishni qo‘llamaydi. Yozma rejim ishlaydi; Chrome yoki Safari'da ovozli rejim bor.</p>}
+            {aiOn && !acct && <JoinForm onJoined={setAcct} text="AI bilan suhbat va baho uchun laqab tanlang (parol shart emas). Laqabsiz ham qoidaviy ustoz bilan davom etish mumkin." />}
+            {aiOn && acct && <p className="notice">AI yoqilgan: suhbatning <b>matni</b> (ovoz emas) javobingizga bog‘liq savol berish va baholash uchun AI provayderiga yuboriladi.</p>}
             <label><input type="checkbox" checked={textMode} disabled={!supported} onChange={(e) => setTextMode(e.target.checked)} /> Mikrofonsiz rejim (yozib javob berish)</label>
             {profile.hardMode && <p className="evidence">Qattiq rejim yoqilgan: ustoz to‘ldiruvchi tovushlar va qisqa javoblarga hazil bilan e’tiroz bildiradi.</p>}
             <div style={{ marginTop: 10 }}><button className="btn primary" onClick={() => void run()}>Suhbatni boshlash</button></div>
@@ -110,7 +133,7 @@ export default function Speaking() {
         </div>
         <div className="card">
           <h3>Hozirgi holat</h3>
-          <p>Ustozning savollari va tartibi tayyor, suhbat jonli ishlaydi. Ustozning javoblari hozircha <b>qoidaviy</b> (AI emas): u savollarni tartib bilan beradi, qisqa javobda "batafsilroq ayting" deydi. Talaffuz va grammatika baholanmaydi. AI ulanganda ustoz javobingizga qarab erkin savol beradi va 4 mezon bo‘yicha baholaydi.</p>
+          <p>Ustozning savollari va tartibi tayyor, suhbat jonli ishlaydi. Ustozning javoblari hozircha <b>qoidaviy</b>{aiOn ? ' (AI yoqilgan bo‘lsa, javobingizga bog‘liq savollar ham beradi)' : ' (AI hali ulanmagan)'}: u savollarni tartib bilan beradi, qisqa javobda "batafsilroq ayting" deydi. Talaffuz va grammatika baholanmaydi. AI ulanganda ustoz javobingizga qarab erkin savol beradi va 4 mezon bo‘yicha baholaydi.</p>
         </div>
       </div>
     );
@@ -127,10 +150,12 @@ export default function Speaking() {
             <div className="row">
               <span className="pill">Fluency (taxm.): <b>{summary.fluencyBand.toFixed(1)}</b></span>
               <span className="pill">Lexical (taxm.): <b>{summary.lexicalBand.toFixed(1)}</b></span>
-              <span className="pill">Grammar va Pronunciation: AI kerak</span>
+              {!aiEval && <span className="pill">{aiState === 'loading' ? 'AI baholayapti…' : 'Grammar va Pronunciation: AI kerak'}</span>}
             </div>
           </div>
         </div>
+        {aiEval && <EvalCard ev={aiEval} title="AI baho (suhbat matni bo‘yicha)" />}
+        {aiState === 'error' && <p className="notice">AI baho berolmadi: {aiErr}. Quyidagi qoidaviy tahlil ishlaydi.</p>}
         <div className="card">
           <table className="data">
             <tbody>

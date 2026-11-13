@@ -24,6 +24,12 @@ export function createDb(path = ':memory:'): DatabaseSync {
       delta INTEGER NOT NULL
     );
     CREATE INDEX IF NOT EXISTS xp_log_ts ON xp_log (ts);
+    CREATE TABLE IF NOT EXISTS ai_usage (
+      player_id INTEGER NOT NULL REFERENCES players(id),
+      day TEXT NOT NULL,
+      calls INTEGER NOT NULL DEFAULT 0,
+      PRIMARY KEY (player_id, day)
+    );
     CREATE TABLE IF NOT EXISTS duels (
       code TEXT PRIMARY KEY,
       words TEXT NOT NULL,
@@ -166,4 +172,17 @@ export function submitDuel(db: DatabaseSync, token: string, code: string, score:
   if (!joined) db.prepare('INSERT INTO duel_players (code, player_id) VALUES (?, ?)').run(info.code, p.id);
   db.prepare('UPDATE duel_players SET score = ?, correct = ?, ms = ?, finished_at = ? WHERE code = ? AND player_id = ?').run(sc, c, t, now, info.code, p.id);
   return getDuel(db, info.code, token, now);
+}
+
+// ---------------- AI foydalanish limiti ----------------
+export const AI_DAILY_LIMIT = Number(process.env.AI_DAILY_LIMIT ?? 120);
+
+/** Har bir AI so'rovdan oldin chaqiriladi: token tekshiriladi va kunlik limit hisoblanadi. */
+export function useAi(db: DatabaseSync, token: string, now = Date.now(), limit = AI_DAILY_LIMIT): number {
+  const p = byToken(db, token);
+  const day = new Date(now).toISOString().slice(0, 10);
+  const row = db.prepare('SELECT calls FROM ai_usage WHERE player_id = ? AND day = ?').get(p.id, day) as { calls: number } | undefined;
+  if ((row?.calls ?? 0) >= limit) throw new ApiError(429, 'Bugungi AI limiti tugadi. Ertaga qayta urinib ko‘ring.');
+  db.prepare('INSERT INTO ai_usage (player_id, day, calls) VALUES (?, ?, 1) ON CONFLICT(player_id, day) DO UPDATE SET calls = calls + 1').run(p.id, day);
+  return (row?.calls ?? 0) + 1;
 }

@@ -45,6 +45,23 @@ faqat shu qurilmada ochiladi. Narxlar (`src/config.ts`) **namunaviy**, oldindan 
   (bir so'rovda 400, soatiga 1500), lekin XP hozircha mijoz tomonidan yuboriladi, shuning uchun to'liq aldovdan himoya emas.
   Keyingi qadam: XP ni serverda o'yin hodisalaridan hisoblash.
 
+## AI ulash (ixtiyoriy)
+
+Kalit bo'lmasa hammasi qoidaviy rejimda ishlaydi. AI ulash uchun:
+
+```bash
+cp .env.example .env     # AI_PROVIDER, AI_API_KEY, AI_MODEL ni to'ldiring (kalitni faqat shu faylga yozing)
+npm run server           # AI holati ishga tushganda yoziladi: "(AI: anthropic)"
+```
+
+- Qo'llanadi: Anthropic, Gemini va OpenAI-mos xizmatlar (OpenAI, Groq, OpenRouter; `AI_BASE_URL` bilan).
+- **Speaking:** AI faqat yaxshi javobdan keyin javobga bog'liq savol beradi (suhbatda eng ko'pi 3 ta) va suhbat oxirida baho beradi. Tartib va vaqtni qoidaviy ustoz boshqaradi. AI xato qilsa skript davom etadi.
+- **Writing:** "AI baholash" tugmasi: 4 mezon, kuchli/zaif tomonlar, tuzatishlar. Kamida 30 so'z kerak.
+- Xavfsizlik: kalit faqat serverda; AI so'rovlari laqab-token talab qiladi va kuniga `AI_DAILY_LIMIT` bilan cheklangan; nomzod matni "ishonchsiz ma'lumot" sifatida ajratiladi; AI javobi qat'iy tekshiriladi (baho 0–9, 0.5 qadam, overall serverda IELTS qoidasi bilan hisoblanadi).
+- Maxfiylik: AI yoqilganda **matn** (ovoz emas) AI provayderiga yuboriladi; foydalanuvchiga ekranda aytiladi.
+- Talaffuz matndan baholanmaydi ("baholanmaydi" deb ko'rsatiladi).
+- Sinash: `npm test` uchala provayder formatini soxta server bilan tekshiradi; haqiqiy kalit bilan sinalmagan.
+
 ## Ma'lum cheklovlar
 
 - Kontent hali kichik: 4 Reading, 4 Listening (13/10 savoldan), 50 Grammar, 152 so'z. Savol turlari: True/False/Not Given, bo'sh joy, test, moslashtirish (sarlavha/harf). Mini-test bandi 40 ballik shkalaga keltirilgan, faqat taxminiy.
