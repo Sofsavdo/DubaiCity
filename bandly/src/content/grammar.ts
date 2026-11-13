@@ -1,8 +1,8 @@
 import type { GrammarItem } from './types';
 
-export const grammarTopics = ['Artikllar', 'Zamonlar', 'Shart gaplar', 'Predloglar', 'Ega va kesim moslashuvi'] as const;
+export const grammarTopics = ['Artikllar', 'Zamonlar', 'Shart gaplar', 'Predloglar', 'Ega va kesim moslashuvi', 'Majhul nisbat', 'Modal fe‘llar', 'Nisbiy gaplar', 'Gerund va infinitiv', 'Taqqoslash'] as const;
 
-export const grammar: GrammarItem[] = [
+const rawGrammar: GrammarItem[] = [
   // Artikllar
   { id: 1, topic: 'Artikllar', q: 'She is ____ engineer at a large company.', options: ['a', 'an', 'the', '—'], answer: 1, explanationUz: "Kasb oldidan a/an qo'yiladi. 'engineer' unli tovush bilan boshlangani uchun 'an' ishlatiladi." },
   { id: 2, topic: 'Artikllar', q: '____ sun rises in the east.', options: ['A', 'An', 'The', '—'], answer: 2, explanationUz: "Yagona va noyob narsalar (sun, moon, sky) oldidan 'the' qo'yiladi." },
@@ -33,4 +33,42 @@ export const grammar: GrammarItem[] = [
   { id: 23, topic: 'Ega va kesim moslashuvi', q: 'Each of the rooms ____ a window.', options: ['have', 'has', 'are having', 'having'], answer: 1, explanationUz: "'Each (of)' birlik ega, fe'l ham birlikda: has." },
   { id: 24, topic: 'Ega va kesim moslashuvi', q: 'A lot of people ____ IELTS every year.', options: ['takes', 'take', 'taking', 'is taking'], answer: 1, explanationUz: "'people' ko'plik, shuning uchun fe'lga -s qo'shilmaydi." },
   { id: 25, topic: 'Ega va kesim moslashuvi', q: 'The news ____ spreading fast online.', options: ['are', 'is', 'were', 'have been'], answer: 1, explanationUz: "'News' sanalmaydigan ot, birlik fe'l bilan keladi." },
+  // Majhul nisbat
+  { id: 26, topic: 'Majhul nisbat', q: 'The bridge ____ in 1998.', options: ['built', 'was built', 'has built', 'is building'], answer: 1, explanationUz: "Ish-harakatni bajaruvchi emas, natija muhim bo'lsa majhul nisbat: was/were + V3." },
+  { id: 27, topic: 'Majhul nisbat', q: 'English ____ all over the world.', options: ['speaks', 'is speaking', 'is spoken', 'spoke'], answer: 2, explanationUz: "Hozirgi umumiy fakt, majhul nisbat: is/are + V3." },
+  { id: 28, topic: 'Majhul nisbat', q: 'The report ____ by Friday.', options: ['will finish', 'will be finished', 'is finishing', 'finished'], answer: 1, explanationUz: "Kelasi zamon majhul nisbati: will be + V3." },
+  { id: 29, topic: 'Majhul nisbat', q: 'The windows ____ at the moment.', options: ['are cleaning', 'are being cleaned', 'were cleaned', 'clean'], answer: 1, explanationUz: "Hozir davom etayotgan harakat, majhul nisbat: am/is/are + being + V3." },
+  { id: 30, topic: 'Majhul nisbat', q: 'The thief ____ by the police yesterday.', options: ['caught', 'was caught', 'is caught', 'has caught'], answer: 1, explanationUz: "O'tgan zamon aniq vaqt (yesterday), majhul nisbat: was + V3." },
+  // Modal fe'llar
+  { id: 31, topic: 'Modal fe‘llar', q: 'You ____ wear a seatbelt. It is the law.', options: ['might', 'must', 'can', 'would'], answer: 1, explanationUz: "Qonun yoki qat'iy majburiyat uchun 'must'." },
+  { id: 32, topic: 'Modal fe‘llar', q: 'Her car is outside, so she ____ be at home.', options: ['must', "can't", "shouldn't", "needn't"], answer: 0, explanationUz: "Kuchli taxmin (deduction): dalil bor, shuning uchun 'must be'." },
+  { id: 33, topic: 'Modal fe‘llar', q: 'You ____ worry about the test; it is optional.', options: ["mustn't", "needn't", "can't", 'might'], answer: 1, explanationUz: "'needn't' = hojat yo'q. 'mustn't' esa taqiqni bildiradi." },
+  { id: 34, topic: 'Modal fe‘llar', q: 'When I was a child, I ____ swim very well.', options: ['can', 'could', 'must', 'should'], answer: 1, explanationUz: "O'tmishdagi umumiy qobiliyat uchun 'could'." },
+  { id: 35, topic: 'Modal fe‘llar', q: 'You ____ see a doctor if the pain continues.', options: ['should', 'could to', 'must to', 'may to'], answer: 0, explanationUz: "Maslahat uchun 'should' + V1 ('to' kerak emas)." },
+  // Nisbiy gaplar
+  { id: 36, topic: 'Nisbiy gaplar', q: 'The man ____ lives next door is a doctor.', options: ['which', 'who', 'whose', 'where'], answer: 1, explanationUz: "Shaxs haqida bo'lsa 'who' (yoki that)." },
+  { id: 37, topic: 'Nisbiy gaplar', q: 'This is the book ____ I told you about.', options: ['who', 'which', 'whose', 'where'], answer: 1, explanationUz: "Narsa haqida 'which' (yoki that)." },
+  { id: 38, topic: 'Nisbiy gaplar', q: 'That is the girl ____ bag was stolen.', options: ['who', 'which', 'whose', 'whom'], answer: 2, explanationUz: "Egalikni bildiradi (uning sumkasi): 'whose'." },
+  { id: 39, topic: 'Nisbiy gaplar', q: 'The city ____ I was born is very old.', options: ['which', 'who', 'whose', 'where'], answer: 3, explanationUz: "Joy haqida: 'where'." },
+  { id: 40, topic: 'Nisbiy gaplar', q: 'My brother, ____ lives in Seoul, is visiting us.', options: ['that', 'who', 'which', 'whom'], answer: 1, explanationUz: "Vergul bilan ajratilgan qo'shimcha izohda 'that' ishlatilmaydi; shaxs uchun 'who'." },
+  // Gerund va infinitiv
+  { id: 41, topic: 'Gerund va infinitiv', q: 'I enjoy ____ to music.', options: ['listen', 'to listen', 'listening', 'listened'], answer: 2, explanationUz: "'enjoy' dan keyin gerund (-ing) keladi." },
+  { id: 42, topic: 'Gerund va infinitiv', q: 'She decided ____ abroad.', options: ['studying', 'to study', 'study', 'studied'], answer: 1, explanationUz: "'decide' dan keyin infinitiv (to + V1) keladi." },
+  { id: 43, topic: 'Gerund va infinitiv', q: 'He suggested ____ a taxi.', options: ['to take', 'take', 'taking', 'took'], answer: 2, explanationUz: "'suggest' dan keyin gerund keladi." },
+  { id: 44, topic: 'Gerund va infinitiv', q: 'They want ____ the exam next month.', options: ['taking', 'to take', 'take', 'took'], answer: 1, explanationUz: "'want' dan keyin infinitiv (to + V1) keladi." },
+  { id: 45, topic: 'Gerund va infinitiv', q: 'I am looking forward to ____ you.', options: ['see', 'seeing', 'to see', 'saw'], answer: 1, explanationUz: "'look forward to' dagi 'to' predlog, shuning uchun gerund keladi." },
+  // Taqqoslash
+  { id: 46, topic: 'Taqqoslash', q: 'This exam is ____ than the last one.', options: ['difficulter', 'more difficult', 'most difficult', 'difficult'], answer: 1, explanationUz: "Uzun sifatlar (3+ bo'g'in) uchun 'more + sifat + than'." },
+  { id: 47, topic: 'Taqqoslash', q: 'She is the ____ student in the class.', options: ['good', 'better', 'best', 'most good'], answer: 2, explanationUz: "Orttirma daraja: 'good → better → best'." },
+  { id: 48, topic: 'Taqqoslash', q: 'Tashkent is not as ____ as Moscow.', options: ['bigger', 'big', 'biggest', 'more big'], answer: 1, explanationUz: "'as ... as' qolipida sifat oddiy darajada turadi." },
+  { id: 49, topic: 'Taqqoslash', q: 'The ____ you practise, the better you speak.', options: ['more', 'most', 'much', 'many'], answer: 0, explanationUz: "'The more..., the better...' qolipi: qanchalik ko'p, shunchalik yaxshi." },
+  { id: 50, topic: 'Taqqoslash', q: 'He runs ____ than his brother.', options: ['fast', 'fastest', 'faster', 'more fast'], answer: 2, explanationUz: "Qisqa sifat/ravish uchun '-er + than'." },
 ];
+
+/** To'g'ri javob doim bir xil joyda bo'lib qolmasligi uchun variantlarni aylantiradi (javob indeksi = id % 4). */
+export const grammar: GrammarItem[] = rawGrammar.map((g) => {
+  const target = g.id % 4;
+  const shift = (target - g.answer + 4) % 4;
+  const options = g.options.map((_, i, a) => a[(i - shift + 4) % 4]);
+  return { ...g, options, answer: target };
+});

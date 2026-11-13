@@ -6,6 +6,7 @@ const games = [
   { href: '#/games/rush', icon: '⚡', title: 'So‘z poygasi', text: '60 soniya, 3 jon, kombo ball' },
   { href: '#/games/pairs', icon: '🧩', title: 'Juftlik', text: 'So‘z va ma’noni juftlang' },
   { href: '#/games/spell', icon: '✍️', title: 'Imlo sinovi', text: 'Misol gapdan so‘zni yozing' },
+  { href: '#/duel', icon: '⚔️', title: 'Duel', text: 'Do‘st bilan bir xil so‘zlarda' },
 ];
 
 export default function GamesHub() {

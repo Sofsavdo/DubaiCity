@@ -1,5 +1,5 @@
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
-import { ApiError, createDb, join, leaderboard, sync } from './db';
+import { ApiError, createDb, createDuel, getDuel, join, leaderboard, submitDuel, sync } from './db';
 
 const PORT = Number(process.env.PORT ?? 3101);
 const db = createDb(process.env.DB_PATH ?? new URL('./data.sqlite', import.meta.url).pathname);
@@ -51,6 +51,19 @@ createServer(async (req, res) => {
       const period = url.searchParams.get('period') === 'all' ? 'all' : 'week';
       const token = req.headers['x-token'];
       return send(res, 200, leaderboard(db, period, typeof token === 'string' ? token : undefined));
+    }
+    if (req.method === 'POST' && url.pathname === '/api/duel/create') {
+      const b = await readJson(req);
+      return send(res, 200, createDuel(db, String(b.token ?? '')));
+    }
+    const dm = url.pathname.match(/^\/api\/duel\/([A-Za-z0-9]{4,8})(\/submit)?$/);
+    if (dm && req.method === 'GET' && !dm[2]) {
+      const token = req.headers['x-token'];
+      return send(res, 200, getDuel(db, dm[1], typeof token === 'string' ? token : undefined));
+    }
+    if (dm && req.method === 'POST' && dm[2]) {
+      const b = await readJson(req);
+      return send(res, 200, submitDuel(db, String(b.token ?? ''), dm[1], Number(b.score), Number(b.correct), Number(b.ms)));
     }
     if (url.pathname === '/api/health') return send(res, 200, { ok: true });
     return send(res, 404, { error: 'Topilmadi' });

@@ -10,6 +10,7 @@ import Mocks from './pages/Mocks';
 import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
 import League from './pages/League';
+import DuelHub, { DuelRoom } from './pages/Duel';
 import Reading from './pages/Reading';
 import Listening from './pages/Listening';
 import Grammar from './pages/Grammar';
@@ -39,6 +40,7 @@ const routes: Record<string, () => ReactNode> = {
   '#/tools': () => <Tools />,
   '#/pricing': () => <Pricing />,
   '#/league': () => <League />,
+  '#/duel': () => <DuelHub />,
   '#/profile': () => <Profile />,
 };
 
@@ -49,6 +51,7 @@ const nav: [string, string][] = [
   ['#/mocks', 'Mock'],
   ['#/games', 'O‘yinlar'],
   ['#/league', 'Reyting'],
+  ['#/duel', 'Duel'],
   ['#/profile', 'Profil'],
 ];
 
@@ -56,7 +59,8 @@ const isActive = (hash: string, base: string): boolean => (base === '#/' ? hash 
 
 export default function App() {
   const hash = useHash();
-  const page = (routes[hash] ?? routes['#/'])();
+  const duelCode = hash.match(/^#\/duel\/([A-Za-z0-9]{4,8})$/)?.[1];
+  const page = duelCode ? <DuelRoom key={duelCode} code={duelCode.toUpperCase()} /> : (routes[hash] ?? routes['#/'])();
   return (
     <>
       <header className="top">

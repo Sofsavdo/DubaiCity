@@ -51,3 +51,16 @@ export function startSync(): void {
   setInterval(() => void syncNow(), 15_000);
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') void syncNow(); });
 }
+
+// ---------------- Duel ----------------
+export interface DuelPlayer { nickname: string; score: number | null; correct: number | null; ms: number | null; me: boolean; rank: number | null }
+export interface DuelInfo { code: string; words: string[]; expired: boolean; full: boolean; players: DuelPlayer[]; iFinished: boolean }
+
+const json = (body: unknown): RequestInit => ({ method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+
+export const createDuel = (): Promise<{ code: string; words: string[] }> => call('/api/duel/create', json({ token: getAccount()?.token ?? '' }));
+export const fetchDuel = (code: string): Promise<DuelInfo> => call(`/api/duel/${encodeURIComponent(code)}`, { headers: { 'x-token': getAccount()?.token ?? '' } });
+export const submitDuel = (code: string, score: number, correct: number, ms: number): Promise<DuelInfo> =>
+  call(`/api/duel/${encodeURIComponent(code)}/submit`, json({ token: getAccount()?.token ?? '', score, correct, ms }));
+
+export const duelUrl = (code: string): string => `${window.location.origin}${window.location.pathname}#/duel/${code}`;
