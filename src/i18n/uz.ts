@@ -1,0 +1,37 @@
+// Asosiy til: o'zbekcha. Yangi til qo'shish: shu fayldagi BARCHA kalitlarni boshqa faylda tarjima qilib, index.ts dagi `dicts` ga qo'shing.
+// Yangi matn yozayotganda to'g'ridan-to'g'ri JSX ga emas, shu yerga kalit qo'shing.
+export const uz = {
+  'nav.home': 'Bosh sahifa',
+  'nav.home.short': 'Asosiy',
+  'nav.exam': 'Imtihon',
+  'nav.grammar': 'Grammar',
+  'nav.mocks': 'Mock testlar',
+  'nav.games': 'O‘yinlar',
+  'nav.league': 'Reyting',
+  'nav.duel': 'Duel',
+  'nav.profile': 'Profil',
+  'nav.tools': 'Band kalkulyatori',
+  'nav.practice': 'Gap tuzish',
+  'nav.menu': 'Menyu',
+  'nav.close': 'Yopish',
+  'nav.main': 'Asosiy menyu',
+  'nav.quick': 'Tezkor menyu',
+  'cta.plans': 'Obuna turlari',
+  'cta.start': 'Boshlash',
+  'stat.streak': 'Ketma-ket kunlar',
+  'stat.daily': 'Kunlik maqsad',
+  'stat.title': 'Statistika',
+  'footer.tracks': 'Yo‘nalishlar',
+  'footer.games': 'O‘yinlar',
+  'footer.free': 'Bepul',
+  'footer.exam': 'Imtihon tayyorgarligi',
+  'footer.rush': 'So‘z poygasi',
+  'footer.pairs': 'Juftlik',
+  'footer.spell': 'Imlo sinovi',
+  'footer.results': 'Natijalarim',
+  'brand.tagline': 'IELTS ga o‘zbek tilida tayyorlaning',
+  'lang.label': 'Til',
+  'greet.progress': '{n} ta qoldi',
+} as const;
+
+export type Key = keyof typeof uz;
