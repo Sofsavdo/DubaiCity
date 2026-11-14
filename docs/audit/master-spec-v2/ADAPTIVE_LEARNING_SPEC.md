@@ -1,6 +1,6 @@
 # Adaptive Learning Spec
 
-Legend: **[F]** verified · **[R]** recommendation · **[U]** unresolved. Nothing here is implemented.
+Legend: **[F]** verified · **[R]** recommendation · **[U]** unresolved. **Implemented (pure logic, not yet wired to any screen):** `src/lib/adaptive/*`, `src/content/curriculum/*`, tests in `src/lib/adaptive/adaptive.test.ts`. Implementation notes: the first review interval is `base·2^(streak−1)·(0.5+m_eff)` days; on a cold start (nothing practised) the one-new-per-three-slots cap is lifted so the first day is not left almost empty.
 
 ### Error taxonomy (hierarchical, stable ids)
 `G.tense, G.article, G.preposition, G.sva, G.word_order, G.modal, G.conditional, G.plural` · `V.word_choice, V.collocation, V.spelling, V.form` · `P.stress, P.phoneme, P.intonation` · `S.hesitation, S.fluency, S.coherence` · `W.coherence, W.task_response, W.organisation, W.sentence_variety` · `R.inference, R.detail, R.main_idea` · `L.detail, L.gist, L.distractor`.
@@ -22,7 +22,7 @@ Per (user, node) store `m ∈ [0,1]`, `attempts`, `distinct_days`, `last_seen`.
 ### Deterministic recommendation rules
 For each candidate node whose prerequisites have `m_eff ≥ 0.6`:
 `score = 0.40·weakness + 0.25·revision_due + 0.20·goal_relevance + 0.15·exam_proximity`
-- `weakness = 1 − m_eff` (+0.2 if its taxonomy id appears in the last 10 errors, capped at 1)
+- `weakness = 0.8·(1 − m_eff) + 0.2·[taxonomy id appears in the last 10 errors]` (changed from `1 − m_eff + 0.2` capped at 1: the cap made the repeated-error signal invisible for new nodes — found by a unit test)
 - `revision_due = clamp((today − due_date)/7, 0, 1)` (0 if not due)
 - `goal_relevance ∈ {0, 0.5, 1}` by match to the learner's goal/exam tag
 - `exam_proximity = clamp(1 − days_to_exam/90, 0, 1)` for exam-tagged nodes, else 0
