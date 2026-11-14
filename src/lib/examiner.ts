@@ -1,4 +1,6 @@
 import { part1Topics, part2Cards } from '../content/speaking';
+import { easyPart1Topics, easyPart2Cards, hardPart3 } from '../content/speakingEasy';
+import type { Cefr } from './levels';
 import type { Reaction } from '../content/roasts';
 import { reactTo, type Level } from './roast';
 
@@ -26,7 +28,7 @@ export class Examiner {
   phase: 'intro' | 'p1' | 'p2prep' | 'p2' | 'p2after' | 'p3' | 'done' = 'intro';
   turns: TurnStat[] = [];
   readonly p1Qs: string[];
-  readonly card = part2Cards[0];
+  readonly card: { title: string; points: string[] } = part2Cards[0];
   readonly p3Qs: string[];
   private qi = 0;
   private followed = false;
@@ -35,13 +37,36 @@ export class Examiner {
   private p2Extended = false;
   private rnd: () => number;
 
-  constructor(rnd: () => number = Math.random, public level: Level = 0) {
+  /** A1–A2: sodda savollar, qisqaroq monolog va o'zbekcha yordam */
+  readonly easy: boolean;
+  private uz = new Map<string, string>();
+
+  constructor(rnd: () => number = Math.random, public level: Level = 0, public cefr: Cefr | null = null) {
     this.rnd = rnd;
+    this.easy = cefr === 'A1' || cefr === 'A2';
+    if (this.easy) {
+      const topics = shuffle(easyPart1Topics, rnd).slice(0, 2);
+      this.p1Qs = topics.flatMap((t) => t.questions.map((q) => q.en));
+      const card = shuffle(easyPart2Cards, rnd)[0];
+      this.card = card;
+      this.p3Qs = card.part3.map((q) => q.en);
+      for (const t of easyPart1Topics) for (const q of t.questions) this.uz.set(q.en, q.uz);
+      for (const c of easyPart2Cards) { this.uz.set(c.title, c.titleUz); for (const q of c.part3) this.uz.set(q.en, q.uz); }
+      return;
+    }
     const topics = shuffle(part1Topics, rnd).slice(0, 2);
     this.p1Qs = topics.flatMap((t) => t.questions.slice(0, 3));
     const card = shuffle(part2Cards, rnd)[0];
     this.card = card;
-    this.p3Qs = card.part3;
+    this.p3Qs = cefr === 'C1' ? [...card.part3.slice(0, 2), ...shuffle(hardPart3, rnd).slice(0, 2)] : card.part3;
+  }
+
+  /** Ekranda ko'rsatiladigan o'zbekcha yordam (faqat A1–A2): gap ichidagi savolga mos tarjima. */
+  hintFor(say: string): string | undefined {
+    if (!this.easy) return undefined;
+    let best: string | undefined;
+    for (const [en, uz] of this.uz) if (say.includes(en) && (!best || en.length > best.length)) best = en;
+    return best ? this.uz.get(best) : undefined;
   }
 
   start(): Step {
@@ -95,14 +120,14 @@ export class Examiner {
         if (part === 1) {
           this.phase = 'p2prep';
           const pts = this.card.points.map((p) => `You should say ${p}.`.replace('.,', '.')).join(' ');
-          return { say: `Thank you. Now I am going to give you a topic, and I would like you to talk about it for one to two minutes. You have one minute to think. Here is your topic. ${this.card.title} ${pts}`, wait: 'prep', part: 2, reaction };
+          return { say: `Thank you. Now I am going to give you a topic, and I would like you to talk about it for ${this.easy ? 'about one minute' : 'one to two minutes'}. You have one minute to think. Here is your topic. ${this.card.title} ${pts}`, wait: 'prep', part: 2, reaction };
         }
         this.phase = 'done';
         return { say: 'Thank you very much. That is the end of the speaking test.', wait: 'end', part: 3, reaction };
       }
       case 'p2': {
         this.take(text, seconds, latencyMs);
-        if (this.pending.seconds < 60 && !this.p2Extended) {
+        if (this.pending.seconds < (this.easy ? 30 : 60) && !this.p2Extended) {
           this.p2Extended = true;
           return { say: 'Please continue. You still have some time.', wait: 'monologue', part: 2 };
         }
@@ -132,7 +157,7 @@ export class Examiner {
   beginMonologue(): Step {
     this.phase = 'p2';
     this.currentQ = this.card.title;
-    return { say: 'All right. Remember, you have one to two minutes. Please begin speaking now.', wait: 'monologue', part: 2 };
+    return { say: `All right. Remember, you have ${this.easy ? 'about one minute' : 'one to two minutes'}. Please begin speaking now.`, wait: 'monologue', part: 2 };
   }
 }
 

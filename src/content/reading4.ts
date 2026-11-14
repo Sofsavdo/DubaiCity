@@ -4,6 +4,7 @@ const letters = ['A', 'B', 'C', 'D', 'E'];
 
 export const reading4: ReadingTest = {
   id: 'reading-4',
+  level: 'B2',
   title: 'Reading mini-test 4: Learning a Language as an Adult',
   minutes: 18,
   passageTitle: 'Learning a Language as an Adult',

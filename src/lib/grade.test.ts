@@ -27,12 +27,15 @@ import { readingTests } from '../content/readingTests';
 import { listeningTests } from '../content/listeningTests';
 
 const clean = (t: string) => t.toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ');
-assert.equal(readingTests.length, 4);
-assert.equal(listeningTests.length, 4);
-assert.equal(new Set([...readingTests, ...listeningTests].map((t) => t.id)).size, 8, 'test id lari noyob');
+assert.equal(readingTests.length, 6);
+assert.equal(listeningTests.length, 5);
+assert.equal(new Set([...readingTests, ...listeningTests].map((t) => t.id)).size, 11, 'test id lari noyob');
+for (const t of [...readingTests, ...listeningTests]) assert.ok(['A1', 'A2', 'B1', 'B2', 'C1'].includes(t.level), `${t.id}: daraja belgilangan`);
+// Har bir darajaga kamida bitta Reading (A2..C1) bor
+for (const lv of ['A2', 'B1', 'B2', 'C1']) assert.ok(readingTests.some((t) => t.level === lv), `Reading ${lv}`);
 
 for (const t of [...readingTests, ...listeningTests]) {
-  assert.ok(t.questions.length >= 10, `${t.id}: savollar soni`);
+  assert.ok(t.questions.length >= 8, `${t.id}: savollar soni`);
   t.questions.forEach((x, i) => assert.equal(x.id, i + 1, `${t.id}: id ketma-ketligi`));
   const ids = t.groups.flatMap((g) => g.questionIds).sort((a, b) => a - b);
   assert.deepEqual(ids, t.questions.map((x) => x.id), `${t.id}: guruhlar hamma savolni qamrashi kerak`);
@@ -55,6 +58,6 @@ for (const t of [...readingTests, ...listeningTests]) {
 // Reading: bo'sh joyli javoblar aynan matndagi so'z (IELTS qoidasi)
 for (const t of readingTests) for (const q of t.questions) if (q.type === 'fill') assert.ok(clean(t.paragraphs.join(' ')).includes(q.answers[0]), `${t.id} Q${q.id}: reading javobi matndagi so'z emas`);
 // Moslashtirish: har bir sarlavha/harf variantidan javob to'g'ri indeksga ega
-const r2 = readingTests[1];
+const r2 = readingTests.find((t) => t.id === 'reading-2')!;
 assert.equal(r2.questions.filter((q) => q.type === 'match').length, 6);
 console.log('grade.test: OK');

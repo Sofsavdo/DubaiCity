@@ -3,7 +3,9 @@
 import { listeningTests } from '../src/content/listeningTests';
 import { part1Topics, part2Cards } from '../src/content/speaking';
 import { roastLines } from '../src/content/roasts';
+import { easyPart1Topics, easyPart2Cards, hardPart3 } from '../src/content/speakingEasy';
 import { Examiner } from '../src/lib/examiner';
+import type { Cefr } from '../src/lib/levels';
 import { clipKey } from '../src/lib/clipHash';
 
 type Task = { kind: 'clip'; key: string; text: string; voice: string; speed: number };
@@ -20,10 +22,11 @@ const add = (text: string, speed = 1, voice = EXAMINER_VOICE) => {
 };
 
 // 1) Ustozning barcha gaplari: turli urug' va javob uzunliklarida Examiner ni yurgizib yig'amiz
-for (let level = 0; level <= 3; level++) for (let seed = 1; seed <= 400; seed++) {
+const CEFRS: (Cefr | null)[] = [null, 'A1', 'C1'];
+for (const cefr of CEFRS) for (let level = 0; level <= 3; level++) for (let seed = 1; seed <= 400; seed++) {
   let s = seed * 9301 + 49297;
   const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
-  const ex = new Examiner(rnd, level as 0 | 1 | 2 | 3);
+  const ex = new Examiner(rnd, level as 0 | 1 | 2 | 3, cefr);
   let step = ex.start(); add(step.say);
   const answers = ['Yes', 'I really like my city because it is warm and friendly and full of life', 'Um um uh er well I am agree with it'];
   for (let i = 0; i < 40 && step.wait !== 'end'; i++) {
@@ -37,6 +40,9 @@ for (let level = 0; level <= 3; level++) for (let seed = 1; seed <= 400; seed++)
 // 2) Ustoz so'zlarining qolgan qismi
 for (const t of part1Topics) t.questions.forEach((q) => add(q));
 for (const c of part2Cards) c.part3.forEach((q) => add(q));
+for (const t of easyPart1Topics) t.questions.forEach((q) => add(q.en));
+for (const c of easyPart2Cards) c.part3.forEach((q) => add(q.en));
+hardPart3.forEach((q) => add(q));
 add('Ha, ha, ha, ha!', 1.2);
 
 // 3) Reaksiya satrlari (inglizcha variant). Qo'yiladigan so'zlar: ma'lum xato juftliklari va "um" soni
@@ -54,6 +60,7 @@ const VOICES: Record<string, { A: string; B?: string }> = {
   'listening-2': { A: 'bf_isabella' },
   'listening-3': { A: 'bm_lewis', B: 'bf_emma' },
   'listening-4': { A: 'bm_george' },
+  'listening-5': { A: 'bf_isabella', B: 'bm_lewis' },
 };
 const listens: Listen[] = listeningTests.map((t) => {
   const v = VOICES[t.id] ?? { A: 'bf_emma', B: 'bm_george' };

@@ -6,6 +6,7 @@ interface RecEvent { resultIndex: number; results: ArrayLike<RecResult> }
 interface Rec {
   lang: string; continuous: boolean; interimResults: boolean;
   onresult: ((e: RecEvent) => void) | null; onend: (() => void) | null; onerror: ((e: { error: string }) => void) | null;
+  onaudiostart: (() => void) | null; onspeechstart: (() => void) | null;
   start(): void; stop(): void; abort(): void;
 }
 type RecCtor = new () => Rec;
@@ -60,51 +61,98 @@ function sayBrowser(text: string, signal: Signal, lang: string, prosody: Prosody
 
 export const stopSpeaking = (): void => { stopClip(); if (ttsSupported()) window.speechSynthesis.cancel(); };
 
+export type MicStatus = 'starting' | 'mic' | 'speech';
 export interface TurnOptions {
   silenceMs: number;       // nutqdan keyin shuncha sukut = javob tugadi
   maxMs: number;           // eng ko'p davomiylik
   noSpeechMs?: number;     // umuman gapirilmasa
+  lang?: string;           // tanish tili: en-US, en-GB, en-IN
   onInterim: (text: string) => void;
+  onStatus?: (s: MicStatus) => void;
   signal: Signal;
   endRef: { current: (() => void) | null }; // "Tugatdim" tugmasi
 }
 export interface TurnResult { text: string; seconds: number; latencyMs: number }
 
-/** Bitta javobni tinglaydi. Ovoz xotirada saqlanmaydi, faqat tanilgan matn qaytadi. */
+export class SpeechError extends Error {
+  constructor(public code: 'denied' | 'network' | 'nomic' | 'unstable' | 'unsupported', message: string) { super(message); }
+}
+
+const isMobile = (): boolean => /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);
+
+/** Bitta javobni tinglaydi. Ovoz xotirada saqlanmaydi, faqat tanilgan matn qaytadi.
+ *  Telefonlarda (Android Chrome) `continuous` ishonchsiz: natijalar takrorlanadi va oraliq natijalar "yakuniy" deb
+ *  belgilanadi. Shuning uchun u yerda har bir iborani alohida seans qilib, o'zimiz yig'amiz. */
 export function listenTurn(o: TurnOptions): Promise<TurnResult> {
   return new Promise((resolve, reject) => {
     const C = ctor();
-    if (!C) { reject(new Error('Brauzer nutqni tanishni qo‘llamaydi')); return; }
+    if (!C) { reject(new SpeechError('unsupported', 'Brauzer nutqni tanishni qo‘llamaydi')); return; }
+    const mobile = isMobile();
     const rec = new C();
-    rec.lang = 'en-GB'; rec.continuous = true; rec.interimResults = true;
+    rec.lang = o.lang ?? 'en-US';
+    rec.continuous = !mobile;
+    rec.interimResults = true;
+    (rec as unknown as { maxAlternatives: number }).maxAlternatives = 1;
     const start = Date.now();
-    let firstAt = 0, lastAt = 0, finals = '', interim = '', done = false;
+    let firstAt = 0, lastAt = 0, done = false;
+    const chunks: string[] = [];
+    let interim = '';
+    const restarts: number[] = [];
+    o.onStatus?.('starting');
 
+    const compose = () => `${chunks.join(' ')} ${interim}`.replace(/\s+/g, ' ').trim();
     const finish = () => {
       if (done) return;
       done = true;
       clearInterval(timer);
       o.endRef.current = null;
       try { rec.onend = null; rec.stop(); } catch { /* */ }
-      const text = `${finals} ${interim}`.replace(/\s+/g, ' ').trim();
-      resolve({ text, seconds: firstAt ? (lastAt - firstAt) / 1000 : 0, latencyMs: firstAt ? firstAt - start : Date.now() - start });
+      resolve({ text: compose(), seconds: firstAt ? (lastAt - firstAt) / 1000 : 0, latencyMs: firstAt ? firstAt - start : Date.now() - start });
     };
+    const fail = (e: SpeechError) => { if (done) return; done = true; clearInterval(timer); o.endRef.current = null; try { rec.onend = null; rec.abort(); } catch { /* */ } reject(e); };
     o.endRef.current = finish;
+
+    const addFinal = (t: string) => {
+      const last = chunks[chunks.length - 1];
+      if (last && (t === last || last.endsWith(t))) return;            // takrorlangan natija
+      if (last && t.startsWith(last)) { chunks[chunks.length - 1] = t; return; } // kengaygan variant
+      chunks.push(t);
+    };
 
     rec.onresult = (e) => {
       const now = Date.now();
       if (!firstAt) firstAt = now;
       lastAt = now;
-      let f = '', i = '';
-      for (let k = 0; k < e.results.length; k++) { const r = e.results[k]; if (r.isFinal) f += ` ${r[0].transcript}`; else i += ` ${r[0].transcript}`; }
-      finals = f.trim(); interim = i.trim();
-      o.onInterim(`${finals} ${interim}`.trim());
+      let liveInterim = '';
+      for (let k = e.resultIndex; k < e.results.length; k++) {
+        const r = e.results[k];
+        const text = r[0].transcript.trim();
+        const conf = (r[0] as unknown as { confidence?: number }).confidence;
+        // Android: ba'zan oraliq natija isFinal=true va ishonch 0 bilan keladi: uni oraliq deb olamiz
+        if (r.isFinal && conf !== 0) { if (text) addFinal(text); interim = ''; } else liveInterim = text;
+      }
+      interim = liveInterim;
+      o.onInterim(compose());
     };
+    rec.onaudiostart = () => o.onStatus?.('mic');
+    rec.onspeechstart = () => { lastAt = Date.now(); o.onStatus?.('speech'); };
     rec.onerror = (e) => {
-      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') { done = true; clearInterval(timer); reject(new Error('Mikrofonga ruxsat berilmadi')); }
+      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') fail(new SpeechError('denied', 'Mikrofonga ruxsat berilmadi'));
+      else if (e.error === 'audio-capture') fail(new SpeechError('nomic', 'Mikrofon topilmadi'));
+      else if (e.error === 'network') fail(new SpeechError('network', 'Nutqni tanish internet talab qiladi, aloqa yo‘q'));
+      else if (e.error === 'language-not-supported') fail(new SpeechError('unsupported', 'Bu til qo‘llanmaydi'));
+      // 'no-speech' va 'aborted' oddiy hollar: onend da qayta ishga tushiriladi
     };
-    rec.onend = () => { if (!done) { try { rec.start(); } catch { /* allaqachon ishlayapti */ } } };
-    try { rec.start(); } catch { /* */ }
+    const begin = () => { try { rec.start(); } catch { /* allaqachon ishlayapti */ } };
+    rec.onend = () => {
+      if (done) return;
+      const now = Date.now();
+      restarts.push(now);
+      while (restarts.length && now - restarts[0] > 4000) restarts.shift();
+      if (restarts.length > 10) { fail(new SpeechError('unstable', 'Nutqni tanish barqaror ishlamayapti')); return; }
+      setTimeout(begin, restarts.length > 3 ? 500 : 120); // tez-tez uzilsa kutish oshiriladi (qotib qolmaslik uchun)
+    };
+    begin();
 
     const timer = setInterval(() => {
       if (o.signal.cancelled) { finish(); return; }

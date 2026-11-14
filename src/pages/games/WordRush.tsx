@@ -1,6 +1,6 @@
 import { Heart } from 'lucide-react';
 import { useMemo, useRef, useState } from 'react';
-import { vocab, vocabById } from '../../content/vocab';
+import { vocabById, vocabForLevel } from '../../content/vocab';
 import { lines, pickLine } from '../../content/lines';
 import { Mascot, type Mood } from '../../components/Mascot';
 import { LockCard } from '../../components/Gate';
@@ -31,7 +31,7 @@ export default function WordRush() {
 
   const cur = queue.length ? vocabById[queue[idx % queue.length]] : undefined;
   const dir: 'en' | 'uz' = idx % 2 === 0 ? 'en' : 'uz';
-  const options = useMemo(() => (cur ? buildOptions(cur, dir) : []), [cur, dir]);
+  const options = useMemo(() => (cur ? buildOptions(cur, dir, vocabForLevel(getProfile().level)) : []), [cur, dir]);
 
   function finish() {
     if (stats.current.done) return;
@@ -44,7 +44,7 @@ export default function WordRush() {
 
   function start() {
     if (!consumeGame()) { setLocked(true); return; }
-    setQueue(pickSession(vocab.map((w) => w.id), getProfile().srs, Date.now(), 24));
+    setQueue(pickSession(vocabForLevel(getProfile().level).map((w) => w.id), getProfile().srs, Date.now(), 24));
     setIdx(0); setLives(3); setCombo(0); setScore(0); setPicked(null); setMissed([]); setMood('idle'); setMsg('Tez va aniq!');
     stats.current = { score: 0, correct: 0, total: 0, done: false };
     reset(SECONDS);

@@ -1,4 +1,7 @@
 import { Flame, Lock, Trophy } from 'lucide-react';
+import { useState } from 'react';
+import { setSound, sfx, soundOn } from '../lib/fx';
+import { LEVEL_INFO } from '../lib/levels';
 import { ACHIEVEMENTS, levelProgress } from '../lib/game';
 import { loadResults } from '../lib/storage';
 import { resetAll, setDailyGoal, useProfile } from '../lib/store';
@@ -9,6 +12,7 @@ import { Mascot } from '../components/Mascot';
 
 export default function Profile() {
   const p = useProfile();
+  const [snd, setSnd] = useState(soundOn());
   const lp = levelProgress(p.xp);
   const results = loadResults();
   const mastered = vocab.filter((w) => isMastered(p.srs[w.id])).length;
@@ -23,6 +27,7 @@ export default function Profile() {
           <div className="row" style={{ marginTop: 8 }}>
             <span className="pill"><Flame size={14} color="#ff7a1a" fill="#ff7a1a" /> Seriya: {p.streak} kun</span>
             <span className="pill">Eng uzun: {p.longestStreak}</span>
+            {p.level && <span className="pill">Daraja: {p.level} · {LEVEL_INFO[p.level].name}</span>}
             <span className="pill">So‘zlar: {mastered}/{vocab.length}</span>
             <span className="pill">O‘yinlar: {p.gamesPlayed}</span>
           </div>
@@ -39,6 +44,10 @@ export default function Profile() {
 
       <div className="card">
         <h3>Sozlamalar</h3>
+        <div className="row" style={{ marginBottom: 10 }}>
+          <a className="btn sm" href="#/placement">{p.level ? `Darajani qayta aniqlash (${p.level})` : 'Darajani aniqlash'}</a>
+          <label><input type="checkbox" checked={snd} onChange={(e) => { setSnd(e.target.checked); setSound(e.target.checked); if (e.target.checked) sfx('ok'); }} /> Ovozli effektlar</label>
+        </div>
         <div className="row">
           <label>Kunlik maqsad:{' '}
             <select value={p.dailyGoal} onChange={(e) => setDailyGoal(Number(e.target.value))}>

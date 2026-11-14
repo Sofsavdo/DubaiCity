@@ -3,6 +3,7 @@ import type { ReadingTest } from './types';
 // Original mashq matni (xayoliy ma'lumotlar bilan). Rasmiy IELTS materiali emas.
 export const reading1: ReadingTest = {
   id: 'reading-1',
+  level: 'B1',
   title: 'Reading mini-test 1: The Rise of the Rooftop Garden',
   minutes: 15,
   passageTitle: 'The Rise of the Rooftop Garden',

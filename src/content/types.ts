@@ -7,6 +7,7 @@ export type Question =
 
 export interface ReadingTest {
   id: string;
+  level: Cefr;
   title: string;
   minutes: number;
   passageTitle: string;
@@ -17,6 +18,7 @@ export interface ReadingTest {
 
 export interface ListeningTest {
   id: string;
+  level: Cefr;
   title: string;
   minutes: number;
   context: string;
@@ -27,8 +29,11 @@ export interface ListeningTest {
   questions: Question[];
 }
 
+import type { Cefr } from '../lib/levels';
+
 export interface GrammarItem {
   id: number;
+  level: Cefr;
   topic: string;
   q: string;
   options: string[];

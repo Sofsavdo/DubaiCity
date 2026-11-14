@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { Gate } from './components/Gate';
 import { useHash } from './components/hooks';
 import { Footer } from './components/Footer';
@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import Exam from './pages/Exam';
 import Mocks from './pages/Mocks';
 import Pricing from './pages/Pricing';
+import Placement from './pages/Placement';
 import Profile from './pages/Profile';
 import League from './pages/League';
 import DuelHub, { DuelRoom } from './pages/Duel';
@@ -42,6 +43,7 @@ const routes: Record<string, () => ReactNode> = {
   '#/league': () => <League />,
   '#/duel': () => <DuelHub />,
   '#/profile': () => <Profile />,
+  '#/placement': () => <Placement />,
 };
 
 /** #/exam|mocks/reading|listening[/id] yo'nalishi: ro'yxat yoki bitta test, tegishli obuna bilan */
@@ -58,6 +60,8 @@ function testRoute(hash: string): ReactNode | null {
 
 export default function App() {
   const hash = useHash();
+  // Menyu bosilganda yangi sahifa har doim tepadan boshlansin
+  useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: 'auto' }); }, [hash]);
   const duelCode = hash.match(/^#\/duel\/([A-Za-z0-9]{4,8})$/)?.[1];
   const tr = testRoute(hash);
   const page = tr ? tr : duelCode ? <DuelRoom key={duelCode} code={duelCode.toUpperCase()} /> : (routes[hash] ?? routes['#/'])();

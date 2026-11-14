@@ -2,6 +2,7 @@ import type { ListeningTest } from './types';
 
 export const listening3: ListeningTest = {
   id: 'listening-3',
+  level: 'B2',
   title: 'Listening mini-test 3: Research project tutorial',
   minutes: 9,
   names: { A: 'Tutor', B: 'Maria' },

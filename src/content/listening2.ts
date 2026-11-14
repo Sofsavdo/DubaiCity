@@ -13,6 +13,7 @@ const text = [
 
 export const listening2: ListeningTest = {
   id: 'listening-2',
+  level: 'B1',
   title: 'Listening mini-test 2: Library introduction',
   minutes: 8,
   names: { A: 'Librarian' },

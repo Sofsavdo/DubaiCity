@@ -3,6 +3,7 @@ import type { ListeningTest } from './types';
 // Original mashq skripti. Audio brauzerning ovoz sintezi bilan o'qiladi.
 export const listening1: ListeningTest = {
   id: 'listening-1',
+  level: 'B1',
   title: 'Listening mini-test 1: Joining a fitness centre',
   minutes: 8,
   names: { A: 'Anna', B: 'Daniel' },

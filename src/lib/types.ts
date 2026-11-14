@@ -1,3 +1,5 @@
+import type { Cefr } from './levels';
+
 export type TrackId = 'exam' | 'grammar' | 'mocks';
 
 export interface CardState {
@@ -28,6 +30,13 @@ export interface Profile {
   roastLevel: number;
   /** Foydalanuvchi 18 yoshdan oshganini o'zi tasdiqlagan */
   adult: boolean;
+  /** Daraja aniqlash natijasi (null = hali aniqlanmagan) */
+  level: Cefr | null;
+  /** Maqsad IELTS bali */
+  target: number;
+  /** Imtihon sanasi (YYYY-MM-DD) yoki null */
+  examDate: string | null;
+  placementAt: string | null;
 }
 
 export const defaultProfile = (today: string): Profile => ({
@@ -47,4 +56,8 @@ export const defaultProfile = (today: string): Profile => ({
   hardMode: false,
   roastLevel: 0,
   adult: false,
+  level: null,
+  target: 6.5,
+  examDate: null,
+  placementAt: null,
 });

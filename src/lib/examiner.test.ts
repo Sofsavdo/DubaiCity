@@ -83,3 +83,26 @@ ai.overrideQuestion('What do you enjoy most about it?');
 ai.answer('I enjoy the food and the markets, they are colourful and cheap and always busy', 5, 500);
 assert.equal(ai.turns.at(-1)?.q, 'What do you enjoy most about it?');
 console.log('examiner.test: OK');
+
+// A1–A2: sodda savollar, o'zbekcha yordam, qisqaroq monolog
+{
+  const easy = new Examiner(rnd, 0, 'A1');
+  assert.equal(easy.easy, true);
+  let st = easy.start(); st = easy.answer('Ali', 1, 1);
+  assert.ok(easy.hintFor(st.say), 'birinchi savolga o‘zbekcha yordam bor');
+  assert.ok(easy.p1Qs.length >= 6);
+  for (let i = 0; i < 12 && st.wait !== 'prep'; i++) st = easy.answer('I like it very much because it is nice', 3, 1500);
+  assert.equal(st.wait, 'prep');
+  assert.ok(st.say.includes('about one minute'));
+  assert.ok(easy.hintFor(st.say), 'kartochka sarlavhasiga yordam');
+  const mono = easy.beginMonologue();
+  assert.ok(mono.say.includes('about one minute'));
+  // 30 soniyadan keyin qo'shimcha so'ralmaydi
+  const after = easy.answer('I have a friend. He is kind and funny and we play football every weekend together.', 35, 1000);
+  assert.ok(!after.say.startsWith('Please continue'), 'A1 monologi 30s dan keyin yetarli');
+  const hard = new Examiner(rnd, 0, 'B2');
+  assert.equal(hard.easy, false); assert.equal(hard.hintFor('Where is your hometown?'), undefined);
+  const c1 = new Examiner(rnd, 0, 'C1');
+  assert.equal(c1.p3Qs.length, 4);
+}
+console.log('examiner.test (levels): OK');

@@ -11,6 +11,7 @@ const parts = [
 
 export const listening4: ListeningTest = {
   id: 'listening-4',
+  level: 'C1',
   title: 'Listening mini-test 4: Urban beekeeping (lecture)',
   minutes: 9,
   names: { A: 'Lecturer' },

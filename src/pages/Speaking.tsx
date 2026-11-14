@@ -6,7 +6,7 @@ import { getAccount } from '../lib/account';
 import { aiEnabled, aiEvaluateSpeaking, aiFollowup, type Evaluation } from '../lib/ai';
 import { Mascot, type Mood } from '../components/Mascot';
 import { Examiner, summarize, type Summary, type TurnStat } from '../lib/examiner';
-import { hasVoice, listenTurn, say, sayReaction, stopSpeaking, sttSupported, type Signal, type TurnResult } from '../lib/speech';
+import { SpeechError, hasVoice, listenTurn, say, sayReaction, stopSpeaking, sttSupported, type MicStatus, type Signal, type TurnResult } from '../lib/speech';
 import type { Reaction } from '../content/roasts';
 import { PersonaPicker } from '../components/PersonaPicker';
 import { detectSlip } from '../lib/roast';
@@ -15,6 +15,12 @@ import { addXp, personaLevel, useProfile } from '../lib/store';
 
 type Stage = 'intro' | 'live' | 'report';
 type Status = 'speaking' | 'listening' | 'prep' | 'thinking';
+const ACCENTS = [
+  { id: 'en-US', label: 'AQSh (en-US)', hint: 'Ko‘pchilik uchun eng yaxshi tanish' },
+  { id: 'en-GB', label: 'Britaniya (en-GB)', hint: 'IELTS talaffuziga yaqin' },
+  { id: 'en-IN', label: 'Hind (en-IN)', hint: 'Janubiy Osiyo aksentini yaxshiroq tushunishi mumkin' },
+] as const;
+const readAccent = (): string => { try { return localStorage.getItem('bandly.stt') ?? 'en-US'; } catch { return 'en-US'; } };
 const mmss = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 
 export default function Speaking() {
@@ -23,6 +29,7 @@ export default function Speaking() {
   const [stage, setStage] = useState<Stage>('intro');
   const [textMode, setTextMode] = useState(!supported);
   const [caption, setCaption] = useState('');
+  const [hint, setHint] = useState('');
   const [reaction, setReaction] = useState<Reaction | null>(null);
   const [flash, setFlash] = useState(false);
   const flashed = useRef(false);
@@ -41,6 +48,13 @@ export default function Speaking() {
   const [aiEval, setAiEval] = useState<Evaluation | null>(null);
   const [aiState, setAiState] = useState<'idle' | 'loading' | 'error'>('idle');
   const [aiErr, setAiErr] = useState('');
+  const [accent, setAccent] = useState(readAccent);
+  const [mic, setMic] = useState<MicStatus>('starting');
+  const [review, setReview] = useState<string | null>(null);
+  const reviewRes = useRef<((a: 'ok' | 'redo') => void) | null>(null);
+  const forceText = useRef(false);
+  const accentRef = useRef(accent);
+  accentRef.current = accent;
   useEffect(() => { void aiEnabled().then(setAiOn); }, []);
 
   const sig = useRef<Signal>({ cancelled: false });
@@ -63,39 +77,61 @@ export default function Speaking() {
   const getTurn = async (mono: boolean): Promise<TurnResult> => {
     const t0 = Date.now();
     const tick = setInterval(() => setElapsed((Date.now() - t0) / 1000), 250);
+    setMic('starting');
     try {
       if (!textModeRef.current) {
         try {
-          return await listenTurn({ silenceMs: mono ? 6000 : 2300, maxMs: mono ? 125_000 : 60_000, noSpeechMs: 12_000, onInterim: (t) => { setInterim(t); if (personaLevel() >= 1 && !flashed.current && detectSlip(t)) { flashed.current = true; setFlash(true); } }, signal: sig.current, endRef });
+          const r = await listenTurn({
+            silenceMs: mono ? 6000 : 2300, maxMs: mono ? 125_000 : 60_000, noSpeechMs: 12_000, lang: accentRef.current,
+            onInterim: (t) => { setInterim(t); if (personaLevel() >= 1 && !flashed.current && detectSlip(t)) { flashed.current = true; setFlash(true); } },
+            onStatus: setMic, signal: sig.current, endRef,
+          });
+          if (!forceText.current) return r;
         } catch (e) {
-          setErr((e as Error).message + '. Yozma rejimga o‘tildi.');
-          setTextMode(true); textModeRef.current = true; setTimed(false);
+          const msg = e instanceof SpeechError ? e.message : 'Nutqni tanishda xato';
+          setErr(`${msg}. Yozma rejimga o‘tildi, suhbat davom etadi.`);
         }
+        setTextMode(true); textModeRef.current = true; setTimed(false); forceText.current = false;
       }
       return await new Promise<TurnResult>((resolve) => { textResolve.current = resolve; });
     } finally { clearInterval(tick); }
   };
+
+  /** Ovozli javobdan keyin tanilgan matnni ko'rsatadi: noto'g'ri tushunilgan bo'lsa qayta aytish mumkin. */
+  const confirmTurn = (text: string): Promise<'ok' | 'redo'> => new Promise((resolve) => {
+    setReview(text);
+    const finishWith = (a: 'ok' | 'redo') => { clearTimeout(timer); reviewRes.current = null; setReview(null); resolve(a); };
+    const timer = setTimeout(() => finishWith('ok'), 3200);
+    reviewRes.current = finishWith;
+  });
 
   const run = async () => {
     setErr(''); setSummary(null); setAiEval(null); setAiState('idle'); setTimed(!textMode);
     const useAiNow = aiOn && !!getAccount();
     let aiAsked = 0;
     sig.current = { cancelled: false };
-    const ex = new Examiner(Math.random, personaLevel(profile));
+    const ex = new Examiner(Math.random, personaLevel(profile), profile.level);
     setStage('live');
     let step = ex.start();
     while (!sig.current.cancelled) {
       setPart(step.part); setInterim(''); setTyped(''); setElapsed(0); setFlash(false); flashed.current = false;
       if (step.reaction) { setReaction(step.reaction); setStatus('speaking'); await sayReaction(step.reaction, sig.current); if (sig.current.cancelled) return; }
-      setCaption(step.say); setStatus('speaking');
+      setCaption(step.say); setHint(ex.hintFor(step.say) ?? ''); setStatus('speaking');
       await say(step.say, sig.current);
       if (sig.current.cancelled) return;
       if (step.wait === 'end') break;
       if (step.wait === 'prep') { await prep(); if (sig.current.cancelled) return; step = ex.beginMonologue(); continue; }
-      setStatus('listening');
       setReaction(null);
-      const r = await getTurn(step.wait === 'monologue');
-      if (sig.current.cancelled) return;
+      let r: TurnResult;
+      for (;;) {
+        setStatus('listening'); setInterim('');
+        r = await getTurn(step.wait === 'monologue');
+        if (sig.current.cancelled) return;
+        if (textModeRef.current || !r.text.trim()) break;
+        setStatus('thinking');
+        if ((await confirmTurn(r.text)) === 'ok') break;
+        if (sig.current.cancelled) return;
+      }
       setStatus('thinking');
       const before = ex.turns.length;
       step = ex.answer(r.text, textModeRef.current ? 0 : r.seconds, r.latencyMs);
@@ -118,7 +154,9 @@ export default function Speaking() {
     addXp(30);
   };
 
-  const abort = () => { sig.current.cancelled = true; stopSpeaking(); endRef.current?.(); prepSkip.current?.(); setStage('intro'); };
+  const abort = () => { sig.current.cancelled = true; stopSpeaking(); endRef.current?.(); prepSkip.current?.(); reviewRes.current?.('ok'); setStage('intro'); };
+  const switchToText = () => { forceText.current = true; endRef.current?.(); };
+  const chooseAccent = (id: string) => { setAccent(id); try { localStorage.setItem('bandly.stt', id); } catch { /* */ } };
   const submitText = () => { if (!typed.trim()) return; textResolve.current?.({ text: typed.trim(), seconds: 0, latencyMs: 0 }); textResolve.current = null; };
 
   if (stage === 'intro') {
@@ -152,6 +190,13 @@ export default function Speaking() {
           {aiOn && !acct && <JoinForm onJoined={setAcct} text="AI bilan suhbat va baho uchun laqab tanlang (parol shart emas). Laqabsiz ham qoidaviy ustoz bilan davom etish mumkin." />}
           {aiOn && acct && <p className="notice">AI yoqilgan: suhbatning <b>matni</b> (ovoz emas) javobingizga bog‘liq savol berish va baholash uchun AI provayderiga yuboriladi.</p>}
           <p className="evidence">Ovozingiz <b>yozib olinmaydi va saqlanmaydi</b>. Nutqni matnga o‘girishni brauzeringiz xizmati bajaradi (Chrome, Edge, Safari qo‘llaydi; bu xizmat ovozni o‘z serveriga yuborishi mumkin). Naushnik ishlatsangiz, ustoz ovozi mikrofonga kirmaydi.</p>
+          <div style={{ margin: '12px 0' }}>
+            <b style={{ fontSize: 14 }}>Nutqni tanish aksenti</b>
+            <div className="tabs" style={{ margin: '8px 0 4px' }}>
+              {ACCENTS.map((a) => <button key={a.id} className={`btn sm ${accent === a.id ? 'dark' : ''}`} onClick={() => chooseAccent(a.id)}>{a.label}</button>)}
+            </div>
+            <span className="evidence">{ACCENTS.find((a) => a.id === accent)?.hint}. Ustoz sizni noto‘g‘ri tushunsa, boshqa aksentni sinab ko‘ring.</span>
+          </div>
           <p><label><input type="checkbox" checked={textMode} disabled={!supported} onChange={(e) => setTextMode(e.target.checked)} /> Mikrofonsiz rejim (yozib javob berish)</label></p>
           <button className="btn primary lg" onClick={() => void run()}><Mic size={18} /> Suhbatni boshlash</button>
           <p className="evidence" style={{ marginTop: 14 }}>
@@ -204,8 +249,8 @@ export default function Speaking() {
     );
   }
 
-  const EMO: Record<Reaction['emotion'], Mood> = { angry: 'angry', laugh: 'laugh', disappointed: 'sad', impressed: 'happy', happy: 'happy' };
-  const mood: Mood = reaction && status === 'speaking' ? EMO[reaction.emotion] : flash && status === 'listening' ? 'angry' : status === 'speaking' ? 'happy' : status === 'listening' ? 'idle' : 'think';
+  const EMO: Record<Reaction['emotion'], Mood> = { angry: 'angry', laugh: 'laugh', disappointed: 'sad', impressed: 'impressed', happy: 'happy' };
+  const mood: Mood = reaction && status === 'speaking' ? EMO[reaction.emotion] : flash && status === 'listening' ? 'angry' : status === 'speaking' ? 'idle' : status === 'listening' ? 'listen' : 'think';
   const statusLabel = status === 'speaking' ? 'Ustoz gapiryapti' : status === 'listening' ? 'Sizni tinglayapti' : status === 'prep' ? 'Tayyorgarlik vaqti' : 'O‘ylayapti';
   return (
     <div>
@@ -216,11 +261,22 @@ export default function Speaking() {
           <button className="btn sm" onClick={abort}>Tugatish</button>
         </div>
         <div className="stage-center">
-          <div className={`mascot-wrap ${status}`}><Mascot mood={mood} size={132} /></div>
+          <div className={`mascot-wrap ${status}`}><Mascot mood={mood} size={150} talking={status === 'speaking'} /></div>
           {reaction && <div className="bubble" style={{ maxWidth: 640 }}><b>{reaction.uz}</b><div className="evidence">{reaction.en}</div></div>}
           <div className="say">{caption}</div>
-          {status === 'listening' && !textMode && <span className="wave" aria-hidden="true"><i /><i /><i /><i /><i /><i /><i /></span>}
+          {hint && <p className="hint-uz"><b>O‘zbekcha:</b> {hint}</p>}
+          {status === 'listening' && !textMode && <span className="wave" aria-hidden="true" style={{ opacity: mic === 'speech' ? 1 : .35 }}><i /><i /><i /><i /><i /><i /><i /></span>}
+          {status === 'listening' && !textMode && <span className={`pill ${mic === 'starting' ? '' : 'ok'}`}>{mic === 'starting' ? 'Mikrofon ulanmoqda…' : mic === 'mic' ? 'Mikrofon tayyor, gapiring' : 'Eshityapman'}</span>}
           {err && <p className="notice">{err}</p>}
+          {review !== null && (
+            <div style={{ width: '100%', maxWidth: 720 }}>
+              <div className="transcript"><span className="evidence">Siz aytdingiz:</span><br /><b>{review}</b></div>
+              <div className="row" style={{ justifyContent: 'center', marginTop: 12 }}>
+                <button className="btn primary" onClick={() => reviewRes.current?.('ok')}>To‘g‘ri, davom etish</button>
+                <button className="btn" onClick={() => reviewRes.current?.('redo')}>Noto‘g‘ri tushundi, qayta aytaman</button>
+              </div>
+            </div>
+          )}
 
           {status === 'prep' && (
             <div className="row" style={{ justifyContent: 'center' }}>
@@ -238,6 +294,7 @@ export default function Speaking() {
                 <button className="btn primary lg" onClick={() => endRef.current?.()}>Men tugatdim</button>
               </div>
               <span className="evidence">Ikki soniya jim qolsangiz ham javob tugaydi.</span>
+              <button className="btn sm" onClick={switchToText}>Mikrofon ishlamayaptimi? Yozib javob berish</button>
             </>
           )}
 

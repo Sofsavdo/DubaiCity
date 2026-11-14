@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { vocab, vocabById } from '../../content/vocab';
+import { vocabById, vocabForLevel } from '../../content/vocab';
 import { Mascot, type Mood } from '../../components/Mascot';
 import { LockCard } from '../../components/Gate';
 import { fmt } from '../../components/hooks';
@@ -29,7 +29,7 @@ export default function Pairs() {
 
   function start() {
     if (!consumeGame()) { setLocked(true); return; }
-    const ids = pickSession(vocab.map((w) => w.id), getProfile().srs, Date.now(), 6);
+    const ids = pickSession(vocabForLevel(getProfile().level).map((w) => w.id), getProfile().srs, Date.now(), 6);
     setWords(ids);
     setRightOrder(shuffle(ids));
     setSelL(null); setMatched([]); setMistakes({}); mistakesRef.current = {}; setElapsed(0); setMood('idle');

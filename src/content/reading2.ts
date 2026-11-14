@@ -12,6 +12,7 @@ const headings = [
 
 export const reading2: ReadingTest = {
   id: 'reading-2',
+  level: 'C1',
   title: 'Reading mini-test 2: The Hidden Work of Sleep',
   minutes: 18,
   passageTitle: 'The Hidden Work of Sleep',

@@ -1,8 +1,15 @@
+import type { Cefr } from '../lib/levels';
 import type { GrammarItem } from './types';
 
-export const grammarTopics = ['Artikllar', 'Zamonlar', 'Shart gaplar', 'Predloglar', 'Ega va kesim moslashuvi', 'Majhul nisbat', 'Modal fe‘llar', 'Nisbiy gaplar', 'Gerund va infinitiv', 'Taqqoslash'] as const;
+export const grammarTopics = ['To be va there is', 'Present Simple', 'Past Simple', 'Olmoshlar va egalik', 'Sonlar va miqdor', 'Artikllar', 'Zamonlar', 'Shart gaplar', 'Predloglar', 'Ega va kesim moslashuvi', 'Majhul nisbat', 'Modal fe‘llar', 'Nisbiy gaplar', 'Gerund va infinitiv', 'Taqqoslash', 'Murakkab tuzilmalar'] as const;
 
-const rawGrammar: GrammarItem[] = [
+/** Mavzuning CEFR darajasi (tavsiya uchun) */
+export const topicLevel: Record<string, Cefr> = {
+  'To be va there is': 'A1', 'Present Simple': 'A1', 'Past Simple': 'A2', 'Olmoshlar va egalik': 'A1', 'Sonlar va miqdor': 'A2',
+  Artikllar: 'A2', Zamonlar: 'B1', 'Shart gaplar': 'B1', Predloglar: 'A2', 'Ega va kesim moslashuvi': 'B1', 'Majhul nisbat': 'B2', 'Modal fe‘llar': 'B1', 'Nisbiy gaplar': 'B2', 'Gerund va infinitiv': 'B2', Taqqoslash: 'A2', 'Murakkab tuzilmalar': 'C1',
+};
+
+const rawGrammar: Omit<GrammarItem, 'level'>[] = [
   // Artikllar
   { id: 1, topic: 'Artikllar', q: 'She is ____ engineer at a large company.', options: ['a', 'an', 'the', '—'], answer: 1, explanationUz: "Kasb oldidan a/an qo'yiladi. 'engineer' unli tovush bilan boshlangani uchun 'an' ishlatiladi." },
   { id: 2, topic: 'Artikllar', q: '____ sun rises in the east.', options: ['A', 'An', 'The', '—'], answer: 2, explanationUz: "Yagona va noyob narsalar (sun, moon, sky) oldidan 'the' qo'yiladi." },
@@ -63,6 +70,43 @@ const rawGrammar: GrammarItem[] = [
   { id: 48, topic: 'Taqqoslash', q: 'Tashkent is not as ____ as Moscow.', options: ['bigger', 'big', 'biggest', 'more big'], answer: 1, explanationUz: "'as ... as' qolipida sifat oddiy darajada turadi." },
   { id: 49, topic: 'Taqqoslash', q: 'The ____ you practise, the better you speak.', options: ['more', 'most', 'much', 'many'], answer: 0, explanationUz: "'The more..., the better...' qolipi: qanchalik ko'p, shunchalik yaxshi." },
   { id: 50, topic: 'Taqqoslash', q: 'He runs ____ than his brother.', options: ['fast', 'fastest', 'faster', 'more fast'], answer: 2, explanationUz: "Qisqa sifat/ravish uchun '-er + than'." },
+
+  // To be va there is (A1)
+  { id: 51, topic: 'To be va there is', q: 'My brother ____ a student.', options: ['am', 'is', 'are', 'be'], answer: 1, explanationUz: "'brother' birlik (he), shuning uchun 'is' ishlatiladi: I am, he/she/it is, we/you/they are." },
+  { id: 52, topic: 'To be va there is', q: 'We ____ at home now.', options: ['is', 'am', 'are', 'be'], answer: 2, explanationUz: "'We' bilan 'are' ishlatiladi." },
+  { id: 53, topic: 'To be va there is', q: '____ you from Uzbekistan?', options: ['Is', 'Am', 'Are', 'Do'], answer: 2, explanationUz: "'you' bilan 'to be' ning shakli 'are'. Savolda u ega oldiga chiqadi: Are you ...?" },
+  { id: 54, topic: 'To be va there is', q: 'There ____ a cat under the table.', options: ['are', 'is', 'am', 'be'], answer: 1, explanationUz: "'There is' + birlik ot (a cat), 'There are' + ko'plik ot." },
+  { id: 55, topic: 'To be va there is', q: 'There ____ five students in the room.', options: ['is', 'are', 'am', 'has'], answer: 1, explanationUz: "Ko'plik ot (five students) bilan 'There are' ishlatiladi." },
+  // Present Simple (A1)
+  { id: 56, topic: 'Present Simple', q: 'She ____ tea every morning.', options: ['drink', 'drinks', 'drinking', 'is drink'], answer: 1, explanationUz: "He/she/it bilan Present Simple da fe'lga -s qo'shiladi: drinks." },
+  { id: 57, topic: 'Present Simple', q: 'I ____ like coffee.', options: ["don't", "doesn't", 'am not', 'not'], answer: 0, explanationUz: "I/you/we/they bilan inkor: do not (don't) + fe'l." },
+  { id: 58, topic: 'Present Simple', q: '____ he work in a bank?', options: ['Do', 'Does', 'Is', 'Has'], answer: 1, explanationUz: "He/she/it bilan savol: Does + ega + fe'l (asl shaklda)." },
+  { id: 59, topic: 'Present Simple', q: 'They ____ football on Sundays.', options: ['plays', 'play', 'playing', 'is play'], answer: 1, explanationUz: "'They' bilan fe'l o'zgarmaydi: play." },
+  { id: 60, topic: 'Present Simple', q: 'My father ____ go to work by bus.', options: ["don't", "doesn't", "isn't", 'not'], answer: 1, explanationUz: "'My father' = he. Inkor: doesn't + fe'l asl shaklda (go, goes emas)." },
+  // Past Simple (A2)
+  { id: 61, topic: 'Past Simple', q: 'We ____ a film last night.', options: ['watch', 'watched', 'watching', 'watches'], answer: 1, explanationUz: "O'tgan zamon: oddiy fe'llarga -ed qo'shiladi: watched." },
+  { id: 62, topic: 'Past Simple', q: 'She ____ to school yesterday.', options: ['go', 'goes', 'went', 'gone'], answer: 2, explanationUz: "'go' noto'g'ri fe'l: go → went → gone. Past Simple da 'went'." },
+  { id: 63, topic: 'Past Simple', q: 'I ____ not see him at the party.', options: ['did', 'do', 'was', 'am'], answer: 0, explanationUz: "O'tgan zamon inkori: did not (didn't) + fe'l asl shaklda." },
+  { id: 64, topic: 'Past Simple', q: '____ you finish your homework?', options: ['Did', 'Do', 'Were', 'Are'], answer: 0, explanationUz: "O'tgan zamon savoli: Did + ega + fe'l asl shaklda." },
+  { id: 65, topic: 'Past Simple', q: 'He ____ a new car last month.', options: ['buy', 'buys', 'bought', 'buyed'], answer: 2, explanationUz: "'buy' noto'g'ri fe'l: buy → bought → bought. 'buyed' degan so'z yo'q." },
+  // Olmoshlar va egalik (A1)
+  { id: 66, topic: 'Olmoshlar va egalik', q: 'This is Ali. ____ sister is a doctor.', options: ['He', 'His', 'Him', 'Her'], answer: 1, explanationUz: "Egalik uchun ega olmoshi: his (uning, erkak), her (uning, ayol)." },
+  { id: 67, topic: 'Olmoshlar va egalik', q: 'Can you help ____?', options: ['I', 'my', 'me', 'mine'], answer: 2, explanationUz: "To'ldiruvchi o'rnida (fe'ldan keyin) 'me' ishlatiladi." },
+  { id: 68, topic: 'Olmoshlar va egalik', q: 'This book is ____, not yours.', options: ['my', 'me', 'mine', 'I'], answer: 2, explanationUz: "Otsiz egalik olmoshi: mine (meniki), yours (seniki)." },
+  { id: 69, topic: 'Olmoshlar va egalik', q: 'Anna and ____ are friends.', options: ['me', 'my', 'I', 'mine'], answer: 2, explanationUz: "Ega vazifasida 'I' ishlatiladi: Anna and I." },
+  { id: 70, topic: 'Olmoshlar va egalik', q: 'They love ____ new house.', options: ['there', 'their', 'they', 'them'], answer: 1, explanationUz: "'their' = ularning. 'there' = u yerda; ikkalasini adashtirmang." },
+  // Sonlar va miqdor (A2)
+  { id: 71, topic: 'Sonlar va miqdor', q: "There aren't ____ apples in the bag.", options: ['some', 'any', 'much', 'a'], answer: 1, explanationUz: "Inkor gapda 'any' ishlatiladi; 'some' darak gapda." },
+  { id: 72, topic: 'Sonlar va miqdor', q: 'How ____ water do you drink a day?', options: ['many', 'much', 'few', 'a'], answer: 1, explanationUz: "Sanalmaydigan ot (water) bilan 'much', sanaladigan ko'plik ot bilan 'many'." },
+  { id: 73, topic: 'Sonlar va miqdor', q: 'I have ____ friends in this city, so I feel lonely.', options: ['a few', 'few', 'little', 'a little'], answer: 1, explanationUz: "'few' = deyarli yo'q (salbiy), 'a few' = bir nechta (ijobiy). Sanaladigan ot bilan keladi." },
+  { id: 74, topic: 'Sonlar va miqdor', q: 'Would you like ____ tea?', options: ['some', 'any', 'many', 'a few'], answer: 0, explanationUz: "Taklif qilinganda savol gapda ham 'some' ishlatiladi." },
+  { id: 75, topic: 'Sonlar va miqdor', q: 'We have very ____ time left.', options: ['few', 'little', 'many', 'a few'], answer: 1, explanationUz: "Sanalmaydigan ot (time) bilan 'little' ishlatiladi." },
+  // Murakkab tuzilmalar (C1)
+  { id: 76, topic: 'Murakkab tuzilmalar', q: 'Rarely ____ such a talented speaker.', options: ['I have heard', 'have I heard', 'I heard', 'did I heard'], answer: 1, explanationUz: "Inversiya: 'rarely', 'seldom', 'never' gap boshida kelsa yordamchi fe'l egadan oldin chiqadi." },
+  { id: 77, topic: 'Murakkab tuzilmalar', q: 'Hardly had she sat down ____ the phone rang.', options: ['than', 'when', 'that', 'then'], answer: 1, explanationUz: "'Hardly had ... when ...' qolipi. ('No sooner ... than ...' bilan adashtirmang.)" },
+  { id: 78, topic: 'Murakkab tuzilmalar', q: 'It is high time we ____ a decision.', options: ['make', 'made', 'will make', 'have made'], answer: 1, explanationUz: "'It is high time' dan keyin Past Simple keladi, lekin ma'no hozirgi vaqtga tegishli." },
+  { id: 79, topic: 'Murakkab tuzilmalar', q: 'No sooner had he left ____ it started to rain.', options: ['when', 'than', 'that', 'as'], answer: 1, explanationUz: "'No sooner had ... than ...' qolipi." },
+  { id: 80, topic: 'Murakkab tuzilmalar', q: 'Were he to apply, he ____ the job.', options: ['would get', 'will get', 'gets', 'got'], answer: 0, explanationUz: "'Were he to ...' = 'If he applied ...'. Natija qismida would + V1." },
 ];
 
 /** To'g'ri javob doim bir xil joyda bo'lib qolmasligi uchun variantlarni aylantiradi (javob indeksi = id % 4). */
@@ -70,5 +114,5 @@ export const grammar: GrammarItem[] = rawGrammar.map((g) => {
   const target = g.id % 4;
   const shift = (target - g.answer + 4) % 4;
   const options = g.options.map((_, i, a) => a[(i - shift + 4) % 4]);
-  return { ...g, options, answer: target };
+  return { ...g, options, answer: target, level: topicLevel[g.topic] ?? 'B1' };
 });

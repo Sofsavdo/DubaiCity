@@ -1,6 +1,6 @@
 import { Volume2 } from 'lucide-react';
 import { useRef, useState } from 'react';
-import { vocab, vocabById } from '../../content/vocab';
+import { vocabById, vocabForLevel } from '../../content/vocab';
 import { lines, pickLine } from '../../content/lines';
 import { Mascot, type Mood } from '../../components/Mascot';
 import { LockCard } from '../../components/Gate';
@@ -27,7 +27,7 @@ export default function Spell() {
 
   function start() {
     if (!consumeGame()) { setLocked(true); return; }
-    setIds(pickSession(vocab.map((w) => w.id), getProfile().srs, Date.now(), SIZE));
+    setIds(pickSession(vocabForLevel(getProfile().level).map((w) => w.id), getProfile().srs, Date.now(), SIZE));
     setI(0); setText(''); setResult(null); setCorrect(0); correctRef.current = 0; setMood('idle'); setMsg('Eshiting, o‘ylang, yozing.');
     setPhase('play');
   }

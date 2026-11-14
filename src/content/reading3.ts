@@ -2,6 +2,7 @@ import type { ReadingTest } from './types';
 
 export const reading3: ReadingTest = {
   id: 'reading-3',
+  level: 'B2',
   title: 'Reading mini-test 3: The Return of the Night Train',
   minutes: 18,
   passageTitle: 'The Return of the Night Train',

@@ -1,5 +1,5 @@
 import { ArrowRight, BookOpen, Puzzle, Swords, Zap } from 'lucide-react';
-import { vocab } from '../../content/vocab';
+import { vocabForLevel } from '../../content/vocab';
 import { isDue, isMastered } from '../../lib/srs';
 import { freeGamesLeft, hasAnyPlan, useProfile } from '../../lib/store';
 
@@ -12,6 +12,7 @@ const games = [
 
 export default function GamesHub() {
   const p = useProfile();
+  const vocab = vocabForLevel(p.level);
   const now = Date.now();
   const mastered = vocab.filter((w) => isMastered(p.srs[w.id])).length;
   const due = vocab.filter((w) => p.srs[w.id] && isDue(p.srs[w.id], now)).length;

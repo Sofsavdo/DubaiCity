@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, Brain, Flame, Gamepad2, Headphones, Languages, Mic, Plus, Puzzle, ShieldCheck, Star, Swords, Target, Timer, Zap } from 'lucide-react';
+import { ArrowRight, CalendarDays, Compass, Map as MapIcon, BookOpen, Brain, Flame, Gamepad2, Headphones, Languages, Mic, Plus, Puzzle, ShieldCheck, Star, Swords, Target, Timer, Zap } from 'lucide-react';
 import { BRAND } from '../brand';
 import { Mascot } from '../components/Mascot';
 import { Tile } from '../components/Tile';
@@ -9,6 +9,8 @@ import { vocab } from '../content/vocab';
 import { levelProgress } from '../lib/game';
 import { isDue } from '../lib/srs';
 import { useProfile } from '../lib/store';
+import { CEFR, LEVEL_INFO, levelIndex } from '../lib/levels';
+import { loadResults } from '../lib/storage';
 
 const faq: [string, string][] = [
   ['Obuna qanday ishlaydi?', 'Uchta yo‘nalish (Imtihon tayyorgarligi, Grammar, Mock testlar) alohida obuna bo‘ladi: faqat kerakli bittasi uchun to‘laysiz. Istalgan obuna so‘z o‘yinlarini cheksiz qiladi. Hozircha to‘lov ulanmagan, obuna demo rejimda.'],
@@ -26,6 +28,20 @@ export default function Home() {
   const due = vocab.filter((w) => p.srs[w.id] && isDue(p.srs[w.id], Date.now())).length;
   const started = p.xp > 0;
   const tests = readingTests.length + listeningTests.length;
+  const lvl = p.level;
+  const solved = new Set(loadResults().map((r) => r.title));
+  const byDist = <T extends { level: typeof CEFR[number] }>(a: T[]) => [...a].sort((x, y) => Math.abs(levelIndex(x.level) - levelIndex(lvl)) - Math.abs(levelIndex(y.level) - levelIndex(lvl)));
+  const nextRead = byDist(readingTests).find((t) => !solved.has(t.title)) ?? byDist(readingTests)[0];
+  const nextListen = byDist(listeningTests).find((t) => !solved.has(t.title)) ?? byDist(listeningTests)[0];
+  const daysLeft = p.examDate ? Math.ceil((new Date(p.examDate).getTime() - Date.now()) / 86400000) : null;
+  const low = lvl === 'A1' || lvl === 'A2';
+  const path = lvl ? [
+    { icon: Zap, title: 'So‘z o‘yini', text: due > 0 ? `${due} ta so‘z takrorlashga tayyor` : low ? 'A1–A2 so‘zlari bilan boshlang' : 'Yangi IELTS so‘zlari', href: '#/games/rush' },
+    { icon: Puzzle, title: 'Grammar', text: low ? 'Asoslar: to be, Present Simple, Past Simple' : '“Sizga mos” savollar', href: '#/grammar' },
+    { icon: BookOpen, title: 'Reading', text: nextRead.title.replace(/^Reading mini-test \d+: /, ''), href: `#/exam/reading/${nextRead.id}` },
+    { icon: Headphones, title: 'Listening', text: nextListen.title.replace(/^Listening mini-test \d+: /, ''), href: `#/exam/listening/${nextListen.id}` },
+    { icon: Mic, title: 'Speaking', text: low ? 'Sodda savollar, o‘zbekcha yordam bilan' : 'IELTS Part 1–3', href: '#/exam/speaking' },
+  ] : [];
 
   return (
     <div>
@@ -39,7 +55,7 @@ export default function Home() {
             <a className="btn lg" href="#/games/rush"><Gamepad2 size={18} /> Bepul o‘yin</a>
           </div>
           <div className="hero-stats">
-            <div><b>{vocab.length}</b><span>IELTS so‘zi</span></div>
+            <div><b>{vocab.length}</b><span>so‘z (A1–C1)</span></div>
             <div><b>{tests}</b><span>Reading/Listening test</span></div>
             <div><b>{grammar.length}</b><span>Grammar savol</span></div>
             <div><b>3</b><span>So‘z o‘yini</span></div>
@@ -52,6 +68,34 @@ export default function Home() {
           <span className="chip c3"><Mic size={16} color="#ea3624" /> Jonli Speaking</span>
         </div>
       </section>
+
+      {!lvl && (
+        <div className="banner">
+          <div><h3><Compass size={20} style={{ verticalAlign: -4 }} /> Avval darajangizni aniqlang</h3><p>3 daqiqalik test: A1 dan C1 gacha. Shunga qarab sizga alohida dastur tuziladi.</p></div>
+          <a className="btn lg" href="#/placement">Testni boshlash <ArrowRight size={18} /></a>
+        </div>
+      )}
+
+      {lvl && (
+        <section className="card myplan">
+          <div className="myplan-head">
+            <div>
+              <span className="eyebrow"><MapIcon size={15} /> Sizning dasturingiz</span>
+              <h2 style={{ margin: '4px 0' }}>Daraja {lvl} · {LEVEL_INFO[lvl].name}</h2>
+              <p className="evidence">Maqsad: IELTS {p.target.toFixed(1)}{daysLeft !== null && daysLeft >= 0 ? <> · <CalendarDays size={14} style={{ verticalAlign: -2 }} /> imtihongacha {daysLeft} kun</> : null}</p>
+            </div>
+            <div className="level-steps">{CEFR.map((l) => <i key={l} className={l === lvl ? 'now' : levelIndex(l) < levelIndex(lvl) ? 'done' : ''}><b>{l}</b></i>)}</div>
+          </div>
+          <div className="path">
+            {path.map((s, i) => (
+              <a key={s.title} className="path-step" href={s.href}>
+                <span className="pn">{i + 1}</span><s.icon size={22} /><b>{s.title}</b><span>{s.text}</span>
+              </a>
+            ))}
+          </div>
+          <div className="row"><a className="btn sm" href="#/placement">Darajani qayta aniqlash</a></div>
+        </section>
+      )}
 
       {started && (
         <div className="dash">

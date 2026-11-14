@@ -1,5 +1,9 @@
+import { fits, type Cefr } from '../lib/levels';
+import { basicWords } from './vocabBasic';
+
 export interface Word {
   id: string;
+  level: Cefr;
   word: string;
   pos: string;
   uz: string;
@@ -8,9 +12,9 @@ export interface Word {
   topic: string;
 }
 
-const w = (id: string, word: string, pos: string, uz: string, def: string, example: string, topic: string): Word => ({ id, word, pos, uz, def, example, topic });
+const w = (id: string, word: string, pos: string, uz: string, def: string, example: string, topic: string): Word => ({ id, word, pos, uz, def, example, topic, level: 'B2' });
 
-export const vocab: Word[] = [
+const ieltsWords: Word[] = [
   // Environment
   w('sustainable', 'sustainable', 'adj', 'barqaror (tabiatga zarar yetkazmaydigan)', 'able to continue without harming the environment', 'Solar power is a sustainable source of energy.', 'Environment'),
   w('pollution', 'pollution', 'n', 'ifloslanish', 'harmful substances in the air, water or soil', 'Air pollution is a serious problem in big cities.', 'Environment'),
@@ -179,5 +183,19 @@ export const vocab: Word[] = [
   w('consequence', 'consequence', 'n', 'oqibat', 'a result of an action', 'Pollution has serious consequences for health.', 'Academic'),
   w('contribute', 'contribute', 'v', 'hissa qo‘shmoq', 'to help to cause or achieve something', 'Exercise contributes to better health.', 'Academic'),
 ];
+
+// IELTS so'zlarining qiyinlik darajasi (aniq belgilanmaganlari B2)
+const C1_IDS = new Set(['dissertation', 'obsolete', 'breakthrough', 'sedentary', 'prescription', 'urbanisation', 'recession', 'rehabilitation', 'censorship', 'hypothesis', 'offender', 'inflation', 'masterpiece', 'whereas', 'prohibit', 'heritage', 'bias', 'exposure', 'congestion', 'infrastructure', 'genetic', 'chronic', 'inequality', 'deforestation', 'compulsory', 'literacy', 'negotiate', 'microscope', 'species', 'renovate', 'moreover']);
+const B1_IDS = new Set(['pollution', 'climate', 'recycle', 'tuition', 'scholarship', 'graduate', 'lecture', 'device', 'digital', 'stress', 'salary', 'passport', 'luggage', 'currency', 'museum', 'festival', 'tax', 'crime', 'fine', 'colleague', 'deadline', 'accommodation', 'sightseeing', 'headline', 'vaccine', 'symptom', 'experiment', 'research', 'budget', 'profit', 'community', 'tradition', 'poverty', 'rent', 'public', 'suburb', 'therefore', 'essential', 'significant', 'estimate', 'tourism', 'journalist', 'audience', 'publish', 'export', 'import', 'afford', 'industry', 'evidence', 'justice', 'violence', 'ancient', 'cuisine', 'festival', 'commute', 'landscape', 'resident', 'software', 'database', 'wireless', 'unemployment', 'immigrant', 'democracy', 'generation', 'internship', 'resign', 'promotion']);
+const leveled = ieltsWords.map((x): Word => ({ ...x, level: C1_IDS.has(x.id) ? 'C1' : B1_IDS.has(x.id) ? 'B1' : 'B2' }));
+
+export const vocab: Word[] = [...basicWords, ...leveled];
+
+/** Foydalanuvchi darajasiga mos so'zlar: bir pog'ona past/yuqori (A1 uchun A1–A2, C1 uchun B2–C1). */
+export function vocabForLevel(level: Cefr | null | undefined): Word[] {
+  if (!level) return vocab;
+  const pool = vocab.filter((x) => fits(x.level, level, 1, 1));
+  return pool.length >= 24 ? pool : vocab;
+}
 
 export const vocabById: Record<string, Word> = Object.fromEntries(vocab.map((x) => [x.id, x]));

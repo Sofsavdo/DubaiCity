@@ -4,6 +4,8 @@ import { review } from './srs';
 import { effectiveLevel } from './roast';
 import { defaultProfile, type Profile, type TrackId } from './types';
 import { FREE_GAMES_PER_DAY } from '../config';
+import type { Cefr } from './levels';
+import { confetti, sfx } from './fx';
 
 const KEY = 'bandly.profile.v1';
 
@@ -71,11 +73,12 @@ export function addXp(amount: number): void {
   const r = applyXp(state, amount, dayKey());
   commit(r.profile);
   pushToast(`+${Math.round(amount)} XP`, 'xp');
-  if (r.levelUp) pushToast(`Yangi daraja: ${r.levelUp}!`, 'level');
-  r.unlocked.forEach((a) => pushToast(`Yutuq: ${a.title}`, 'ach'));
+  if (r.levelUp) { pushToast(`Yangi daraja: ${r.levelUp}!`, 'level'); sfx('level'); confetti(90); }
+  r.unlocked.forEach((a) => { pushToast(`Yutuq: ${a.title}`, 'ach'); if (!r.levelUp) { sfx('ach'); confetti(50); } });
 }
 
 export function recordReview(wordId: string, correct: boolean): void {
+  sfx(correct ? 'ok' : 'bad');
   commit({ ...state, srs: { ...state.srs, [wordId]: review(state.srs[wordId], correct, Date.now()) } });
 }
 
@@ -107,6 +110,12 @@ export function setPersona(level: number, adult: boolean): void {
   commit({ ...state, roastLevel: lv, adult, hardMode: lv >= 2 });
 }
 export const personaLevel = (p: Profile = state) => effectiveLevel(p.roastLevel, p.adult);
+export function setLevel(level: Cefr, target: number, examDate: string | null): void {
+  commit({ ...state, level, target, examDate, placementAt: new Date().toISOString(), dailyGoal: level === 'A1' || level === 'A2' ? 40 : 60 });
+}
+export function setTarget(target: number, examDate: string | null): void {
+  commit({ ...state, target, examDate });
+}
 export function setDailyGoal(goal: number): void {
   commit({ ...state, dailyGoal: goal });
 }
