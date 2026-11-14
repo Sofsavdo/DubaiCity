@@ -41,7 +41,7 @@ Known from Phase 0 (Railway API, read-only): service `bandly`, 1 replica, region
 - Still unknown: the **value** of `DB_PATH` (redacted; Dockerfile default is `/data/bandly.sqlite`), row counts, existing backups.
 
 ## CI first run
-Run 43598572525 on PR #22 **failed in ~2 s with no downloadable logs (HTTP 404)**. A failure that fast with no steps usually means the job never started its steps (e.g., Actions restrictions/billing on the account or repository), but the cause is **unverified**. Owner can open https://github.com/Sofsavdo/Bandly/actions/runs/43598572525 to read the reason. The same command (`npm run test:ci`) passes locally.
+**Cause confirmed by the owner's screenshot (run #8):** "The job was not started because your account is locked due to a billing issue." The workflow never ran; this is a GitHub account billing lock, not a code or workflow error. Fix: owner resolves billing in GitHub Settings → Billing and plans, then re-runs the jobs. Original note: run 43598572525 on PR #22 **failed in ~2 s with no downloadable logs (HTTP 404)**. A failure that fast with no steps usually means the job never started its steps (e.g., Actions restrictions/billing on the account or repository), but the cause is **unverified**. Owner can open https://github.com/Sofsavdo/Bandly/actions/runs/43598572525 to read the reason. The same command (`npm run test:ci`) passes locally.
 
 ## Not done on purpose
 No production snapshot (approval A5 not given), no Railway change, no dependency install, no cron/scheduling.
