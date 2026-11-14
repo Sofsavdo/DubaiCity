@@ -6,11 +6,12 @@ import { B1_U1, B1_U2 } from './b1';
 import { B2_U1, B2_U2 } from './b2';
 import { C1_U1, C1_U2 } from './c1';
 import { C2_U1 } from './c2';
+import { A1_U3, A2_U3, B1_U3 } from './extra';
 import { WRITING } from './writing';
 
 /** General English path (pilot slice A1–C2). Order matters: units and lessons follow the learning sequence. */
 const withWriting = (u: Unit): Unit => ({ ...u, lessons: u.lessons.map((l) => (WRITING[l.id] ? { ...l, writing: WRITING[l.id] } : l)) });
-export const UNITS: Unit[] = [A1_U1, A1_U2, A2_U1, A2_U2, B1_U1, B1_U2, B2_U1, B2_U2, C1_U1, C1_U2, C2_U1].map(withWriting);
+export const UNITS: Unit[] = [A1_U1, A1_U2, A1_U3, A2_U1, A2_U2, A2_U3, B1_U1, B1_U2, B1_U3, B2_U1, B2_U2, C1_U1, C1_U2, C2_U1].map(withWriting);
 
 export const ALL_LESSONS: { unit: Unit; lesson: Lesson; index: number }[] = UNITS.flatMap((unit) => unit.lessons.map((lesson, index) => ({ unit, lesson, index })));
 export const lessonById = (id: string) => ALL_LESSONS.find((x) => x.lesson.id === id);

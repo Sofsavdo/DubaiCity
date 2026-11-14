@@ -190,4 +190,56 @@ export const WRITING: Record<string, WritingTask> = {
     forbid: [{ re: String.raw`\b(make|makes|made|do|does|did) (a )?(threat|research|crime|conclusion)\b|\bdo (a )?mistakes?\b`, labelUz: 'g‘ayritabiiy kollokatsiya (make a threat, do research, do a mistake…)' }],
     model: 'Plastic waste poses a serious threat to rivers and lakes in Central Asia. Several local organisations have conducted research on the problem, and there is strong evidence that most waste comes from households. Schools can play a key role in raising awareness, but governments must also take the cost of recycling into account.',
   },
+  'a1-u3-l1': {
+    promptUz: 'Uyingiz yoki oilangiz haqida 3 ta gap yozing: have got / has got va ’s egalik shaklini ishlating.', minWords: 12,
+    require: [{ re: String.raw`\b(have|has|'ve|'s) got\b`, labelUz: 'have got / has got' }, { re: String.raw`\b[A-Z]?[a-z]+'s [a-z]+`, labelUz: 'egalik ’s (masalan, my sister’s room)' }],
+    model: 'We have got a small flat in Chilanzar. My sister’s room is very bright. My father has got a big library.',
+  },
+  'a1-u3-l2': {
+    promptUz: 'Xonangizdagi narsalarni ko‘rsatib 3 ta gap yozing: this, these, that yoki those bilan.', minWords: 12,
+    require: [{ re: String.raw`\b(this|that) (is|\w+ is)\b`, labelUz: 'this / that + is' }, { re: String.raw`\b(these|those) (are|\w+ are)\b`, labelUz: 'these / those + are' }],
+    forbid: [{ re: String.raw`\b(these|those) is\b|\b(this|that) are\b`, labelUz: 'this/that bilan is, these/those bilan are' }],
+    model: 'This is my desk. These books are my favourite novels. That picture on the wall is from my grandmother.',
+  },
+  'a1-u3-l3': {
+    promptUz: 'Nimalarni qila olishingiz va qila olmasligingiz haqida 3 ta gap yozing (can / can’t).', minWords: 12,
+    require: [{ re: String.raw`\bcan \w+`, labelUz: 'can + fe’l' }, { re: String.raw`\b(can't|cannot|can not) \w+`, labelUz: 'can’t + fe’l' }],
+    forbid: [{ re: String.raw`\bcan to \w+|\bcans\b`, labelUz: 'can dan keyin to ham, -s ham kelmaydi' }],
+    model: 'I can speak three languages. I can cook plov quite well. I can’t drive a car yet.',
+  },
+  'a2-u3-l1': {
+    promptUz: 'Hozir atrofingizda nima bo‘layotganini 3 ta gap bilan yozing (Present Continuous).', minWords: 14,
+    require: [{ re: String.raw`\b(am|is|are|'m|'s|'re) (not )?\w+ing\b`, labelUz: 'am / is / are + -ing' }],
+    forbid: [{ re: String.raw`\b(am|is|are|'m|'s|'re) (knowing|liking|wanting|needing)\b`, labelUz: 'know / like / want / need odatda -ing olmaydi' }],
+    model: 'I am sitting in a café near my office. A waiter is bringing coffee to the next table. Two students are working on their laptops.',
+  },
+  'a2-u3-l2': {
+    promptUz: 'Kasal do‘stingizga 3 ta maslahat yozing (should / shouldn’t).', minWords: 14,
+    require: [{ re: String.raw`\bshould \w+`, labelUz: 'should + fe’l' }, { re: String.raw`\b(shouldn't|should not) \w+`, labelUz: 'shouldn’t + fe’l' }],
+    forbid: [{ re: String.raw`\bshould to \w+`, labelUz: 'should dan keyin to kelmaydi' }],
+    model: 'You should stay in bed and drink a lot of warm tea. You shouldn’t go to work with a fever. I think you should see a doctor tomorrow.',
+  },
+  'a2-u3-l3': {
+    promptUz: 'Keyingi hafta uchun kelishilgan 3 ta rejangizni yozing (Present Continuous + vaqt).', minWords: 15,
+    require: [{ re: String.raw`\b(am|is|are|'m|'s|'re) \w+ing\b`, labelUz: 'am / is / are + -ing' }, { re: String.raw`\b(tomorrow|tonight|next \w+|on (monday|tuesday|wednesday|thursday|friday|saturday|sunday)|this (evening|weekend|afternoon))\b`, labelUz: 'kelajak vaqt so‘zi' }],
+    model: 'On Monday I’m meeting my new manager. On Wednesday evening we’re having dinner with my cousins. Next Saturday I’m flying to Bukhara for a wedding.',
+  },
+  'b1-u3-l1': {
+    promptUz: 'Ishingiz yoki o‘qishingizdagi qoidalar haqida yozing: majburiyat (have to / must), taqiq (mustn’t) va shart emas (don’t have to).', minWords: 20,
+    require: [{ re: String.raw`\b(have to|has to|must)\b`, labelUz: 'have to / must' }, { re: String.raw`\b(mustn't|must not)\b`, labelUz: 'mustn’t (taqiq)' }, { re: String.raw`\b(don't|doesn't) have to\b`, labelUz: 'don’t have to (shart emas)' }],
+    forbid: [{ re: String.raw`\bmust to\b|\bmusted\b`, labelUz: 'must to / musted shakli yo‘q' }],
+    model: 'At my university we have to attend at least eighty per cent of the lectures. We mustn’t use phones during exams. However, we don’t have to wear a uniform.',
+  },
+  'b1-u3-l2': {
+    promptUz: 'Bolaligingizdagi odatlar va hozir nima o‘zgarganini 3 ta gap bilan yozing (used to / didn’t use to).', minWords: 20,
+    require: [{ re: String.raw`\bused to \w+`, labelUz: 'used to + fe’l' }],
+    forbid: [{ re: String.raw`\bdidn't used to\b|\bdid (\w+ )?used to\b`, labelUz: 'did / didn’t dan keyin “use to” (d siz)' }],
+    model: 'When I was a child, I used to spend every summer in my grandparents’ village. I didn’t use to like vegetables, but now I eat them every day. We used to play outside until it got dark.',
+  },
+  'b1-u3-l3': {
+    promptUz: 'Bo‘sh vaqtingiz va kelajak rejalaringiz haqida yozing: enjoy / avoid (+ -ing) va want / hope / decide (+ to) ishlating.', minWords: 20,
+    require: [{ re: String.raw`\b(enjoy|enjoys|avoid|avoids|finish|finished|mind|keep|practise|practice) \w+ing\b`, labelUz: 'enjoy / avoid … + -ing' }, { re: String.raw`\b(want|wants|hope|hopes|decided|decide|plan|plans|would like|'d like) to \w+`, labelUz: 'want / hope / decide + to' }],
+    forbid: [{ re: String.raw`\b(enjoy|enjoys|avoid|avoids|finish|mind) to \w+|\b(want|wants|hope|hopes|decided) \w+ing\b`, labelUz: 'enjoy/avoid + -ing, want/hope/decide + to — aralashib ketgan' }],
+    model: 'In my free time I enjoy reading detective novels and playing chess. I try to avoid spending too much time on my phone. Next year I want to start a small business, and I hope to travel to Korea.',
+  },
 };

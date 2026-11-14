@@ -67,7 +67,7 @@ Target products: **GE** General English · **EP** Exam Preparation · **MA** Moc
 ## 4. Added after the baseline (branch `ccr-f38ad651-jv2w3f`, not deployed)
 | Feature | Route / module | Status | Evidence | Limitations |
 |---|---|---|---|---|
-| General English path | `#/learn` `Learn.tsx`, `src/content/lessons/*` | WORKING (pilot content) | `lessons.test.ts` (content validation, answer keys, graph), Playwright walkthrough | 33 lessons A1–C2 (11 units) with explanation, practice, speaking (browser recognition, not scored), rule-based writing and mastery check; status `pilot`: methodologist review pending; C2 has one unit only; progress in localStorage only |
+| General English path | `#/learn` `Learn.tsx`, `src/content/lessons/*` | WORKING (pilot content) | `lessons.test.ts` (content validation, answer keys, graph), Playwright walkthrough | 42 lessons A1–C2 (14 units) with explanation, practice, speaking (browser recognition, not scored), rule-based writing and mastery check; status `pilot`: methodologist review pending; C2 has one unit only; progress in localStorage only |
 | Lesson player | `#/learn/<id>` `Lesson.tsx`, `src/lib/lessons.ts` | WORKING | tests + Playwright (6/6 pass → next lesson unlocked) | no audio for examples yet; no speaking/writing activities inside lessons |
 | Adaptive engine | `src/lib/adaptive/*` | WORKING (logic) | `adaptive.test.ts` (10⁴ random histories), `record.test.ts` | constants are hypotheses; device-local |
 | "Bugungi reja" (today's plan) | `PlanCard.tsx` on `#/` | WORKING | Playwright (A1/A2/B1/B2 cases) | reading/listening links go to the exam track, which is paywalled in demo mode |
