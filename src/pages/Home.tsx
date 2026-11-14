@@ -1,6 +1,7 @@
-import { ArrowRight, CalendarDays, PenLine, Compass, Map as MapIcon, BookOpen, Brain, Flame, Gamepad2, Headphones, Languages, Mic, Plus, Puzzle, ShieldCheck, Star, Swords, Target, Timer, Zap } from 'lucide-react';
+import { ArrowRight, CalendarDays, Clapperboard, PenLine, Compass, Map as MapIcon, BookOpen, Brain, Flame, Gamepad2, Headphones, Languages, Mic, Plus, Puzzle, ShieldCheck, Star, Swords, Target, Timer, Zap } from 'lucide-react';
 import { BRAND } from '../brand';
 import { Mascot } from '../components/Mascot';
+import { DailyCards } from '../components/DailyCards';
 import { ProgressCard } from '../components/ProgressCard';
 import { Tile } from '../components/Tile';
 import { grammar } from '../content/grammar';
@@ -41,6 +42,7 @@ export default function Home() {
     { task: 'words', icon: Zap, title: 'So‘z o‘yini', text: due > 0 ? `${due} ta so‘z takrorlashga tayyor` : low ? 'A1–A2 so‘zlari bilan boshlang' : 'Yangi IELTS so‘zlari', href: '#/games/rush' },
     { task: 'grammar', icon: Puzzle, title: 'Grammar', text: low ? 'Asoslar: to be, Present Simple, Past Simple' : '“Sizga mos” savollar', href: '#/grammar' },
     { task: 'practice', icon: PenLine, title: 'Gap tuzish', text: low ? 'Tarjima va so‘z tartibi mashqlari' : 'Xatoni toping, gapni kuchaytiring', href: '#/practice' },
+    { task: 'shadow', icon: Clapperboard, title: 'Eshit va takrorla', text: low ? 'Oddiy sahnalar: tinglang va takrorlang' : 'Film, podkast, ma’ruza: shadowing va dictant', href: '#/shadow' },
     { task: 'reading', icon: BookOpen, title: 'Reading', text: nextRead.title.replace(/^Reading mini-test \d+: /, ''), href: `#/exam/reading/${nextRead.id}` },
     { task: 'listening', icon: Headphones, title: 'Listening', text: nextListen.title.replace(/^Listening mini-test \d+: /, ''), href: `#/exam/listening/${nextListen.id}` },
     { task: 'speaking', icon: Mic, title: 'Speaking', text: low ? 'Sodda savollar, o‘zbekcha yordam bilan' : 'IELTS Part 1–3', href: '#/exam/speaking' },
@@ -96,9 +98,11 @@ export default function Home() {
               </a>
             ))}
           </div>
-          <div className="row"><a className="btn sm" href="#/placement">Darajani qayta aniqlash</a></div>
+          <div className="row"><a className="btn sm primary" href="#/homework">Uyga vazifa</a><a className="btn sm" href="#/results">Natijalar</a><a className="btn sm" href="#/placement">Darajani qayta aniqlash</a></div>
         </section>
       )}
+
+      <DailyCards />
 
       <ProgressCard />
 

@@ -14,13 +14,14 @@ let current: HTMLAudioElement | null = null;
 export const stopClip = (): void => { if (current) { current.pause(); current = null; } };
 
 /** Matn uchun tayyor audio bor bo'lsa chaladi (tugaguncha kutadi) va true qaytaradi; yo'q bo'lsa false. */
-export async function playClip(text: string, signal: { cancelled: boolean }): Promise<boolean> {
+export async function playClip(text: string, signal: { cancelled: boolean }, rate = 1): Promise<boolean> {
   const m = await loadManifest();
   const key = clipKey(text);
   if (!m.clips.has(key) || signal.cancelled) return false;
   (window as unknown as { __clipLog?: string[] }).__clipLog?.push(text);
   return new Promise<boolean>((resolve) => {
     const a = new Audio(`/audio/clips/${key}.mp3`);
+    if (rate !== 1) { a.playbackRate = rate; (a as HTMLAudioElement & { preservesPitch?: boolean }).preservesPitch = true; }
     current = a;
     let done = false;
     const finish = (ok: boolean) => { if (done) return; done = true; clearInterval(poll); if (current === a) current = null; resolve(ok); };

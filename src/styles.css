@@ -404,3 +404,61 @@ ins { color: var(--ok); text-decoration: none; font-weight: 700; background: col
 .price-tabs { display: inline-flex; background: var(--surface-2); border-radius: 999px; padding: 4px; margin: 6px 0 14px; }
 .price-tabs button { border: 0; background: transparent; padding: 8px 18px; border-radius: 999px; font-weight: 700; cursor: pointer; color: var(--ink-2); }
 .price-tabs button.on { background: var(--brand); color: #fff; }
+
+/* ===== Writing darslari ===== */
+mark.kw { background: color-mix(in srgb, var(--purple) 16%, transparent); color: var(--purple); font-weight: 700; padding: 0 4px; border-radius: 4px; }
+.essay-model { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 18px; line-height: 1.75; }
+.essay-model p { margin: 0 0 12px; }
+.check { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--line-2); }
+.check.ok { color: var(--ok); } .check.no { color: var(--bad); }
+.check b { color: var(--ink); }
+
+/* ===== Uyga vazifa va natijalar ===== */
+.hw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-bottom: 16px; }
+.hw-card { display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-1); min-height: 250px; }
+.hw-card.done { border-color: var(--ok); background: var(--green-50); }
+.hw-top { display: flex; justify-content: space-between; align-items: center; }
+.hw-ico { width: 46px; height: 46px; border-radius: 14px; background: var(--surface-2); display: grid; place-items: center; }
+.hw-n { font-family: var(--display); font-weight: 800; font-size: 28px; color: var(--line); }
+.hw-kind { text-transform: uppercase; letter-spacing: .1em; color: var(--brand-600); font-weight: 800; margin-top: 10px; }
+.hw-card h3 { margin: 0; font-size: 19px; line-height: 1.3; flex: 1; }
+.hw-card .btn { margin-top: auto; justify-content: center; }
+.bigband { font-family: var(--display); font-weight: 800; font-size: 72px; line-height: 1; color: var(--brand); letter-spacing: -.04em; }
+.linechart { width: 100%; height: auto; display: block; }
+.linechart .grid { stroke: var(--line); stroke-dasharray: 3 4; }
+.linechart .axis { fill: var(--muted); font-size: 12px; }
+.linechart .line { stroke: var(--brand); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 4px 8px color-mix(in srgb, var(--brand) 40%, transparent)); }
+.linechart .dot { fill: var(--surface); stroke: var(--ink-2); stroke-width: 2; }
+.linechart .dot.now { fill: var(--brand); stroke: var(--brand); }
+.linechart .val { fill: var(--ink-2); font-size: 13px; }
+.linechart .val.now { fill: var(--ink); font-weight: 800; font-size: 15px; }
+
+/* ===== Kun so'zi va maslahati ===== */
+.daily { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
+@media (max-width: 760px) { .daily { grid-template-columns: 1fr; } }
+.daily-card { border-radius: var(--r-lg); padding: 20px 22px; border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow-1); display: flex; flex-direction: column; gap: 6px; }
+.daily-card small { text-transform: uppercase; letter-spacing: .08em; font-weight: 800; color: var(--muted); font-size: 11px; }
+.daily-card h3 { margin: 0; font-size: clamp(26px, 4vw, 36px); color: var(--brand); letter-spacing: -.02em; }
+.daily-card .uz { margin: 0; font-weight: 650; }
+.daily-card .def { margin: 0; color: var(--ink-2); font-size: 14.5px; }
+.daily-card .ex { margin: 4px 0 8px; font-style: italic; color: var(--ink-2); }
+.daily-card.tip { background: linear-gradient(135deg, #12162b, #2a1230); border: 0; color: #fff; }
+.daily-card.tip small { color: #ff9b8d; }
+.daily-card.tip .tipen { font-family: var(--display); font-weight: 600; font-size: clamp(18px, 2.6vw, 24px); line-height: 1.35; margin: 6px 0; letter-spacing: -.01em; }
+.daily-card.tip .uz { color: #c9cde6; font-weight: 500; }
+.daily-card.tip .btn { margin-top: auto; }
+
+/* ===== Senior Examiner studiyasi ===== */
+.subs { display: grid; gap: 6px; margin: 14px 0; }
+.subline { display: flex; gap: 12px; align-items: baseline; text-align: left; padding: 10px 14px; border-radius: var(--r-sm); border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); cursor: pointer; font-size: 16px; transition: all .15s; }
+.subline b { flex: none; min-width: 96px; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--brand-600); }
+.subline.now { background: var(--brand-50); border-color: var(--brand); transform: translateX(4px); }
+.subline:hover { border-color: var(--brand); }
+.cloze-line { display: flex; gap: 10px; align-items: flex-start; flex-wrap: wrap; padding: 8px 0; border-bottom: 1px solid var(--line-2); }
+.cloze-line p { margin: 4px 0; flex: 1; min-width: 240px; line-height: 2; }
+input.blank { padding: 2px 8px; margin: 0 3px; border-radius: 8px; border: 2px solid var(--brand); min-width: 70px; font-weight: 700; text-align: center; }
+input.blank.ok { border-color: var(--ok); background: var(--green-50); }
+input.blank.bad { border-color: var(--bad); background: color-mix(in srgb, var(--bad) 8%, transparent); }
+.shadow-line { margin: 10px 0; padding: 14px 18px; border-radius: var(--r); background: var(--surface-2); border-left: 5px solid var(--brand); }
+.shadow-line b { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--brand-600); }
+.exam-brief { display: flex; gap: 12px; align-items: center; padding: 10px 14px; border-radius: var(--r); background: var(--yellow-50); }

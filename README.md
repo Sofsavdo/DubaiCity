@@ -137,3 +137,13 @@ Fidem loyihasidagi kabi **kartaga o'tkazma** orqali ishlaydi (`server/hamyon.ts`
 
 Sozlash (Railway Variables): `HAMYON_SHOP_ID`, `HAMYON_SHOP_KEY`; Hamyon botida `prepare_url` va `complete_url` ni `/api/pay/hamyon/prepare|complete` ga qo'ying. `HAMYON_*` bo'lmasa demo rejim ishlaydi. Qo'llab-quvvatlash: `ADMIN_TOKEN` bilan `GET /api/admin/payments` va `POST /api/admin/grant {nickname, track, days}` (sarlavha `x-admin`).
 Obunalar serverda hisobga (laqab + token) bog'lanadi; boshqa qurilmada Profil'dagi "hisob kodi" bilan tiklanadi.
+
+
+## Writing darslari (Task 2)
+
+`content/writingGuide.ts`: 5 ta insho turi (tuzilma va qoliplar), eng ko'p uchraydigan xatolar va 10 asosiy mavzu: har birida savol, reja, original namuna insho (250–330 so'z) va 8 ta so'z. So'zlar (`vocabWriting.ts`) o'yinlar va takrorlash tizimiga ham qo'shilgan. `lib/writingCheck.ts` `analyzeTask2()` insho turiga mos tekshiruv ro'yxatini beradi (so'zlar soni, abzatslar, xulosa, qisqartma, norasmiy so'z, shaxsiy hikoya, hissiy so'zlar, bog'lovchilar, tur bo'yicha tuzilma, tanish grammatik xatolar, mavzu so'zlari). Barcha namuna insholar shu tekshiruvdan o'tishi testda kafolatlanadi. Kontent original: mualliflik huquqi bilan himoyalangan kitoblardan ko'chirilmagan.
+
+
+## Eshit va takrorla (Senior Examiner studiyasi)
+
+`#/shadow`: 10 ta original sahna (film uslubidagi dialog, podkast, akademik ma'ruza, hujjatli matn; A2–C1), ikki xil neyron ovozda (`content/scenes.ts`, audio `public/audio/clips`). Har sahnada 6 bosqich: subtitrli tinglash (0.6–1x tezlik), subtitrsiz tinglash va savollar, bo'shliqlarni to'ldirish, **shadowing** (eshit va takrorla, mikrofon yoki yozma), dictant va **qayta aytish** (g'oyalar qamrovi). Aniqlik `lib/shadow.ts` da so'zlar bo'yicha hisoblanadi (talaffuz bahosi emas). Sahna iboralari (30 ta) so'z o'yinlari va takrorlash tizimiga qo'shiladi. Haqiqiy film lavhalari va subtitrlar mualliflik huquqi bilan himoyalangan, shuning uchun ishlatilmagan.

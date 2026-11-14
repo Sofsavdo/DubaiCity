@@ -4,6 +4,7 @@ import { listeningTests } from '../content/listeningTests';
 import { readingTests } from '../content/readingTests';
 import { levelIndex } from '../lib/levels';
 import { roundHalf } from '../lib/progress';
+import { recordMock } from '../lib/history';
 import { loadResults, type ResultRecord } from '../lib/storage';
 import { useProfile } from '../lib/store';
 
@@ -62,6 +63,7 @@ export default function FullExam() {
   const doneN = parts.filter((x) => x.done).length;
   const overall = bands.length ? roundHalf(bands.reduce((a, b) => a + b, 0) / bands.length) : null;
   const all = doneN === 4;
+  if (overall !== null && (rl || rr || rs) && doneN >= 3) recordMock({ at: st.startedAt, overall, listening: rl?.band, reading: rr?.band, speaking: rs?.band });
   const nextIdx = parts.findIndex((x) => !x.done);
 
   return (
