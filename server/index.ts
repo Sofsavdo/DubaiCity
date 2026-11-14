@@ -3,6 +3,9 @@ import { ApiError, createDb, createDuel, getDuel, join, leaderboard, submitDuel,
 import { fileURLToPath } from 'node:url';
 import { serveStatic } from './static';
 import { dirname } from 'node:path';
+import { hamyonApi, hamyonConfigFromEnv, verifySign } from './hamyon';
+import { cancelPayment, createPayment, entitlements, findByCallback, grant, markPrepared, applyResult, reconcile, recent, statusFor } from './payments';
+import { PERIODS, TRACKS, priceFor } from './pricing';
 import { TTS_DAILY_LIMIT, TtsError, cleanText, synthesize, ttsConfigFromEnv } from './tts';
 import { AiError, configFromEnv, evaluateSpeaking, evaluateWriting, followUp, followUpPersona } from './ai';
 
@@ -13,6 +16,11 @@ const DIST = fileURLToPath(new URL('../dist', import.meta.url));
 const TRUST_PROXY = process.env.TRUST_PROXY === '1';
 const DB_FILE = process.env.DB_PATH ?? new URL('./data.sqlite', import.meta.url).pathname;
 const db = createDb(DB_FILE);
+const hcfg = hamyonConfigFromEnv();
+const hapi = hcfg ? hamyonApi(hcfg) : null;
+// Demo rejim (to'lovsiz yoqish) faqat to'lov ulanmaganda; PAY_DEMO=1 bilan majburan yoqish mumkin
+const DEMO = process.env.PAY_DEMO ? process.env.PAY_DEMO === '1' : !hapi;
+const ADMIN_TOKEN = (process.env.ADMIN_TOKEN ?? '').trim();
 const tts = ttsConfigFromEnv(process.env.TTS_CACHE_DIR ?? `${dirname(DB_FILE)}/tts-cache`);
 
 // Oddiy so'rov tezligi cheklovi (IP bo'yicha, daqiqada 120 ta)
@@ -28,6 +36,24 @@ const send = (res: ServerResponse, status: number, body: unknown) => {
   res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
   res.end(JSON.stringify(body));
 };
+
+/** Hamyon callbacklari: urlencoded, JSON yoki multipart/form-data maydonlari. */
+function readForm(req: IncomingMessage, limit = 8192): Promise<Record<string, string>> {
+  return new Promise((resolve, reject) => {
+    let size = 0; const chunks: Buffer[] = [];
+    req.on('data', (c: Buffer) => { size += c.length; if (size > limit) { reject(new ApiError(413, 'So‘rov juda katta')); req.destroy(); return; } chunks.push(c); });
+    req.on('end', () => {
+      const raw = Buffer.concat(chunks).toString('utf8');
+      const ct = String(req.headers['content-type'] ?? '');
+      const out: Record<string, string> = {};
+      if (ct.includes('json')) { try { for (const [k, v] of Object.entries(JSON.parse(raw || '{}') as Record<string, unknown>)) out[k] = String(v); } catch { reject(new ApiError(400, 'JSON xato')); return; } }
+      else if (ct.includes('multipart')) { for (const m of raw.matchAll(/name="([^"]+)"\r?\n\r?\n([^\r\n]*)/g)) out[m[1]] = m[2]; }
+      else for (const [k, v] of new URLSearchParams(raw)) out[k] = v;
+      resolve(out);
+    });
+    req.on('error', reject);
+  });
+}
 
 function readJson(req: IncomingMessage, limit = 2048): Promise<Record<string, unknown>> {
   return new Promise((resolve, reject) => {
@@ -110,6 +136,39 @@ createServer(async (req, res) => {
       res.writeHead(200, { 'content-type': 'audio/mpeg', 'content-length': audio.length, 'cache-control': 'private, max-age=86400', 'x-cache': cached ? 'hit' : 'miss' });
       return void res.end(audio);
     }
+    // ---------------- To'lov (Hamyon) ----------------
+    if (req.method === 'GET' && url.pathname === '/api/pay/config') {
+      return send(res, 200, { enabled: !!hapi, demo: DEMO, periods: PERIODS.map((p) => ({ days: p.days, label: p.label, prices: Object.fromEntries(TRACKS.map((t) => [t, priceFor(t, p.days)])) })) });
+    }
+    if (req.method === 'GET' && url.pathname === '/api/me') return send(res, 200, entitlements(db, String(req.headers['x-token'] ?? '')));
+    if (req.method === 'POST' && url.pathname === '/api/pay/create') {
+      if (!hapi) throw new ApiError(503, 'To‘lov hali ulanmagan');
+      const b = await readJson(req);
+      return send(res, 200, await createPayment(db, hapi, String(b.token ?? ''), String(b.track ?? ''), Number(b.days)));
+    }
+    const ps = url.pathname.match(/^\/api\/pay\/(status|cancel)\/([a-f0-9]{8,40})$/);
+    if (ps && req.method === (ps[1] === 'status' ? 'GET' : 'POST')) {
+      const tok = String(req.headers['x-token'] ?? '');
+      return send(res, 200, ps[1] === 'status' ? await statusFor(db, hapi, hcfg?.shopId ?? '', tok, ps[2]) : await cancelPayment(db, hapi, tok, ps[2]));
+    }
+    if (req.method === 'POST' && (url.pathname === '/api/pay/hamyon/prepare' || url.pathname === '/api/pay/hamyon/complete')) {
+      if (!hcfg) throw new ApiError(503, 'To‘lov hali ulanmagan');
+      const f = await readForm(req);
+      if (!verifySign(hcfg, f)) { console.warn('Hamyon: imzo xato (order=%s)', f.order_id); return send(res, 403, { error: 'sign' }); }
+      const p = findByCallback(db, f);
+      if (url.pathname.endsWith('/prepare')) { if (p) markPrepared(db, p.id, f.payment_id); return send(res, 200, { result: 'ok' }); }
+      if (!p) return send(res, 200, { result: 'ok' }); // qayta urinishni to'xtatish uchun 200
+      const paid = f.status === 'paid';
+      const amt = Math.round(Number(f.amount));
+      console.log('Hamyon complete: order=%s status=%s amount=%s', p.id, f.status, f.amount);
+      try { applyResult(db, p.id, paid ? 'paid' : 'cancel', { paidAmount: paid ? (Number.isFinite(amt) ? amt : -1) : undefined, reason: f.reason }); } catch (e) { console.error(e); return send(res, 500, { error: 'retry' }); }
+      return send(res, 200, { result: 'ok' });
+    }
+    if (url.pathname.startsWith('/api/admin/')) {
+      if (!ADMIN_TOKEN || String(req.headers['x-admin'] ?? '') !== ADMIN_TOKEN) throw new ApiError(403, 'Taqiqlangan');
+      if (req.method === 'GET' && url.pathname === '/api/admin/payments') return send(res, 200, { payments: recent(db, 100) });
+      if (req.method === 'POST' && url.pathname === '/api/admin/grant') { const b = await readJson(req); return send(res, 200, { until: grant(db, String(b.nickname ?? ''), String(b.track ?? ''), Number(b.days)) }); }
+    }
     if (url.pathname === '/api/health') return send(res, 200, { ok: true });
     if (!url.pathname.startsWith('/api/') && serveStatic(req, res, DIST)) return;
     return send(res, 404, { error: 'Topilmadi' });
@@ -118,4 +177,7 @@ createServer(async (req, res) => {
     console.error(e);
     return send(res, 500, { error: 'Server xatosi' });
   }
-}).listen(PORT, HOST, () => console.log(`Bandly: http://${HOST}:${PORT} (AI: ${ai.provider}, TTS: ${tts.provider})`));
+}).listen(PORT, HOST, () => console.log(`Bandly: http://${HOST}:${PORT} (AI: ${ai.provider}, TTS: ${tts.provider}, To‘lov: ${hapi ? 'Hamyon' : 'yo‘q (demo)'})`));
+
+// Yo'qolgan callbacklar uchun xavfsizlik to'ri: har 90 soniyada ochiq to'lovlar Hamyondan tekshiriladi
+if (hapi && hcfg) setInterval(() => { reconcile(db, hapi, hcfg.shopId).then((n) => { if (n) console.log('Hamyon reconcile: %s ta to‘lov yakunlandi', n); }).catch((e) => console.warn('reconcile xato', e)); }, 90_000);

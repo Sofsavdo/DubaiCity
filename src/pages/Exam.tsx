@@ -16,7 +16,7 @@ export default function Exam() {
   return (
     <div>
       <div className="card">
-        <h2>Imtihon tayyorgarligi {p.plan.exam ? <span className="badge on">Obuna faol (demo)</span> : <span className="badge">Obuna kerak</span>}</h2>
+        <h2>Imtihon tayyorgarligi {p.plan.exam ? <span className="badge on">{p.planUntil.exam ? 'Obuna faol' : 'Obuna faol (demo)'}</span> : <span className="badge">Obuna kerak</span>}</h2>
         <div className="tabs" style={{ marginBottom: 0 }}>
           <button className={`btn ${tab === 'ielts' ? 'dark' : ''}`} onClick={() => setTab('ielts')}>IELTS</button>
           <button className={`btn ${tab === 'sat' ? 'dark' : ''}`} onClick={() => setTab('sat')}>SAT <span className="badge soon">tez orada</span></button>

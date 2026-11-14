@@ -22,6 +22,8 @@ export interface Profile {
   achievements: string[];
   /** DEMO: to'lov ulangunga qadar obuna holati qurilmada saqlanadi */
   plan: Record<TrackId, boolean>;
+  /** Server tasdiqlagan obuna tugash vaqti (ms); demo rejimda null */
+  planUntil: Record<TrackId, number | null>;
   srs: Record<string, CardState>;
   gamesPlayed: number;
   freeGames: { day: string; n: number };
@@ -58,6 +60,7 @@ export const defaultProfile = (today: string): Profile => ({
   dailyGoal: 50,
   achievements: [],
   plan: { exam: false, grammar: false, mocks: false },
+  planUntil: { exam: null, grammar: null, mocks: null },
   srs: {},
   gamesPlayed: 0,
   freeGames: { day: today, n: 0 },

@@ -10,7 +10,7 @@ export default function Mocks() {
   return (
     <div>
       <div className="card">
-        <h2>Mock testlar {p.plan.mocks ? <span className="badge on">Obuna faol (demo)</span> : <span className="badge">Obuna kerak</span>}</h2>
+        <h2>Mock testlar {p.plan.mocks ? <span className="badge on">{p.planUntil.mocks ? 'Obuna faol' : 'Obuna faol (demo)'}</span> : <span className="badge">Obuna kerak</span>}</h2>
         <p style={{ marginBottom: 0 }}>Imtihon sharoitida: taymer, avtomatik baho va har savol bo‘yicha tahlil. Natijalar profilda saqlanadi.</p>
       </div>
       <div className="grid">

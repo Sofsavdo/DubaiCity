@@ -1,5 +1,8 @@
 import { Flame, Lock, Trophy } from 'lucide-react';
 import { useState } from 'react';
+import { getAccount, restoreAccount } from '../lib/account';
+import { fmtDate, refreshEntitlements } from '../lib/pay';
+import { TRACK_NAME } from '../config';
 import { setSound, sfx, soundOn } from '../lib/fx';
 import { LEVEL_INFO } from '../lib/levels';
 import { ACHIEVEMENTS, levelProgress } from '../lib/game';
@@ -14,6 +17,9 @@ import { ProgressCard } from '../components/ProgressCard';
 export default function Profile() {
   const p = useProfile();
   const [snd, setSnd] = useState(soundOn());
+  const [code, setCode] = useState('');
+  const [msg, setMsg] = useState('');
+  const acc = getAccount();
   const lp = levelProgress(p.xp);
   const results = loadResults();
   const mastered = vocab.filter((w) => isMastered(p.srs[w.id])).length;
@@ -36,6 +42,24 @@ export default function Profile() {
       </div>
 
       <ProgressCard />
+
+      <div className="card">
+        <h3>Hisob va obunalar</h3>
+        {(['exam', 'grammar', 'mocks'] as const).map((t) => (
+          <p key={t} style={{ margin: '4px 0' }}>{TRACK_NAME[t]}: {p.planUntil[t] && p.planUntil[t]! > Date.now() ? <b className="ok">faol, {fmtDate(p.planUntil[t]!)} gacha</b> : p.plan[t] ? <span>demo</span> : <span className="evidence">obuna yo‘q</span>}</p>
+        ))}
+        {acc ? (
+          <>
+            <p className="evidence">Laqab: <b>{acc.nickname}</b>. Hisob kodi obunani boshqa qurilmada tiklash uchun kerak, uni hech kimga bermang.</p>
+            <div className="row"><button className="btn sm" onClick={async () => { await navigator.clipboard.writeText(acc.token).catch(() => {}); setMsg('Hisob kodi nusxalandi. Xavfsiz joyda saqlang.'); }}>Hisob kodini nusxalash</button></div>
+          </>
+        ) : <p className="evidence">Obuna sotib olish uchun hisob kerak: u to‘lov vaqtida laqab bilan yaratiladi.</p>}
+        <div className="row" style={{ marginTop: 10 }}>
+          <input type="text" value={code} placeholder="Boshqa qurilmadagi hisob kodi" onChange={(e) => setCode(e.target.value)} style={{ minWidth: 220 }} />
+          <button className="btn sm" disabled={code.trim().length < 20} onClick={async () => { try { const a = await restoreAccount(code); await refreshEntitlements(); setMsg(`Kirdingiz: ${a.nickname}`); setCode(''); } catch (e) { setMsg((e as Error).message); } }}>Kod bilan kirish</button>
+        </div>
+        {msg && <p className="evidence">{msg}</p>}
+      </div>
 
       <div className="card">
         <h3>Yutuqlar</h3>

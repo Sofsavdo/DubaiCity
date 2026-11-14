@@ -4,6 +4,7 @@ import { useHash } from './components/hooks';
 import { Footer } from './components/Footer';
 import { Header } from './components/Header';
 import { TabBar } from './components/TabBar';
+import { PaySheet } from './components/PaySheet';
 import { Toasts } from './components/Toasts';
 import Home from './pages/Home';
 import Exam from './pages/Exam';
@@ -76,6 +77,7 @@ export default function App() {
       <Footer />
       <TabBar hash={hash} />
       <Toasts />
+      <PaySheet />
     </>
   );
 }

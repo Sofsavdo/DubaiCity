@@ -30,6 +30,31 @@ export function createDb(path = ':memory:'): DatabaseSync {
       calls INTEGER NOT NULL DEFAULT 0,
       PRIMARY KEY (player_id, day)
     );
+    CREATE TABLE IF NOT EXISTS payments (
+      id TEXT PRIMARY KEY,
+      player_id INTEGER NOT NULL REFERENCES players(id),
+      track TEXT NOT NULL,
+      days INTEGER NOT NULL,
+      amount INTEGER NOT NULL,
+      hamyon_payment_id TEXT,
+      hamyon_amount INTEGER,
+      card TEXT,
+      status TEXT NOT NULL,
+      expire_at INTEGER,
+      error TEXT,
+      note TEXT,
+      created_at INTEGER NOT NULL,
+      paid_at INTEGER,
+      checked_at INTEGER
+    );
+    CREATE INDEX IF NOT EXISTS payments_player ON payments (player_id, created_at);
+    CREATE INDEX IF NOT EXISTS payments_open ON payments (status, created_at);
+    CREATE TABLE IF NOT EXISTS subscriptions (
+      player_id INTEGER NOT NULL REFERENCES players(id),
+      track TEXT NOT NULL,
+      until INTEGER NOT NULL,
+      PRIMARY KEY (player_id, track)
+    );
     CREATE TABLE IF NOT EXISTS duels (
       code TEXT PRIMARY KEY,
       words TEXT NOT NULL,
@@ -67,9 +92,9 @@ export function join(db: DatabaseSync, nickname: string, now = Date.now()): { to
   return { token, nickname: nick };
 }
 
-interface Player { id: number; nickname: string; xp: number; streak: number }
+export interface Player { id: number; nickname: string; xp: number; streak: number }
 
-const byToken = (db: DatabaseSync, token: string): Player => {
+export const byToken = (db: DatabaseSync, token: string): Player => {
   const p = db.prepare('SELECT id, nickname, xp, streak FROM players WHERE token = ?').get(token ?? '') as Player | undefined;
   if (!p) throw new ApiError(401, 'Noma’lum token');
   return p;

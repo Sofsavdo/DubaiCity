@@ -113,9 +113,9 @@ export default function Home() {
 
       <div className="section-title"><h2>Yo‘nalishlar</h2><a href="#/pricing" className="btn sm">Obuna turlari</a></div>
       <div className="tracks">
-        <Tile big href="#/exam" tone="red" icon={Target} title="Imtihon tayyorgarligi" text="IELTS: Reading, Listening, Writing va jonli Speaking. SAT va CEFR tez orada." badge={p.plan.exam ? <span className="badge on">Obuna faol (demo)</span> : <span className="badge">Obuna kerak</span>} />
-        <Tile big href="#/grammar" tone="blue" icon={Puzzle} title="Grammar" text="Mavzular bo‘yicha mashqlar, o‘zbekcha tushuntirish, xatolar ustida ishlash." badge={p.plan.grammar ? <span className="badge on">Obuna faol (demo)</span> : <span className="badge">Bepul: Artikllar</span>} />
-        <Tile big href="#/mocks" tone="orange" icon={Timer} title="Mock testlar" text="Imtihon taymeri, avtomatik baho va har savol bo‘yicha tahlil." badge={p.plan.mocks ? <span className="badge on">Obuna faol (demo)</span> : <span className="badge">Obuna kerak</span>} />
+        <Tile big href="#/exam" tone="red" icon={Target} title="Imtihon tayyorgarligi" text="IELTS: Reading, Listening, Writing va jonli Speaking. SAT va CEFR tez orada." badge={p.plan.exam ? <span className="badge on">{p.planUntil.exam ? 'Obuna faol' : 'Obuna faol (demo)'}</span> : <span className="badge">Obuna kerak</span>} />
+        <Tile big href="#/grammar" tone="blue" icon={Puzzle} title="Grammar" text="Mavzular bo‘yicha mashqlar, o‘zbekcha tushuntirish, xatolar ustida ishlash." badge={p.plan.grammar ? <span className="badge on">{p.planUntil.grammar ? 'Obuna faol' : 'Obuna faol (demo)'}</span> : <span className="badge">Bepul: Artikllar</span>} />
+        <Tile big href="#/mocks" tone="orange" icon={Timer} title="Mock testlar" text="Imtihon taymeri, avtomatik baho va har savol bo‘yicha tahlil." badge={p.plan.mocks ? <span className="badge on">{p.planUntil.mocks ? 'Obuna faol' : 'Obuna faol (demo)'}</span> : <span className="badge">Obuna kerak</span>} />
       </div>
 
       <div className="section-title"><h2>Nega {BRAND.name}</h2></div>

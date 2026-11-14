@@ -64,3 +64,12 @@ export const submitDuel = (code: string, score: number, correct: number, ms: num
   call(`/api/duel/${encodeURIComponent(code)}/submit`, json({ token: getAccount()?.token ?? '', score, correct, ms }));
 
 export const duelUrl = (code: string): string => `${window.location.origin}${window.location.pathname}#/duel/${code}`;
+
+/** Boshqa qurilmada kirish: hisob kodi (token) bilan. */
+export async function restoreAccount(code: string): Promise<Account> {
+  const token = code.trim();
+  const me = await call<{ nickname: string }>('/api/me', { headers: { 'x-token': token } });
+  const a = { token, nickname: me.nickname };
+  setAccount(a);
+  return a;
+}

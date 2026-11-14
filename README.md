@@ -124,3 +124,16 @@ npm run server           # AI holati ishga tushganda yoziladi: "(AI: anthropic)"
 - `lib/progress.ts`: boshlang'ich band (daraja aniqlashdan) → hozirgi taxminiy band (so'nggi Reading/Listening/Speaking natijalaridan) → maqsad. Past darajali testda yuqori band ko'rsatilmaydi (`BAND_CAP`). Kunlik reja va kerakli soat (1 band ≈ 150 soat) hisoblanadi.
 - `#/mocks/full`: Listening → Reading → Writing → Speaking tartibidagi imtihon simulyatsiyasi va umumiy taxminiy band.
 - Barcha ballar taxminiy va qurilmada saqlangan natijalarga asoslangan, rasmiy IELTS balli emas va natija kafolatlanmaydi.
+
+
+## To'lov (Hamyon)
+
+Fidem loyihasidagi kabi **kartaga o'tkazma** orqali ishlaydi (`server/hamyon.ts`, `server/payments.ts`):
+
+1. Foydalanuvchi yo'nalish va muddatni tanlaydi, server Hamyon'da to'lov ochadi va karta raqami bilan **aniq summani** qaytaradi (band summa uchun +1 so'm).
+2. Foydalanuvchi shu summani kartaga o'tkazadi, Hamyon `complete_url` ga natijani yuboradi (md5 imzo tekshiriladi), obuna **bir marta** beriladi (takroriy callback obunani uzaytirmaydi).
+3. Callback yo'qolsa: mijoz holatni so'raganda va har 90 soniyada server Hamyon'dan o'zi tekshiradi.
+4. Kech kelgan to'lov (bekor qilingandan keyin) ham yetkaziladi; summa mos kelmasa yetkazilmaydi va `note` ga yoziladi.
+
+Sozlash (Railway Variables): `HAMYON_SHOP_ID`, `HAMYON_SHOP_KEY`; Hamyon botida `prepare_url` va `complete_url` ni `/api/pay/hamyon/prepare|complete` ga qo'ying. `HAMYON_*` bo'lmasa demo rejim ishlaydi. Qo'llab-quvvatlash: `ADMIN_TOKEN` bilan `GET /api/admin/payments` va `POST /api/admin/grant {nickname, track, days}` (sarlavha `x-admin`).
+Obunalar serverda hisobga (laqab + token) bog'lanadi; boshqa qurilmada Profil'dagi "hisob kodi" bilan tiklanadi.

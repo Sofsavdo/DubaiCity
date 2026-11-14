@@ -107,6 +107,12 @@ export function consumeGame(): boolean {
   return true;
 }
 
+/** To'lov ulangan rejimda obuna holati faqat serverdan keladi. */
+export function applyServerPlans(subs: Record<TrackId, number | null>): void {
+  const now = Date.now();
+  const plan = { exam: !!subs.exam && subs.exam > now, grammar: !!subs.grammar && subs.grammar > now, mocks: !!subs.mocks && subs.mocks > now };
+  commit({ ...state, plan, planUntil: { exam: subs.exam, grammar: subs.grammar, mocks: subs.mocks } });
+}
 export function setPlan(track: TrackId, on: boolean): void {
   commit({ ...state, plan: { ...state.plan, [track]: on } });
 }
