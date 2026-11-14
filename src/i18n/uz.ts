@@ -13,6 +13,7 @@ export const uz = {
   'nav.tools': 'Band kalkulyatori',
   'nav.practice': 'Gap tuzish',
   'nav.homework': 'Uyga vazifa',
+  'nav.shadow': 'Eshit va takrorla',
   'nav.results': 'Natijalar',
   'nav.menu': 'Menyu',
   'nav.close': 'Yopish',

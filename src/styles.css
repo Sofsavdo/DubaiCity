@@ -447,3 +447,18 @@ mark.kw { background: color-mix(in srgb, var(--purple) 16%, transparent); color:
 .daily-card.tip .tipen { font-family: var(--display); font-weight: 600; font-size: clamp(18px, 2.6vw, 24px); line-height: 1.35; margin: 6px 0; letter-spacing: -.01em; }
 .daily-card.tip .uz { color: #c9cde6; font-weight: 500; }
 .daily-card.tip .btn { margin-top: auto; }
+
+/* ===== Senior Examiner studiyasi ===== */
+.subs { display: grid; gap: 6px; margin: 14px 0; }
+.subline { display: flex; gap: 12px; align-items: baseline; text-align: left; padding: 10px 14px; border-radius: var(--r-sm); border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); cursor: pointer; font-size: 16px; transition: all .15s; }
+.subline b { flex: none; min-width: 96px; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--brand-600); }
+.subline.now { background: var(--brand-50); border-color: var(--brand); transform: translateX(4px); }
+.subline:hover { border-color: var(--brand); }
+.cloze-line { display: flex; gap: 10px; align-items: flex-start; flex-wrap: wrap; padding: 8px 0; border-bottom: 1px solid var(--line-2); }
+.cloze-line p { margin: 4px 0; flex: 1; min-width: 240px; line-height: 2; }
+input.blank { padding: 2px 8px; margin: 0 3px; border-radius: 8px; border: 2px solid var(--brand); min-width: 70px; font-weight: 700; text-align: center; }
+input.blank.ok { border-color: var(--ok); background: var(--green-50); }
+input.blank.bad { border-color: var(--bad); background: color-mix(in srgb, var(--bad) 8%, transparent); }
+.shadow-line { margin: 10px 0; padding: 14px 18px; border-radius: var(--r); background: var(--surface-2); border-left: 5px solid var(--brand); }
+.shadow-line b { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--brand-600); }
+.exam-brief { display: flex; gap: 12px; align-items: center; padding: 10px 14px; border-radius: var(--r); background: var(--yellow-50); }

@@ -5,6 +5,7 @@ import { part1Topics, part2Cards } from '../src/content/speaking';
 import { roastLines } from '../src/content/roasts';
 import { easyPart1Topics, easyPart2Cards, hardPart3 } from '../src/content/speakingEasy';
 import { vocab } from '../src/content/vocab';
+import { scenes } from '../src/content/scenes';
 import { Examiner } from '../src/lib/examiner';
 import type { Cefr } from '../src/lib/levels';
 import { clipKey } from '../src/lib/clipHash';
@@ -47,6 +48,8 @@ hardPart3.forEach((q) => add(q));
 add('Ha, ha, ha, ha!', 1.2);
 // Lug'at so'zlari va iboralari (kun so'zi, imlo o'yini va Writing mavzu so'zlari uchun)
 vocab.forEach((w) => add(w.word));
+// Sahnalar: har gap o'z so'zlovchisining ovozida (bir xil matn bitta ovoz bilan yaratiladi)
+for (const sc of scenes) for (const l of sc.lines) add(l.text, 1, l.sp === 'A' ? sc.voices.A : (sc.voices.B ?? sc.voices.A));
 
 // 3) Reaksiya satrlari (inglizcha variant). Qo'yiladigan so'zlar: ma'lum xato juftliklari va "um" soni
 const PAIRS: [string, string][] = [['I am agree', 'I agree'], ['she go', 'she goes'], ['he have', 'he has'], ['he like', 'he likes'], ["it don't", "it doesn't"], ['more better', 'better'], ['discuss about', 'discuss'], ['I have twenty years old', 'I am twenty years old'], ['peoples', 'people'], ['advices', 'advice'], ['I am boring', 'I am bored'], ['I very like', 'I really like'], ['I am study', 'I study'], ["didn't went", "didn't go"]];

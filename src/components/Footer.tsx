@@ -3,7 +3,7 @@ import { useT, type Key } from '../i18n';
 import { Mascot } from './Mascot';
 
 const cols: [Key, [Key, string][]][] = [
-  ['footer.tracks', [['footer.exam', '#/exam'], ['nav.grammar', '#/grammar'], ['nav.practice', '#/practice'], ['nav.mocks', '#/mocks'], ['cta.plans', '#/pricing']]],
+  ['footer.tracks', [['footer.exam', '#/exam'], ['nav.grammar', '#/grammar'], ['nav.practice', '#/practice'], ['nav.shadow', '#/shadow'], ['nav.mocks', '#/mocks'], ['cta.plans', '#/pricing']]],
   ['footer.games', [['footer.rush', '#/games/rush'], ['footer.pairs', '#/games/pairs'], ['footer.spell', '#/games/spell'], ['nav.duel', '#/duel']]],
   ['footer.free', [['nav.homework', '#/homework'], ['nav.results', '#/results'], ['nav.tools', '#/tools'], ['nav.league', '#/league']]],
 ];

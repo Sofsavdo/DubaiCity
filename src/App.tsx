@@ -15,6 +15,7 @@ import Practice from './pages/Practice';
 import FullExam from './pages/FullExam';
 import Homework from './pages/Homework';
 import Results from './pages/Results';
+import ShadowHub from './pages/Shadow';
 import Profile from './pages/Profile';
 import League from './pages/League';
 import DuelHub, { DuelRoom } from './pages/Duel';
@@ -53,6 +54,7 @@ const routes: Record<string, () => ReactNode> = {
   '#/practice': () => <Practice />,
   '#/homework': () => <Homework />,
   '#/results': () => <Results />,
+  '#/shadow': () => <Gate track="exam"><ShadowHub /></Gate>,
 };
 
 /** #/exam|mocks/reading|listening[/id] yo'nalishi: ro'yxat yoki bitta test, tegishli obuna bilan */
@@ -71,9 +73,10 @@ export default function App() {
   const hash = useHash();
   // Menyu bosilganda yangi sahifa har doim tepadan boshlansin
   useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: 'auto' }); }, [hash]);
+  const shadowId = hash.match(/^#\/shadow\/([\w-]+)$/)?.[1];
   const duelCode = hash.match(/^#\/duel\/([A-Za-z0-9]{4,8})$/)?.[1];
   const tr = testRoute(hash);
-  const page = tr ? tr : duelCode ? <DuelRoom key={duelCode} code={duelCode.toUpperCase()} /> : (routes[hash] ?? routes['#/'])();
+  const page = tr ? tr : shadowId ? <Gate track="exam"><ShadowHub id={shadowId} /></Gate> : duelCode ? <DuelRoom key={duelCode} code={duelCode.toUpperCase()} /> : (routes[hash] ?? routes['#/'])();
   return (
     <>
       <Header hash={hash} />
