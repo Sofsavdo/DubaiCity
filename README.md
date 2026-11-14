@@ -107,3 +107,14 @@ npm run server           # AI holati ishga tushganda yoziladi: "(AI: anthropic)"
 - Faqat original matnlar (xayoliy ma'lumotlar mumkin); rasmiy Cambridge/IELTS materiallarini nusxalamang.
 - Har bir javob uchun `evidence` (dalil). Band doim "taxminiy" deb ko'rsatiladi.
 - Lug'atda o'zbekcha ma'nolar takrorlanmasin (variantlar adashmasligi uchun, testda tekshiriladi).
+
+
+## Daraja aniqlash va shaxsiy dastur
+
+- `#/placement`: 20 tagacha savol, A1–C1 bloklari ketma-ket (blokdan o'tish: 4 tadan 3 ta). Natija profilga `level`, `target` va `examDate` sifatida saqlanadi.
+- Lug'at (`content/vocab.ts` + `vocabBasic.ts`), grammar (`topicLevel`), Reading/Listening testlari (`level`) CEFR belgisiga ega. O'yinlar, "Sizga mos" grammar bo'limi, testlar tartibi va Speaking savollari daraja bo'yicha tanlanadi.
+- Speaking A1–A2 da sodda savollar va ekranda o'zbekcha tarjima (`content/speakingEasy.ts`), C1 da murakkabroq Part 3.
+
+## O'zbekcha ovoz (ixtiyoriy)
+
+`/api/tts` Azure Speech orqali o'zbekcha neyron ovoz beradi (`TTS_KEY`, `TTS_REGION`, `.env.example`ga qarang). Javoblar diskda keshlanadi; har bir foydalanuvchiga kunlik limit bor. Kalit bo'lmasa xizmat o'chiq turadi.

@@ -2,6 +2,8 @@ import { createServer, type IncomingMessage, type ServerResponse } from 'node:ht
 import { ApiError, createDb, createDuel, getDuel, join, leaderboard, submitDuel, sync, useAi } from './db';
 import { fileURLToPath } from 'node:url';
 import { serveStatic } from './static';
+import { dirname } from 'node:path';
+import { TTS_DAILY_LIMIT, TtsError, cleanText, synthesize, ttsConfigFromEnv } from './tts';
 import { AiError, configFromEnv, evaluateSpeaking, evaluateWriting, followUp, followUpPersona } from './ai';
 
 const PORT = Number(process.env.PORT ?? 3101);
@@ -9,7 +11,9 @@ const ai = configFromEnv();
 const HOST = process.env.HOST ?? (process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1');
 const DIST = fileURLToPath(new URL('../dist', import.meta.url));
 const TRUST_PROXY = process.env.TRUST_PROXY === '1';
-const db = createDb(process.env.DB_PATH ?? new URL('./data.sqlite', import.meta.url).pathname);
+const DB_FILE = process.env.DB_PATH ?? new URL('./data.sqlite', import.meta.url).pathname;
+const db = createDb(DB_FILE);
+const tts = ttsConfigFromEnv(process.env.TTS_CACHE_DIR ?? `${dirname(DB_FILE)}/tts-cache`);
 
 // Oddiy so'rov tezligi cheklovi (IP bo'yicha, daqiqada 120 ta)
 const hits = new Map<string, { n: number; reset: number }>();
@@ -96,12 +100,22 @@ createServer(async (req, res) => {
       }
       return send(res, 404, { error: 'Topilmadi' });
     }
+    if (req.method === 'GET' && url.pathname === '/api/tts/status') return send(res, 200, { enabled: tts.provider !== 'none', voice: tts.provider === 'none' ? null : tts.voice });
+    if (req.method === 'POST' && url.pathname === '/api/tts') {
+      if (tts.provider === 'none') throw new TtsError(503, 'Ovoz xizmati yoqilmagan');
+      const b = await readJson(req, 2048);
+      const text = cleanText(b.text);
+      useAi(db, String(b.token ?? ''), Date.now(), TTS_DAILY_LIMIT, 'tts'); // token va kunlik limit
+      const { audio, cached } = await synthesize(tts, text, { rate: Number(b.rate) || 1, pitch: Number(b.pitch) || 0 });
+      res.writeHead(200, { 'content-type': 'audio/mpeg', 'content-length': audio.length, 'cache-control': 'private, max-age=86400', 'x-cache': cached ? 'hit' : 'miss' });
+      return void res.end(audio);
+    }
     if (url.pathname === '/api/health') return send(res, 200, { ok: true });
     if (!url.pathname.startsWith('/api/') && serveStatic(req, res, DIST)) return;
     return send(res, 404, { error: 'Topilmadi' });
   } catch (e) {
-    if (e instanceof ApiError || e instanceof AiError) return send(res, e.status, { error: e.message });
+    if (e instanceof ApiError || e instanceof AiError || e instanceof TtsError) return send(res, e.status, { error: e.message });
     console.error(e);
     return send(res, 500, { error: 'Server xatosi' });
   }
-}).listen(PORT, HOST, () => console.log(`Bandly: http://${HOST}:${PORT} (AI: ${ai.provider})`));
+}).listen(PORT, HOST, () => console.log(`Bandly: http://${HOST}:${PORT} (AI: ${ai.provider}, TTS: ${tts.provider})`));

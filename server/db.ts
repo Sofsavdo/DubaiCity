@@ -178,9 +178,9 @@ export function submitDuel(db: DatabaseSync, token: string, code: string, score:
 export const AI_DAILY_LIMIT = Number(process.env.AI_DAILY_LIMIT ?? 120);
 
 /** Har bir AI so'rovdan oldin chaqiriladi: token tekshiriladi va kunlik limit hisoblanadi. */
-export function useAi(db: DatabaseSync, token: string, now = Date.now(), limit = AI_DAILY_LIMIT): number {
+export function useAi(db: DatabaseSync, token: string, now = Date.now(), limit = AI_DAILY_LIMIT, bucket = ''): number {
   const p = byToken(db, token);
-  const day = new Date(now).toISOString().slice(0, 10);
+  const day = (bucket ? `${bucket}:` : '') + new Date(now).toISOString().slice(0, 10);
   const row = db.prepare('SELECT calls FROM ai_usage WHERE player_id = ? AND day = ?').get(p.id, day) as { calls: number } | undefined;
   if ((row?.calls ?? 0) >= limit) throw new ApiError(429, 'Bugungi AI limiti tugadi. Ertaga qayta urinib ko‘ring.');
   db.prepare('INSERT INTO ai_usage (player_id, day, calls) VALUES (?, ?, 1) ON CONFLICT(player_id, day) DO UPDATE SET calls = calls + 1').run(p.id, day);

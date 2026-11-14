@@ -59,7 +59,7 @@ function sayBrowser(text: string, signal: Signal, lang: string, prosody: Prosody
   });
 }
 
-export const stopSpeaking = (): void => { stopClip(); if (ttsSupported()) window.speechSynthesis.cancel(); };
+export const stopSpeaking = (): void => { stopClip(); stopUz(); if (ttsSupported()) window.speechSynthesis.cancel(); };
 
 export type MicStatus = 'starting' | 'mic' | 'speech';
 export interface TurnOptions {
@@ -167,6 +167,7 @@ export function listenTurn(o: TurnOptions): Promise<TurnResult> {
 // ---------------- Hissiyotli ovoz ----------------
 import type { Emotion, Reaction } from '../content/roasts';
 import { playClip, stopClip } from './clips';
+import { playUz, stopUz } from './tts';
 
 /** Brauzer ovozida hissiyot faqat ohang (pitch), tezlik va balandlik orqali beriladi. */
 export const PROSODY: Record<Emotion, Prosody> = {
@@ -182,6 +183,8 @@ export const hasVoice = (prefix: string): boolean => ttsSupported() && window.sp
 /** Reaksiyani aytadi: o'zbekcha ovoz bo'lsa o'zbekcha, bo'lmasa inglizcha variant. Kulgi uchun avval "ha-ha". */
 export async function sayReaction(r: Reaction, signal: Signal): Promise<'uz' | 'en'> {
   if (r.emotion === 'laugh') await say('Ha, ha, ha, ha!', signal, 'en-GB', { pitch: 1.7, rate: 1.3, volume: 1 });
+  // 1) Serverdagi o'zbekcha neyron ovoz (sozlangan bo'lsa), 2) brauzerdagi o'zbek ovozi, 3) inglizcha variant
+  if (await playUz(r.uz, r.emotion, signal)) return 'uz';
   const uz = hasVoice('uz');
   await say(uz ? r.uz : r.en, signal, uz ? 'uz-UZ' : 'en-GB', PROSODY[r.emotion]);
   return uz ? 'uz' : 'en';
