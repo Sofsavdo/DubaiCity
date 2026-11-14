@@ -1,3 +1,4 @@
+import { RankBadge } from '../components/RankBadge';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { vocabById } from '../content/vocab';
 import { Mascot } from '../components/Mascot';
@@ -106,7 +107,7 @@ function Results({ info }: { info: DuelInfo }) {
         <tbody>
           {info.players.map((p) => (
             <tr key={p.nickname} style={p.me ? { background: 'rgba(255,77,61,.12)', fontWeight: 700 } : undefined}>
-              <td>{p.rank === 1 ? '🥇' : p.rank === 2 ? '🥈' : p.rank === 3 ? '🥉' : p.rank ?? '…'}</td>
+              <td><RankBadge n={p.rank} /></td>
               <td>{p.nickname}{p.me ? ' (siz)' : ''}</td>
               <td>{p.score ?? 'kutilmoqda'}</td><td>{p.correct ?? '—'}</td><td>{p.ms ? `${Math.round(p.ms / 1000)} s` : '—'}</td>
             </tr>

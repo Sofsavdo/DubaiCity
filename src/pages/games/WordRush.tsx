@@ -1,3 +1,4 @@
+import { Heart } from 'lucide-react';
 import { useMemo, useRef, useState } from 'react';
 import { vocab, vocabById } from '../../content/vocab';
 import { lines, pickLine } from '../../content/lines';
@@ -121,7 +122,7 @@ export default function WordRush() {
     <div className="card">
       <div className="row" style={{ justifyContent: 'space-between' }}>
         <span className="timer">{fmt(left)}</span>
-        <span className="hearts">{'❤️'.repeat(lives)}{'🖤'.repeat(3 - lives)}</span>
+        <span className="hearts">{[0, 1, 2].map((i) => <Heart key={i} size={22} color="#ff4b3a" fill={i < lives ? '#ff4b3a' : 'none'} />)}</span>
         <span className="combo">x{1 + Math.min(4, Math.floor(combo / 3))} · {score}</span>
       </div>
       <div className="hero" style={{ margin: '10px 0' }}>

@@ -1,27 +1,23 @@
-import { useProfile } from '../lib/store';
-
+import { BookOpen, FlaskConical, Headphones, Ruler } from 'lucide-react';
+import { Tile } from '../components/Tile';
 import { listeningTests } from '../content/listeningTests';
 import { readingTests } from '../content/readingTests';
-
-const mocks = [
-  { href: '#/mocks/reading', icon: '📖', title: 'IELTS Reading mini-mocklar', meta: `${readingTests.length} ta test · 13 savoldan` },
-  { href: '#/mocks/listening', icon: '🎧', title: 'IELTS Listening mini-mocklar', meta: `${listeningTests.length} ta test · 10 savoldan` },
-];
+import { useProfile } from '../lib/store';
 
 export default function Mocks() {
   const p = useProfile();
+  const lock = !p.plan.mocks && <span className="badge">Obuna kerak</span>;
   return (
     <div>
       <div className="card">
         <h2>Mock testlar {p.plan.mocks ? <span className="badge on">Obuna faol (demo)</span> : <span className="badge">Obuna kerak</span>}</h2>
-        <p>Imtihon sharoitida: taymer, avtomatik baho va har savol bo‘yicha tahlil. Natijalar profilda saqlanadi.</p>
+        <p style={{ marginBottom: 0 }}>Imtihon sharoitida: taymer, avtomatik baho va har savol bo‘yicha tahlil. Natijalar profilda saqlanadi.</p>
       </div>
       <div className="grid">
-        {mocks.map((m) => (
-          <a key={m.href} className="card tile" href={m.href}><div style={{ fontSize: 30 }}>{m.icon}</div><h3>{!p.plan.mocks && '🔒 '}{m.title}</h3><p>{m.meta}</p></a>
-        ))}
-        <div className="card tile"><div style={{ fontSize: 30 }}>🧪</div><h3>To‘liq IELTS mock <span className="badge soon">tez orada</span></h3><p>40 savollik Reading va Listening, to‘liq Writing va Speaking</p></div>
-        <div className="card tile"><div style={{ fontSize: 30 }}>📐</div><h3>SAT va CEFR mock <span className="badge soon">tez orada</span></h3><p>Alohida imtihon formatlari</p></div>
+        <Tile href="#/mocks/reading" icon={BookOpen} tone="blue" title="IELTS Reading mini-mocklar" text={`${readingTests.length} ta test · 13 savoldan`} badge={lock} />
+        <Tile href="#/mocks/listening" icon={Headphones} tone="red" title="IELTS Listening mini-mocklar" text={`${listeningTests.length} ta test · 10 savoldan`} badge={lock} />
+        <Tile icon={FlaskConical} tone="purple" title="To‘liq IELTS mock" text="40 savollik Reading va Listening, to‘liq Writing va Speaking" badge={<span className="badge soon">tez orada</span>} />
+        <Tile icon={Ruler} tone="ink" title="SAT va CEFR mock" text="Alohida imtihon formatlari" badge={<span className="badge soon">tez orada</span>} />
       </div>
     </div>
   );

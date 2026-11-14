@@ -19,9 +19,28 @@ export const ttsSupported = (): boolean => 'speechSynthesis' in window;
 
 export interface Signal { cancelled: boolean }
 
+/** Eng silliq ingliz ovozini tanlaydi: tabiiy/onlayn ovozlar va Britaniya/AQSh talaffuzi afzal, hind lahjasi eng oxirda. */
+const GOOD = /(natural|neural|online|premium|enhanced|google uk english|google us english|samantha|serena|daniel|karen|moira|libby|sonia|jenny|aria|ryan|guy)/i;
+export function bestVoice(prefix: string): SpeechSynthesisVoice | undefined {
+  if (!ttsSupported()) return undefined;
+  const all = window.speechSynthesis.getVoices();
+  const pool = all.filter((v) => v.lang.toLowerCase().replace('_', '-').startsWith(prefix.toLowerCase()));
+  if (!pool.length) return undefined;
+  const score = (v: SpeechSynthesisVoice) => {
+    const l = v.lang.toLowerCase().replace('_', '-');
+    return (GOOD.test(v.name) ? 10 : 0) + (l === 'en-gb' ? 3 : l === 'en-us' ? 2.5 : /^en-(au|ca|ie|za|nz)/.test(l) ? 1 : l === 'en-in' ? -6 : 0) + (v.localService ? 0 : 1.5);
+  };
+  return [...pool].sort((a, b) => score(b) - score(a))[0];
+}
+
 /** Ustoz gapirishi. onend ishlamaydigan qurilmalar uchun taxminiy vaqtdan keyin ham tugaydi. */
 export interface Prosody { pitch: number; rate: number; volume: number }
-export function say(text: string, signal: Signal, lang = 'en-GB', prosody: Prosody = { pitch: 1, rate: 0.95, volume: 1 }): Promise<void> {
+export async function say(text: string, signal: Signal, lang = 'en-GB', prosody: Prosody = { pitch: 1, rate: 0.95, volume: 1 }): Promise<void> {
+  if (lang.toLowerCase().startsWith('en') && (await playClip(text, signal))) return;
+  return sayBrowser(text, signal, lang, prosody);
+}
+
+function sayBrowser(text: string, signal: Signal, lang: string, prosody: Prosody): Promise<void> {
   return new Promise((resolve) => {
     const guard = setTimeout(done, Math.max(1500, text.length * 90 + 1500));
     let finished = false;
@@ -31,7 +50,7 @@ export function say(text: string, signal: Signal, lang = 'en-GB', prosody: Proso
     synth.cancel();
     const u = new SpeechSynthesisUtterance(text);
     const want = lang.toLowerCase();
-    const voice = synth.getVoices().find((v) => v.lang.toLowerCase().startsWith(want)) ?? synth.getVoices().find((v) => v.lang.toLowerCase().startsWith(want.slice(0, 2)));
+    const voice = want.startsWith('en') ? bestVoice('en') : bestVoice(want) ?? bestVoice(want.slice(0, 2));
     if (voice) u.voice = voice;
     u.lang = lang; u.rate = prosody.rate; u.pitch = prosody.pitch; u.volume = prosody.volume;
     u.onend = done; u.onerror = done;
@@ -39,7 +58,7 @@ export function say(text: string, signal: Signal, lang = 'en-GB', prosody: Proso
   });
 }
 
-export const stopSpeaking = (): void => { if (ttsSupported()) window.speechSynthesis.cancel(); };
+export const stopSpeaking = (): void => { stopClip(); if (ttsSupported()) window.speechSynthesis.cancel(); };
 
 export interface TurnOptions {
   silenceMs: number;       // nutqdan keyin shuncha sukut = javob tugadi
@@ -99,6 +118,7 @@ export function listenTurn(o: TurnOptions): Promise<TurnResult> {
 
 // ---------------- Hissiyotli ovoz ----------------
 import type { Emotion, Reaction } from '../content/roasts';
+import { playClip, stopClip } from './clips';
 
 /** Brauzer ovozida hissiyot faqat ohang (pitch), tezlik va balandlik orqali beriladi. */
 export const PROSODY: Record<Emotion, Prosody> = {

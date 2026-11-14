@@ -1,3 +1,5 @@
+import { Flame } from 'lucide-react';
+import { RankBadge } from '../components/RankBadge';
 import { useCallback, useEffect, useState } from 'react';
 import { Mascot } from '../components/Mascot';
 import { fetchBoard, getAccount, joinLeague, leaveLeague, syncNow, type Board } from '../lib/account';
@@ -53,11 +55,11 @@ export default function League() {
         {board && board.top.length === 0 && <p>Hali hech kim yo‘q. Birinchi bo‘ling: o‘yin o‘ynab XP yig‘ing!</p>}
         {board && board.top.length > 0 && (
           <table className="data" style={{ width: '100%' }}>
-            <thead><tr><th>#</th><th>Laqab</th><th>XP</th><th>🔥</th></tr></thead>
+            <thead><tr><th>#</th><th>Laqab</th><th>XP</th><th><Flame size={14} /></th></tr></thead>
             <tbody>
               {board.top.map((r) => (
                 <tr key={r.rank} style={r.me ? { background: 'rgba(255,77,61,.12)', fontWeight: 700 } : undefined}>
-                  <td>{r.rank === 1 ? '🥇' : r.rank === 2 ? '🥈' : r.rank === 3 ? '🥉' : r.rank}</td>
+                  <td><RankBadge n={r.rank} /></td>
                   <td>{r.nickname}{r.me ? ' (siz)' : ''}</td><td>{r.xp}</td><td>{r.streak}</td>
                 </tr>
               ))}

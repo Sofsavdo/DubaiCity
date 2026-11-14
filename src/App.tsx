@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react';
-import { BRAND } from './brand';
 import { Gate } from './components/Gate';
 import { useHash } from './components/hooks';
-import { StatsBar } from './components/StatsBar';
+import { Footer } from './components/Footer';
+import { Header } from './components/Header';
+import { TabBar } from './components/TabBar';
 import { Toasts } from './components/Toasts';
 import Home from './pages/Home';
 import Exam from './pages/Exam';
@@ -43,19 +44,6 @@ const routes: Record<string, () => ReactNode> = {
   '#/profile': () => <Profile />,
 };
 
-const nav: [string, string][] = [
-  ['#/', 'Bosh sahifa'],
-  ['#/exam', 'Imtihon'],
-  ['#/grammar', 'Grammar'],
-  ['#/mocks', 'Mock'],
-  ['#/games', 'O‘yinlar'],
-  ['#/league', 'Reyting'],
-  ['#/duel', 'Duel'],
-  ['#/profile', 'Profil'],
-];
-
-const isActive = (hash: string, base: string): boolean => (base === '#/' ? hash === '#/' || hash === '' : hash === base || hash.startsWith(base + '/'));
-
 /** #/exam|mocks/reading|listening[/id] yo'nalishi: ro'yxat yoki bitta test, tegishli obuna bilan */
 function testRoute(hash: string): ReactNode | null {
   const m = hash.match(/^#\/(exam|mocks)\/(reading|listening)(?:\/([\w-]+))?$/);
@@ -75,17 +63,10 @@ export default function App() {
   const page = tr ? tr : duelCode ? <DuelRoom key={duelCode} code={duelCode.toUpperCase()} /> : (routes[hash] ?? routes['#/'])();
   return (
     <>
-      <header className="top">
-        <div className="container">
-          <a className="logo" href="#/">{BRAND.name}</a>
-          <nav>
-            {nav.map(([h, label]) => <a key={h} href={h} className={isActive(hash, h) ? 'active' : ''}>{label}</a>)}
-          </nav>
-          <StatsBar />
-        </div>
-      </header>
+      <Header hash={hash} />
       <main className="container">{page}</main>
-      <footer className="container">{BRAND.disclaimer}</footer>
+      <Footer />
+      <TabBar hash={hash} />
       <Toasts />
     </>
   );

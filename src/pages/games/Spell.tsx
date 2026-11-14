@@ -1,3 +1,4 @@
+import { Volume2 } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { vocab, vocabById } from '../../content/vocab';
 import { lines, pickLine } from '../../content/lines';
@@ -98,7 +99,7 @@ export default function Spell() {
         <input type="text" autoFocus autoComplete="off" autoCapitalize="off" spellCheck={false} readOnly={!!result} value={text}
           onChange={(e) => setText(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') (result ? next() : check()); }}
           placeholder={`${w.word[0]}${' _'.repeat(Math.max(0, w.word.length - 1))}`} style={{ padding: 10, fontSize: 18, borderRadius: 10, border: '2px solid var(--line)', background: 'var(--bg)', color: 'var(--text)' }} />
-        <button className="btn" onClick={() => speak(w.word)}>🔊 Eshitish</button>
+        <button className="btn" onClick={() => speak(w.word)}><Volume2 size={18} /> Eshitish</button>
         {!result ? <button className="btn primary" onClick={check}>Tekshirish</button> : <button className="btn primary" onClick={next}>{i + 1 >= ids.length ? 'Yakunlash' : 'Keyingi'}</button>}
       </div>
       {result && <p className={result === 'ok' ? 'ok' : 'bad'}>{result === 'ok' ? 'To‘g‘ri!' : `To‘g‘ri javob: ${w.word}`}</p>}

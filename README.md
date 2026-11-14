@@ -44,6 +44,21 @@ faqat shu qurilmada ochiladi. Narxlar (`src/config.ts`) **namunaviy**, oldindan 
   (bir so'rovda 400, soatiga 1500), lekin XP hozircha mijoz tomonidan yuboriladi, shuning uchun to'liq aldovdan himoya emas.
   Keyingi qadam: XP ni serverda o'yin hodisalaridan hisoblash.
 
+## Ovoz sifati: neyron audio
+
+Brauzerning standart ovozi (ayniqsa Android'da hind lahjali yoki qo'pol) o'rniga **oldindan yaratilgan neyron ovoz** ishlatiladi:
+- `public/audio/listening/*.mp3`: 4 ta Listening testining to'liq audiosi (ikki xil spiker, Britaniya talaffuzi).
+- `public/audio/clips/*.mp3`: ustozning 228 ta gapi (barcha savollar, ko'rsatmalar, inglizcha reaksiyalar). Fayl nomi matnning qisqa kaliti (`src/lib/clipHash.ts`).
+- Ilova avval tayyor faylni chaladi; matn uchun fayl bo'lmasa (masalan AI yaratgan yangi savol) **yaxshilangan brauzer ovoziga** o'tadi: tabiiy/onlayn ovozlar va Britaniya/AQSh talaffuzi afzal, hind lahjasi (`en-IN`) eng oxirgi tanlov.
+- Model: [Kokoro](https://github.com/thewh1teagle/kokoro-onnx) (ochiq, Apache-2.0), CPU'da ishlaydi, kalit talab qilmaydi.
+- Qayta yaratish: `tools/gen-audio.py` ichidagi ko'rsatmaga qarang (`npx tsx tools/audio-tasks.ts > tasks.json`, keyin generator). Kontent yoki ustoz matnlari o'zgarsa shuni qayta ishga tushiring; mavjud fayllar qayta yaratilmaydi.
+- Server audioga `Range` so'rovlarini qo'llaydi (Safari uchun majburiy).
+- Cheklov: o'zbekcha reaksiyalar uchun neyron ovoz yo'q (qurilmada o'zbekcha ovoz bo'lsa o'sha ishlatiladi, aks holda inglizcha variant). Hissiyot faqat tezlik va ohang bilan beriladi.
+
+## Dizayn tizimi
+
+Shriftlar: Unbounded (sarlavhalar) va Inter (matn), paket ichida (`@fontsource`), tashqi serverga bog'liq emas. Ikonkalar: `lucide-react`. Barcha ranglar, radiuslar va soyalar `src/styles.css` boshidagi tokenlarda; qorong'i rejim avtomatik. Mobilda pastki tezkor panel va menyu, kompyuterda yuqori menyu.
+
 ## Ustoz shaxsiyati (Speaking)
 
 4 daraja (profilda yoki Speaking boshida tanlanadi): **0 Yumshoq**, **1 Hazil** (kinoya), **2 Qattiq (18+)**, **3 Jallod (18+)**.

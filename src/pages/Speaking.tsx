@@ -1,3 +1,4 @@
+import { Mic, ShieldCheck } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { EvalCard } from '../components/EvalCard';
 import { JoinForm } from '../components/JoinForm';
@@ -123,26 +124,39 @@ export default function Speaking() {
   if (stage === 'intro') {
     return (
       <div>
-        <div className="card hero">
-          <Mascot mood="think" size={110} />
-          <div>
-            <h2 style={{ margin: 0 }}>Speaking: jonli suhbat</h2>
-            <p>Ustoz Bandi siz bilan IELTS tartibida gaplashadi: Part 1 (tanishuv), Part 2 (1 daqiqa tayyorgarlik va monolog), Part 3 (muhokama). U gapiradi, siz ovoz bilan javob berasiz.</p>
-            <p className="evidence">
-              Ovozingiz <b>yozib olinmaydi va saqlanmaydi</b>. Nutqni matnga o‘girishni brauzeringiz xizmati bajaradi (Chrome, Edge, Safari qo‘llaydi; bu xizmat ovozni o‘z serveriga yuborishi mumkin). Naushnik ishlatsangiz, ustoz ovozi mikrofonga kirmaydi.
-            </p>
-            {!supported && <p className="notice">Brauzeringiz nutqni tanishni qo‘llamaydi. Yozma rejim ishlaydi; Chrome yoki Safari'da ovozli rejim bor.</p>}
-            {aiOn && !acct && <JoinForm onJoined={setAcct} text="AI bilan suhbat va baho uchun laqab tanlang (parol shart emas). Laqabsiz ham qoidaviy ustoz bilan davom etish mumkin." />}
-            {aiOn && acct && <p className="notice">AI yoqilgan: suhbatning <b>matni</b> (ovoz emas) javobingizga bog‘liq savol berish va baholash uchun AI provayderiga yuboriladi.</p>}
-            <label><input type="checkbox" checked={textMode} disabled={!supported} onChange={(e) => setTextMode(e.target.checked)} /> Mikrofonsiz rejim (yozib javob berish)</label>
-            <PersonaPicker />
-            {personaLevel(profile) >= 1 && !hasVoice('uz') && <p className="evidence">Qurilmangizda o‘zbekcha ovoz topilmadi: ustoz reaksiyalarni inglizcha ovozda aytadi, o‘zbekcha matn ekranda ko‘rinadi.</p>}
-            <div style={{ marginTop: 10 }}><button className="btn primary" onClick={() => void run()}>Suhbatni boshlash</button></div>
+        <div className="stage">
+          <div className="hero">
+            <Mascot mood="think" size={120} />
+            <div>
+              <span className="eyebrow"><Mic size={15} /> Jonli ovozli suhbat</span>
+              <h2 style={{ marginBottom: 8 }}>Speaking: ustoz bilan suhbat</h2>
+              <p style={{ color: 'var(--ink-2)' }}>Ustoz Bandi IELTS tartibida gaplashadi: Part 1 (tanishuv), Part 2 (1 daqiqa tayyorgarlik va monolog), Part 3 (muhokama). U gapiradi, siz ovoz bilan javob berasiz.</p>
+              <div className="row">
+                <span className="pill"><ShieldCheck size={14} /> Ovoz yozilmaydi</span>
+                <span className="pill">Part 1 · 2 · 3</span>
+                <span className="pill">~10 daqiqa</span>
+              </div>
+            </div>
           </div>
         </div>
+
         <div className="card">
-          <h3>Hozirgi holat</h3>
-          <p>Ustozning savollari va tartibi tayyor, suhbat jonli ishlaydi. Ustozning javoblari hozircha <b>qoidaviy</b>{aiOn ? ' (AI yoqilgan bo‘lsa, javobingizga bog‘liq savollar ham beradi)' : ' (AI hali ulanmagan)'}: u savollarni tartib bilan beradi, qisqa javobda "batafsilroq ayting" deydi. Talaffuz va grammatika baholanmaydi. AI ulanganda ustoz javobingizga qarab erkin savol beradi va 4 mezon bo‘yicha baholaydi.</p>
+          <h3>Ustoz xarakteri</h3>
+          <PersonaPicker />
+          {personaLevel(profile) >= 1 && !hasVoice('uz') && <p className="evidence">Qurilmangizda o‘zbekcha ovoz topilmadi: ustoz reaksiyalarni inglizcha ovozda aytadi, o‘zbekcha matn ekranda ko‘rinadi.</p>}
+        </div>
+
+        <div className="card">
+          <h3>Boshlashdan oldin</h3>
+          {!supported && <p className="notice">Brauzeringiz nutqni tanishni qo‘llamaydi. Yozma rejim ishlaydi; ovozli rejim uchun Chrome yoki Safari kerak.</p>}
+          {aiOn && !acct && <JoinForm onJoined={setAcct} text="AI bilan suhbat va baho uchun laqab tanlang (parol shart emas). Laqabsiz ham qoidaviy ustoz bilan davom etish mumkin." />}
+          {aiOn && acct && <p className="notice">AI yoqilgan: suhbatning <b>matni</b> (ovoz emas) javobingizga bog‘liq savol berish va baholash uchun AI provayderiga yuboriladi.</p>}
+          <p className="evidence">Ovozingiz <b>yozib olinmaydi va saqlanmaydi</b>. Nutqni matnga o‘girishni brauzeringiz xizmati bajaradi (Chrome, Edge, Safari qo‘llaydi; bu xizmat ovozni o‘z serveriga yuborishi mumkin). Naushnik ishlatsangiz, ustoz ovozi mikrofonga kirmaydi.</p>
+          <p><label><input type="checkbox" checked={textMode} disabled={!supported} onChange={(e) => setTextMode(e.target.checked)} /> Mikrofonsiz rejim (yozib javob berish)</label></p>
+          <button className="btn primary lg" onClick={() => void run()}><Mic size={18} /> Suhbatni boshlash</button>
+          <p className="evidence" style={{ marginTop: 14 }}>
+            Ustozning javoblari hozircha <b>qoidaviy</b>{aiOn ? ' (AI yoqilgan bo‘lsa, javobingizga bog‘liq savollar ham beradi)' : ' (AI hali ulanmagan)'}: savollarni tartib bilan beradi, qisqa javobda "batafsilroq ayting" deydi. Talaffuz va grammatika baholanmaydi.
+          </p>
         </div>
       </div>
     );
@@ -192,48 +206,48 @@ export default function Speaking() {
 
   const EMO: Record<Reaction['emotion'], Mood> = { angry: 'angry', laugh: 'laugh', disappointed: 'sad', impressed: 'happy', happy: 'happy' };
   const mood: Mood = reaction && status === 'speaking' ? EMO[reaction.emotion] : flash && status === 'listening' ? 'angry' : status === 'speaking' ? 'happy' : status === 'listening' ? 'idle' : 'think';
+  const statusLabel = status === 'speaking' ? 'Ustoz gapiryapti' : status === 'listening' ? 'Sizni tinglayapti' : status === 'prep' ? 'Tayyorgarlik vaqti' : 'O‘ylayapti';
   return (
     <div>
-      <div className="card">
-        <div className="row" style={{ justifyContent: 'space-between' }}>
+      <div className="stage">
+        <div className="stage-top">
           <span className="pill">{part === 0 ? 'Tanishuv' : `Part ${part}`}</span>
-          <span className="pill">{status === 'speaking' ? 'Ustoz gapiryapti…' : status === 'listening' ? 'Sizni tinglayapti…' : status === 'prep' ? 'Tayyorgarlik' : 'O‘ylayapti…'}</span>
-          <button className="btn" onClick={abort}>Tugatish</button>
+          <span className={`pill ${status === 'listening' ? 'ok' : ''}`}>{statusLabel}</span>
+          <button className="btn sm" onClick={abort}>Tugatish</button>
         </div>
-        <div className="hero" style={{ margin: '12px 0' }}>
-          <div className={`mascot-wrap ${status}`}><Mascot mood={mood} size={110} /></div>
-          <div style={{ flex: 1 }}>
-            {reaction && <div className="bubble" style={{ marginBottom: 8 }}><b>{reaction.uz}</b><div className="evidence">{reaction.en}</div></div>}
-            <div className="bubble">{caption}</div>
-          </div>
-        </div>
-        {err && <p className="notice">{err}</p>}
+        <div className="stage-center">
+          <div className={`mascot-wrap ${status}`}><Mascot mood={mood} size={132} /></div>
+          {reaction && <div className="bubble" style={{ maxWidth: 640 }}><b>{reaction.uz}</b><div className="evidence">{reaction.en}</div></div>}
+          <div className="say">{caption}</div>
+          {status === 'listening' && !textMode && <span className="wave" aria-hidden="true"><i /><i /><i /><i /><i /><i /><i /></span>}
+          {err && <p className="notice">{err}</p>}
 
-        {status === 'prep' && (
-          <div className="row">
-            <span className="timer">{mmss(prepLeft)}</span>
-            <span className="evidence">Fikrlaringizni o‘ylab oling. Yozib olish mumkin emas: faqat xotirangizda tayyorlaning.</span>
-            <button className="btn primary" onClick={() => prepSkip.current?.()}>Tayyorman</button>
-          </div>
-        )}
-
-        {status === 'listening' && !textMode && (
-          <div>
-            <div className="bubble" style={{ minHeight: 48 }}>{interim || <span className="evidence">Gapiring…</span>}</div>
-            <div className="row" style={{ marginTop: 10 }}>
-              {part === 2 && <span className="timer">{mmss(elapsed)} / 2:00</span>}
-              <button className="btn primary" onClick={() => endRef.current?.()}>Men tugatdim</button>
-              <span className="evidence">Ikki soniya jim qolsangiz ham javob tugaydi.</span>
+          {status === 'prep' && (
+            <div className="row" style={{ justifyContent: 'center' }}>
+              <span className="timer">{mmss(prepLeft)}</span>
+              <button className="btn primary" onClick={() => prepSkip.current?.()}>Tayyorman</button>
+              <span className="evidence" style={{ width: '100%' }}>Fikrlaringizni o‘ylab oling. Hech narsa yozib olinmaydi.</span>
             </div>
-          </div>
-        )}
+          )}
 
-        {status === 'listening' && textMode && (
-          <div>
-            <textarea className="essay" style={{ minHeight: 110 }} value={typed} onChange={(e) => setTyped(e.target.value)} placeholder="Javobingizni inglizcha yozing…" />
-            <div className="row" style={{ marginTop: 10 }}><button className="btn primary" disabled={!typed.trim()} onClick={submitText}>Yuborish</button></div>
-          </div>
-        )}
+          {status === 'listening' && !textMode && (
+            <>
+              <div className="transcript">{interim || <span className="evidence">Gapiring…</span>}</div>
+              <div className="row" style={{ justifyContent: 'center' }}>
+                {part === 2 && <span className="timer">{mmss(elapsed)} / 2:00</span>}
+                <button className="btn primary lg" onClick={() => endRef.current?.()}>Men tugatdim</button>
+              </div>
+              <span className="evidence">Ikki soniya jim qolsangiz ham javob tugaydi.</span>
+            </>
+          )}
+
+          {status === 'listening' && textMode && (
+            <div style={{ width: '100%', maxWidth: 720 }}>
+              <textarea className="essay" style={{ minHeight: 110 }} value={typed} onChange={(e) => setTyped(e.target.value)} placeholder="Javobingizni inglizcha yozing…" />
+              <div className="row" style={{ marginTop: 10, justifyContent: 'center' }}><button className="btn primary" disabled={!typed.trim()} onClick={submitText}>Yuborish</button></div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

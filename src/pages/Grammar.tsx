@@ -1,3 +1,4 @@
+import { Lock } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { grammar, grammarTopics } from '../content/grammar';
 import { LockCard } from '../components/Gate';
@@ -46,7 +47,7 @@ export default function Grammar() {
         <div className="tabs">
           {tabs.map((t) => (
             <button key={t} className={`btn ${t === topic ? 'primary' : ''}`} onClick={() => change(t)}>
-              {!unlocked && t !== FREE_TOPIC ? '🔒 ' : ''}{t}
+              {!unlocked && t !== FREE_TOPIC && <Lock size={14} />}{t}
             </button>
           ))}
         </div>

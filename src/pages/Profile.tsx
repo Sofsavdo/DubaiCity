@@ -1,3 +1,4 @@
+import { Flame, Lock, Trophy } from 'lucide-react';
 import { ACHIEVEMENTS, levelProgress } from '../lib/game';
 import { loadResults } from '../lib/storage';
 import { resetAll, setDailyGoal, useProfile } from '../lib/store';
@@ -20,7 +21,7 @@ export default function Profile() {
           <div className="bar" style={{ margin: '8px 0' }}><i style={{ width: `${lp.pct * 100}%` }} /></div>
           <div className="evidence">{lp.into} / {lp.span} XP · jami {p.xp} XP</div>
           <div className="row" style={{ marginTop: 8 }}>
-            <span className="pill">🔥 Seriya: {p.streak} kun</span>
+            <span className="pill"><Flame size={14} color="#ff7a1a" fill="#ff7a1a" /> Seriya: {p.streak} kun</span>
             <span className="pill">Eng uzun: {p.longestStreak}</span>
             <span className="pill">So‘zlar: {mastered}/{vocab.length}</span>
             <span className="pill">O‘yinlar: {p.gamesPlayed}</span>
@@ -32,7 +33,7 @@ export default function Profile() {
         <h3>Yutuqlar</h3>
         {ACHIEVEMENTS.map((a) => {
           const on = p.achievements.includes(a.id);
-          return <div key={a.id} className={`ach ${on ? '' : 'off'}`}><span style={{ fontSize: 24 }}>{on ? '🏆' : '🔒'}</span><div><b>{a.title}</b><div className="evidence">{a.desc}</div></div></div>;
+          return <div key={a.id} className={`ach ${on ? '' : 'off'}`}><span className="ach-ico">{on ? <Trophy size={20} /> : <Lock size={18} />}</span><div><b>{a.title}</b><div className="evidence">{a.desc}</div></div></div>;
         })}
       </div>
 
