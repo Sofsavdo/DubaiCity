@@ -44,5 +44,9 @@ const short = checkWriting(lessonById('a1-u1-l1')!.lesson.writing!, 'I am Ali.')
 assert.equal(short.enoughWords, false); assert.ok(short.reqs.some((r) => !r.ok));
 const err = checkWriting(lessonById('a1-u2-l2')!.lesson.writing!, 'My brother work in a bank. He go to work by bus. She likes tea and reads books every day.');
 assert.ok(err.issues.length > 0 && !err.passed, 'known learner error (3rd person -s) is caught');
+const inv = checkWriting(lessonById('c1-u1-l1')!.lesson.writing!, 'Never I have seen such a beautiful place in my life. Rarely we travel so far. It was an amazing trip with my family and friends.');
+assert.ok(!inv.passed && inv.forbidden.length > 0, 'non-inverted "Never I have" is flagged');
+const acad = checkWriting(lessonById('c1-u1-l3')!.lesson.writing!, 'Lots of young people can\'t find jobs and there was a considerable increase in prices, so the situation became difficult.');
+assert.ok(!acad.passed && acad.forbidden.length > 0, 'informal words are flagged in the academic rewrite');
 assert.equal(wordCount("I'm from Tashkent, it’s big."), 5);
 console.log(`lessons.test: OK (${UNITS.length} units, ${ALL_LESSONS.length} lessons, ${ALL_LESSONS.reduce((s, x) => s + x.lesson.practice.length + x.lesson.check.length, 0)} items)`);

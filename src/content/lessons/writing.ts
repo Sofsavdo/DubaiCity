@@ -137,4 +137,39 @@ export const WRITING: Record<string, WritingTask> = {
     forbid: [{ re: String.raw`\bdespite of\b`, labelUz: '“despite of” — xato' }, { re: String.raw`\b(despite|in spite of) (it|he|she|they|we|I|the \w+) (is|was|are|were|has|have)\b`, labelUz: 'despite dan keyin to‘liq gap emas, ot yoki -ing keladi' }],
     model: 'Although online learning is flexible, it requires a lot of discipline. Students can study at any time. However, many of them miss face-to-face contact with teachers. Despite these problems, I think a mix of both is the best option.',
   },
+  'c1-u1-l1': {
+    promptUz: 'Hayotingizdagi unutilmas tajriba haqida rasmiy uslubda 3 ta gap yozing; kamida 1 ta inversiya ishlating (Never have I…, Not only…, Rarely…).', minWords: 25,
+    require: [{ re: String.raw`\b(Never|Rarely|Seldom|Not only|Hardly|No sooner|Only then|Only after|Under no circumstances)\s+(\w+\s+)?(have|has|had|do|does|did|is|are|was|were|will|would|can|could|should)\s+(I|we|you|he|she|it|they|the|this|my)\b`, labelUz: 'inversiya: inkor so‘z + yordamchi fe’l + ega' }],
+    forbid: [{ re: String.raw`\b(Never|Rarely|Seldom) (I|we|you|he|she|they) (have|has|had|do|did|was|am|is)\b`, labelUz: 'inversiyada yordamchi fe’l egadan oldin keladi' }],
+    model: 'Never have I felt as proud as on the day I graduated. Not only did my whole family come, but my old teacher also travelled from Fergana. Rarely do such moments happen in life.',
+  },
+  'c1-u1-l2': {
+    promptUz: 'O‘z shahringiz yoki ishingiz haqida 3 ta gap yozing: It is/was … that/who … va What … is … tuzilmalarini ishlating.', minWords: 25,
+    require: [{ re: String.raw`\bIt (is|was) .{2,60}? (that|who)\b`, labelUz: 'It is / It was … that / who …' }, { re: String.raw`\bWhat (I|we|you|he|she|they|people|my \w+) [^.?!]{1,60}? (is|was)\b`, labelUz: 'What … is / was …' }],
+    forbid: [{ re: String.raw`\bWhat (I|we|you|he|she|they) \w+ it (is|was)\b`, labelUz: 'What … is … gapida ortiqcha “it” bor' }],
+    model: 'What I love most about Tashkent is its green parks. It was in this city that I started my first business. It is the people who make this place special.',
+  },
+  'c1-u1-l3': {
+    promptUz: 'Quyidagi og‘zaki matnni akademik uslubda qayta yozing: “Lots of young people don’t get jobs, and prices went up a lot, so life got really hard.”', minWords: 18,
+    require: [{ re: String.raw`\b\w+(tion|ment|ance|ence|ity|ness|ure)\b`, labelUz: 'otlashtirilgan so‘z (-tion, -ment, -ity…)' }, { re: String.raw`\b(significant|considerable|substantial|a great deal of|a large number of)\b`, labelUz: 'rasmiy miqdor so‘zi' }],
+    forbid: [{ re: String.raw`\b(don't|doesn't|can't|won't|isn't|aren't|didn't|it's|lots of|a lot|really|got)\b`, labelUz: 'qisqartma yoki og‘zaki so‘z (lots of, really, got…) qolgan' }],
+    model: 'A significant number of young people are unable to find employment. In addition, there has been a considerable increase in prices, which has resulted in a decline in living standards.',
+  },
+  'c1-u2-l1': {
+    promptUz: '“Ijtimoiy tarmoqlar yoshlarga zarar yetkazadimi?” — ehtiyotkor tilda 3 ta gap yozing (may, tend to, it could be argued…).', minWords: 25,
+    require: [{ re: String.raw`\b(may|might|could)\b`, labelUz: 'may / might / could' }, { re: String.raw`\b(tend to|tends to|appear to|seem to|it could be argued|arguably|to some extent|there is some evidence)\b`, labelUz: 'boshqa ehtiyotkor ibora (tend to, arguably…)' }],
+    forbid: [{ re: String.raw`\b(all young people|everyone knows|always causes|never helps|it is a fact that)\b`, labelUz: 'mutlaq da’vo — yumshating' }],
+    model: 'Excessive use of social media may affect the mental health of some teenagers. Young people tend to compare themselves with others online. However, it could be argued that these platforms also help them to learn and stay connected.',
+  },
+  'c1-u2-l2': {
+    promptUz: 'Shaharlarda tirbandlik nima uchun ortyapti va bu nimaga olib kelyapti? 3–4 ta gapda sabab va natijani bog‘lang.', minWords: 30,
+    require: [{ re: String.raw`\b(due to|owing to|because of|as a result of|because|since|as)\b`, labelUz: 'sabab bog‘lovchisi' }, { re: String.raw`\b(therefore|consequently|as a result|thus|lead to|leads to|led to|result in|results in|resulted in)\b`, labelUz: 'natija bog‘lovchisi' }],
+    forbid: [{ re: String.raw`\b(due to|owing to|because of) (it|he|she|they|we|I|there) (is|was|are|were|has|have)\b`, labelUz: 'due to / because of dan keyin to‘liq gap emas, ot keladi' }, { re: String.raw`\b(result|results|resulted) to\b|\blead(s)? in\b`, labelUz: '“result to / lead in” emas: result in / lead to' }],
+    model: 'Traffic in large cities is increasing due to the rapid growth in car ownership. Since public transport is still limited, many people prefer to drive. As a result, journeys take longer, and air pollution can lead to serious health problems.',
+  },
+  'c1-u2-l3': {
+    promptUz: 'Shahringizdagi tarixiy joy yoki o‘z hayotingiz haqida 3 ta gap yozing: -ing, V3 va Having + V3 oborotlarini ishlating.', minWords: 25,
+    require: [{ re: String.raw`(^|[.!?]\s+)(Built|Founded|Written|Designed|Made|Known|Located|Opened|Created|Established)\b`, labelUz: 'V3 oborot (Built in…, Founded in…)' }, { re: String.raw`\bHaving \w+(ed|en|wn|t|ne|ght|id|un)\b`, labelUz: 'Having + V3' }],
+    model: 'Built in the fifteenth century, the Ulugh Beg Madrasa attracts thousands of visitors. Having studied its history at school, I finally visited it last year. Walking through the courtyard, I imagined the scholars who once worked there.',
+  },
 };
