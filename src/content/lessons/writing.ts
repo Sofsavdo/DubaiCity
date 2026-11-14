@@ -101,4 +101,40 @@ export const WRITING: Record<string, WritingTask> = {
     forbid: [{ re: String.raw`\bmore (cheaper|bigger|better|easier|faster|smaller|cleaner|quieter|noisier|happier|older|younger|larger|longer|shorter|higher|lower|worse|warmer|colder|hotter|richer|poorer|busier)\b`, labelUz: 'more va -er birga ishlatilmaydi' }],
     model: 'Life in the city is more exciting than life in a village. A village is not as noisy as a city. For me, Tashkent is the most comfortable place to live.',
   },
+  'b2-u1-l1': {
+    promptUz: 'Shahringizdagi biror bino yoki joy haqida qisqa ma’lumot yozing: qachon qurilgan, nima uchun ishlatiladi (kamida 2 ta passiv gap).', minWords: 25,
+    require: [{ re: String.raw`\b(is|are|was|were|has been|have been|will be|can be)( \w+ly)? \w+(ed|en|wn|lt|ght|ne|un|t)\b`, labelUz: 'passiv: be + 3-shakl' }],
+    forbid: [{ re: String.raw`\b(was|were|is) (happened|died|arrived|existed)\b`, labelUz: 'happen / die / arrive / exist o‘timsiz — passivi yo‘q' }, { re: String.raw`\b(was|were|is|are) (build|make|write|take|give|speak)\b`, labelUz: 'be dan keyin 3-shakl kerak (built, made, written…)' }],
+    model: 'The Amir Temur Museum in Tashkent was opened in 1996. It was built in the centre of the city, and it is visited by thousands of tourists every year. Many old manuscripts are kept there.',
+  },
+  'b2-u1-l2': {
+    promptUz: 'Kecha kimdir sizga aytgan 3 ta gapni o‘zlashtirma gap bilan yetkazing (said / told / asked).', minWords: 22,
+    require: [{ re: String.raw`\b(said|told|asked)\b`, labelUz: 'said / told / asked' }, { re: String.raw`\b(was|were|had|would|could|wanted|liked|lived|worked)\b`, labelUz: 'zamon bir pog‘ona orqaga surilgan' }],
+    forbid: [{ re: String.raw`\bsaid (me|him|her|us|them)\b`, labelUz: 'said + kishi emas: told me / said to me' }, { re: String.raw`\basked (me |him |her )?(where|what|when|why|how) (do|does|did|is|are|can|will) `, labelUz: 'o‘zlashtirma savolda so‘roq tartibi bo‘lmaydi' }],
+    model: 'My friend told me that she had passed her driving test. My teacher said that the exam would be on Monday. My brother asked me where I had put his charger.',
+  },
+  'b2-u1-l3': {
+    promptUz: 'Sizga muhim bo‘lgan odam, joy va narsani tasvirlang: who, where, which/that ishlatib 3 ta gap.', minWords: 25,
+    require: [{ re: String.raw`\bwho\b`, labelUz: 'who (odam)' }, { re: String.raw`\b(where|whose)\b`, labelUz: 'where yoki whose' }, { re: String.raw`\b(which|that)\b`, labelUz: 'which / that (narsa)' }],
+    forbid: [{ re: String.raw`, that\b`, labelUz: 'vergulli (qo‘shimcha ma’lumot) gapda that ishlatilmaydi' }],
+    model: 'My grandfather, who was a teacher, taught me to read. Samarkand is the city where I spent my childhood. The book which changed my life was a gift from him.',
+  },
+  'b2-u2-l1': {
+    promptUz: '“Agar bir yil ishlamasdan yashay olsangiz, nima qilardingiz?” — 3 ta gap bilan javob bering.', minWords: 25,
+    require: [{ re: String.raw`\bif\b`, labelUz: 'if' }, { re: String.raw`\b(would|could|might|'d)\b`, labelUz: 'would / could + fe’l' }],
+    forbid: [{ re: String.raw`\bif\b[^,.]*\bwould\b`, labelUz: 'if qismida would ishlatilmaydi' }],
+    model: 'If I didn’t have to work for a year, I would travel around Central Asia. I would visit Almaty and Bishkek first. If I had enough money, I could also learn to paint.',
+  },
+  'b2-u2-l2': {
+    promptUz: 'O‘tmishdagi bitta qaroringiz haqida yozing: boshqacha qilganingizda nima bo‘lardi va nimadan afsuslanasiz.', minWords: 25,
+    require: [{ re: String.raw`\bif (I|we|you|he|she|they) had\b`, labelUz: 'If + had + 3-shakl' }, { re: String.raw`\bwould(n't)? have\b`, labelUz: 'would have + 3-shakl' }, { re: String.raw`\bwish\b`, labelUz: 'I wish …' }],
+    forbid: [{ re: String.raw`\bif\b[^,.]*\bwould\b`, labelUz: 'if qismida would ishlatilmaydi' }],
+    model: 'Two years ago I chose economics instead of medicine. If I had chosen medicine, I would have studied for seven years. Sometimes I wish I had listened to my heart, but I am happy with my job now.',
+  },
+  'b2-u2-l3': {
+    promptUz: '“Onlayn ta’lim an’anaviy darsdan yaxshimi?” — ikki tomonni keltirib 3–4 ta gap yozing (although / however / despite).', minWords: 30,
+    require: [{ re: String.raw`\b(although|even though|though)\b`, labelUz: 'although / even though' }, { re: String.raw`\b(however|despite|in spite of)\b`, labelUz: 'however yoki despite' }],
+    forbid: [{ re: String.raw`\bdespite of\b`, labelUz: '“despite of” — xato' }, { re: String.raw`\b(despite|in spite of) (it|he|she|they|we|I|the \w+) (is|was|are|were|has|have)\b`, labelUz: 'despite dan keyin to‘liq gap emas, ot yoki -ing keladi' }],
+    model: 'Although online learning is flexible, it requires a lot of discipline. Students can study at any time. However, many of them miss face-to-face contact with teachers. Despite these problems, I think a mix of both is the best option.',
+  },
 };
