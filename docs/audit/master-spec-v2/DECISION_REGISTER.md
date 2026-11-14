@@ -1,42 +1,32 @@
-# DECISION REGISTER (Master Spec v2 intake)
+# DECISION REGISTER
 
-Legend: **[F]** verified · **[R]** recommendation · **[U]** unresolved. No owner approval is invented. "Approved" below means the owner stated it in this chat; the three ChatGPT conversations and `Loyiha tahlili.txt` were **not readable** (see §1), so decisions from them are listed only as "to import".
+Stable IDs: **OD-01…OD-11** are owner questions (authoritative detail in `docs/audit/phase-0.2/OWNER_DECISION_REGISTER.md`, not renumbered). **DR-xx** track spec-vs-code conflicts. "Owner approval" values: **approved** (stated by the owner in this chat) · **pending** · **hypothesis** (owner proposed as test value) · **rejected** (none). Recommendations are never recorded as approvals.
 
-## 1. Source availability [F]
+**Sources not reviewed:** ChatGPT conversations `t_6af8539b…`, `t_6af85483…`, `t_6af854e0…` (inaccessible: host not reachable) and `Loyiha tahlili.txt` (not present). Any decision from them is absent from this table until imported.
 
-| Source | Status |
-|---|---|
-| chatgpt.com/s/t_6af8539b… | **Inaccessible**: host does not resolve from this session (outside allowed network domains) |
-| chatgpt.com/s/t_6af85483… | **Inaccessible**: same |
-| chatgpt.com/s/t_6af854e0… | **Inaccessible**: same |
-| `Loyiha tahlili.txt` | **Not found** in the session filesystem (no file attached/uploaded here) |
-| Repository `Sofsavdo/Bandly` (local clone, branch `main`) | Read in Phases 0–0.2 |
+| ID | Topic | Original decision | Current implementation | New Master Spec v2 requirement | Conflict / gap | Recommended resolution | Owner approval | Dependencies | Implementation impact |
+|---|---|---|---|---|---|---|---|---|---|
+| DR-01 | Product structure | (earlier chat) 3 tracks exam / grammar / mocks, priced | `server/pricing.ts`, `src/config.ts`: 3 tracks; `Gate` client-side | 3 products: General English (grammar inside), Exam Prep, free Mock Arena | grammar separate; mocks paid | map per OD-08 option A | **approved (structure)** by Master Spec; mapping pending (OD-08) | M5, OD-08 | entitlement tables, content split; no paying customers expected — confirm in M1 inventory |
+| DR-02 | Languages | uz only (earlier); i18n skeleton requested | 34 keys, ~360 hard-coded lines | 6 locales; 4 independent settings | kk/ky/tg not planned before | M6 for uz/en/ru, catalogue designed for 6; kk/ky/tg later | **approved (scope)**; rollout order pending | M6, OD-10 | catalogue + settings model |
+| DR-03 | Exam scope | IELTS Academic | Academic only | + IELTS GT, CEFR (country-specific), SAT | formats unverified | verify official specs before design | approved (scope); details pending | external verification | new exam modules |
+| DR-04 | AI personalities | roast/examiner modes, 18+ checkbox | `roast.ts`, `PersonaPicker.tsx`; client-only age | 5 distinct personalities; Savage opt-in; no minors | behaviours + server safety missing | `STRATEGIC_GAPS_SPEC` §2 | approved (list); safety rules per spec | OD-06, M7 | personality configs, filter |
+| DR-05 | Prices | owner earlier: Hamyon, UZS | 3 UZS tracks | Free $0 / GE $5.99 / EP $7.99 / All $9.99 as **hypotheses**, local pricing, no hardcoding | not final | plans/prices as data (country_prices) | **hypothesis** | OD-08, OD-11 | pricing tables |
+| DR-06 | Rollout | Uzbekistan first | UZ-specific code | UZ→KZ→KG→TJ→TM; country config | hard-coded assumptions | country model `STRATEGIC_GAPS_SPEC` §6 | **approved (sequence)** | OD-01 per country | config tables |
+| DR-07 | Hosting/residency | Phase 0 said "Europe" (my recommendation, not approved) | Railway sfo | legal review required | unanswered legal question | OD-01 first | pending | lawyer | blocks PG + off-site backup |
+| DR-08 | Database | SQLite (inherited) | `node:sqlite`, no backups | PG only after backup/restore/rollback | no safety net | M1 then M2 | pending (OD-02) | OD-01 | M2 |
+| DR-09 | Legacy tokens | plaintext token (inherited) | `players.token` plaintext | never migrate raw credentials | — | token_hash pre-step | pending (approval at M2a) | M2a | `FINAL_MIGRATION_SPEC` §2 |
+| DR-10 | AI credit ledger | none | `ai_usage` counters | robust ledger, ceilings, crash safety | — | `FINAL_AI_CREDIT_SPEC` | structure recommended; numbers pending OD-09 | M7 | |
+| DR-11 | Creator rewards | none | none | $1/$5/$10/$50/$100 at 10k/50k/100k/500k/1M views | not approved financial commitment | track only; payouts disabled | **hypothesis only** | owner approval of budget, fraud, eligibility, minimum payout, provider, campaign limits; legal/tax | creator tables later |
+| DR-12 | Timed speaking challenge | none | none | own-design challenge, thresholds 12/10/5/2.5 s | hypotheses; accessibility; no competitor assets | configurable thresholds, pressure-off option | **hypothesis** | voice engine | Phase 5/8 |
+| DR-13 | Voice provider | browser STT/TTS; optional TTS vendor | browser + untested adapter | provider-agnostic, verify uz/ru/kk/ky/tg | nothing verified | evaluation plan `STRATEGIC_GAPS_SPEC` §3 | pending | external docs, OD-09 | interfaces |
+| DR-14 | Design identity | existing mascot/theme | `src/brand.ts`, `styles.css`, `Mascot.tsx` | inspect first; navy/violet suggestion not final | undecided | brand audit in Phase 1 | pending | — | design tokens |
+| DR-15 | Launch scope & order | (Phase 0 recommendation, unapproved) GE A1–B1 + IELTS Academic + free Mock Arena in en/uz/ru | partial | broader ambitions | scope inflation | keep foundation M1–M8; sequence new products after; Mock Arena right after M5 | pending (OD-10) | | ROADMAP_RECONCILIATION |
+| DR-16 | Age / adult mode | 18+ checkbox | client-side | server-enforced; no minors | bypassable | OD-06 | pending | legal | M3 |
+| DR-17 | Retention / deletion | none | none | deletion, export | periods unknown | `FINAL_ARCHITECTURE_SPEC` §6 | pending (OD-07) | legal | M3/M8 |
+| DR-18 | Admin | `ADMIN_TOKEN` endpoints | token | RBAC, CMS lifecycle, audit | — | `STRATEGIC_GAPS_SPEC` §8 | pending | M3 | |
+| DR-19 | Mock Arena free | mocks priced (code) | `mocks` track | free objective tests | conflict | free; AI feedback premium | **approved (principle)**; limits pending OD-08 | M5 | |
+| DR-20 | Analytics | none | none | event-based metrics, no fakes | — | events in M3+ | pending (OD-01 processors) | | |
+| OD-01…OD-11 | Owner questions | see `phase-0.2/OWNER_DECISION_REGISTER.md` | | | | | all **pending** | | unchanged IDs |
 
-**Owner action:** paste/export the three conversations and the text file into chat (or allow `chatgpt.com` in the session network settings), then I import their decisions here.
-
-## 2. Register
-
-| ID | Topic | Previously agreed | Current implementation | Conflict / gap | Proposed resolution | Status | Consequences |
-|---|---|---|---|---|---|---|---|
-| DR-01 | Product structure | 3 products: General English (grammar inside), Exam Prep, free Mock Arena | 3 tracks `exam`, `grammar`, `mocks` (grammar sold separately, mocks priced) [F] | Grammar is a separate product; mocks not free | Map per OD-08 (option A) | pending owner (OD-08) | No paying users expected; confirm via M1 inventory |
-| DR-02 | Language model | 4 separate settings: interface, explanation, learning, voice; locales en, uz, ru, kk, ky, tg (tk later) | 34-key skeleton, ~360 hard-coded Uzbek lines, one language [F] | kk/ky/tg not planned in Phase 0–0.2 (only uz/en/ru) | Add kk/ky/tg to localization phase; keep M6 on uz/en/ru first; `Intl` plural rules for kk/ky/tg to be verified before commitment | **[U]** needs owner confirmation of rollout order | Native-speaker review needed per locale (OD-10) |
-| DR-03 | Exam scope | IELTS Academic+General, CEFR (country-specific), SAT (digital) | IELTS-centric only [F] | CEFR formats and current SAT spec unverified | Verify official specs before design (Phase 6) | pending | Content licensing: original questions only |
-| DR-04 | AI personalities | 5 (Friendly, Strict Examiner, Savage opt-in, Comedy, Debate) | Examiner persona only, browser STT/TTS [F] | 4 personalities + safety rules missing | Phase 5 per spec; Savage default off, never in exam mode, not for minors | approved as scope by owner message; details pending | Needs OD-06 (age) |
-| DR-05 | Pricing | Free $0 / General $5.99 / Exam $7.99 / All Access $9.99 (hypotheses) | prices in code/config for old 3 tracks [F] | not approved; must be data | Store as configurable data; no hardcoding | pending owner | Country prices per OD-11/OD-04 |
-| DR-06 | Roll-out | UZ → KZ → KG → TJ → TM; architecture international | Uzbekistan-specific (Hamyon, UZS) [F] | country config absent | Country table in DB design | approved as sequence | Residency law per country (OD-01) |
-| DR-07 | Data residency/hosting | (unknown — conversation unread) | Railway sfo [F] | Phase 0 "move to Europe" ignored legal question | OD-01 | pending owner + lawyer | blocks PG, off-site backup |
-| DR-08 | Database | PostgreSQL desirable, only after backup/restore/rollback | SQLite on volume [F] | no backup, no migrations | M1 then M2 per Phase 0.1/0.2 | pending (OD-02) | |
-| DR-09 | Auth/tokens | secure auth; no raw legacy credentials migrated | plaintext token column [F] | — | token_hash pre-step; FINAL_MIGRATION_SPEC §2 | recommended | |
-| DR-10 | AI credits | ledger with reserve/settle, idempotency, provider and global caps | none; `ai_usage` counters only [F] | — | FINAL_AI_CREDIT_SPEC | recommended; numbers pending OD-09 | |
-| DR-11 | Creator program rewards | $1/$5/$10/$50/$100 at 10k/50k/100k/500k/1M views — **test values only** | none | no budget, fraud rules, payout provider | Build tracking only; **no payouts** until owner approves budget, fraud, eligibility, minimum payout, provider | pending owner | Legal/tax per country **[U]** |
-| DR-12 | Speak-or-Die-style challenge | thresholds 12/10/5/2.5 s hypotheses | none | accessibility, IP | Own design; configurable; pressure-off option | pending | no competitor assets |
-| DR-13 | Voice provider | provider-agnostic; verify Uzbek/Kazakh/Kyrgyz/Tajik support | browser Web Speech only [F] | no provider verified | Provider comparison doc with sources/dates before choice | pending | No unsupported language advertised |
-| DR-14 | Design identity | inspect existing brand first; navy/violet suggestion not final | existing mascot/theme [F] | not yet reviewed as design system | Phase 1 audit of assets then tokens | pending | |
-| DR-15 | Launch scope | (earlier: GE A1–B1 + IELTS Academic + free Mock Arena in en/uz/ru) | partial content [F] | conflicts with 5-country/6-locale ambition | Keep narrow first scope unless owner changes | pending (OD-10) | |
-| DR-16 | Age / adult mode | Savage opt-in, no minors | client-side 18+ checkbox [F] | bypassable | server-enforced age band | pending (OD-06) | legal input |
-| DR-17 | Retention / deletion | account deletion, export | none | — | FINAL_ARCHITECTURE §6; periods pending | pending (OD-07) | not legal advice |
-| DR-18 | Previous decision IDs | OD-01…OD-11 | — | overlaps with this register | OD-xx remain the owner-question IDs; DR-xx track spec-vs-code conflicts | informational | |
-
-## 3. Newly raised conflict to decide now
-
-**Scope inflation vs. Phase 0.2 plan:** this spec adds 3 more locales, SAT, CEFR, Creator Program, admin CMS, Speak-or-Die and 5 personalities on top of M1–M8. Recommendation **[R]**: keep M1–M8 (foundation) unchanged, treat the rest as Phase 2+ products sequenced after M5/M7, and let the owner confirm order (DR-15).
+## Remaining conflicts
+1. Scope vs. foundation order (DR-15). 2. Free Mock Arena vs. existing paid `mocks` (DR-01/19). 3. Savage mode vs. unverified age policy (DR-04/16). 4. International ambition vs. unanswered residency law (DR-06/07). 5. Hypothesis prices/rewards must not reach code as constants (DR-05/11).
