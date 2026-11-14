@@ -34,6 +34,15 @@ Date: 2026-11-14 · Base commit `b51f705` (+ docs commits on branch `ccr-f38ad65
 ## Production inventory (read-only) — what is and is not known
 Known from Phase 0 (Railway API, read-only): service `bandly`, 1 replica, region sfo, volume `bandly-data` 5000 MB at `/data`, `DB_PATH=/data/bandly.sqlite` per Dockerfile, startup `AI: none, TTS: none, To'lov: yo'q (demo)`, 71 requests/24 h, 0 5xx. **Not known:** row counts (players/payments/subscriptions), `ADMIN_TOKEN` set or not, whether the DB file is really on the volume, existing backups (none known). No new Railway call was made in this step.
 
+## Production inventory addendum (2026-11-14, Railway API, read-only, variable NAMES only; values redacted by the API)
+- Project `bandly`, environment `production`, service `bandly`, latest deployment `eb3e9d61` SUCCESS, volume `bandly-data` 5000 MB at `/data` (sfo).
+- Variables present: `DB_PATH`, `HOST`, `NODE_ENV`, `TRUST_PROXY` + Railway system variables.
+- **Absent:** `ADMIN_TOKEN`, `HAMYON_*`, `AI_*`, `TTS_*`, `PRICE_*` → admin endpoints have no token configured (behaviour when unset: see `server/index.ts`), no payment/AI/TTS keys, default prices in use. This supports "demo mode, no real payments".
+- Still unknown: the **value** of `DB_PATH` (redacted; Dockerfile default is `/data/bandly.sqlite`), row counts, existing backups.
+
+## CI first run
+Run 43598572525 on PR #22 **failed in ~2 s with no downloadable logs (HTTP 404)**. A failure that fast with no steps usually means the job never started its steps (e.g., Actions restrictions/billing on the account or repository), but the cause is **unverified**. Owner can open https://github.com/Sofsavdo/Bandly/actions/runs/43598572525 to read the reason. The same command (`npm run test:ci`) passes locally.
+
 ## Not done on purpose
 No production snapshot (approval A5 not given), no Railway change, no dependency install, no cron/scheduling.
 
