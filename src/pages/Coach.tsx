@@ -6,6 +6,9 @@ import { getAccount, type Account } from '../lib/account';
 import { coachSay, coachStatus, newTurnId, prosodyFor, type CoachReply, type CoachStatus } from '../lib/coach';
 import { listenTurn, say, SpeechError, stopSpeaking, sttSupported, ttsSupported } from '../lib/speech';
 import { useProfile } from '../lib/store';
+import { addMistake } from '../lib/mistakes';
+import { logErrors } from '../lib/adaptive/store';
+import { isTaxonomyId, type TaxonomyId } from '../lib/adaptive/taxonomy';
 
 type Phase = 'idle' | 'listening' | 'thinking' | 'speaking' | 'error';
 const PHASE_UZ: Record<Phase, string> = { idle: 'Navbat sizda', listening: 'Tinglayapman…', thinking: 'O‘ylayapman…', speaking: 'Gapiryapman…', error: 'Xato' };
@@ -66,6 +69,11 @@ export default function Coach() {
       const history = msgs.map((m) => ({ role: m.role, text: m.text }));
       const r = await coachSay({ persona, mode, adult: p.adult, level: p.level, history, text: turn.text, turnId: turn.turnId });
       pending.current = null;
+      if (r.correction) {
+        const tax: TaxonomyId[] = r.correction.errorType && isTaxonomyId(r.correction.errorType) ? [r.correction.errorType] : [];
+        logErrors(tax);
+        try { addMistake('coach', { kind: 'fix', wrong: r.correction.wrong, right: r.correction.right, whyUz: r.correction.whyUz }, tax); } catch { /* not a usable pair */ }
+      }
       const line = [r.reply, r.question].filter(Boolean).join(' ');
       setMsgs((m) => [...m, { role: 'coach', text: line, reply: r }]);
       setPhase('idle');

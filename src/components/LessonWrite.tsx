@@ -3,6 +3,7 @@ import { useState } from 'react';
 import type { WritingTask } from '../content/lessons/types';
 import { checkWriting, wordCount, type WritingCheck } from '../lib/lessons';
 import { logErrors } from '../lib/adaptive/store';
+import { addMistake } from '../lib/mistakes';
 import type { TaxonomyId } from '../lib/adaptive/taxonomy';
 
 // grammarCheck rule id → error type (only where the mapping is clear)
@@ -16,6 +17,7 @@ export function LessonWrite({ task }: { task: WritingTask }) {
     const r = checkWriting(task, text);
     setRes(r);
     logErrors(r.issues.map((i) => ISSUE_TAX[i.id]).filter((x): x is TaxonomyId => !!x));
+    for (const i of r.issues) { try { addMistake('writing', { kind: 'fix', wrong: i.wrong, right: i.right, whyUz: i.ruleUz }, ISSUE_TAX[i.id] ? [ISSUE_TAX[i.id]!] : []); } catch { /* not a usable pair */ } }
   };
   return (
     <div>

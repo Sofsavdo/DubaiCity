@@ -36,12 +36,14 @@ import Learn from './pages/Learn';
 import LessonPage from './pages/Lesson';
 import SkillCheck from './pages/SkillCheck';
 import Coach from './pages/Coach';
+import Mistakes from './pages/Mistakes';
 
 const routes: Record<string, () => ReactNode> = {
   '#/': () => <Home />,
   '#/learn': () => <Learn />,
   '#/skills': () => <SkillCheck />,
   '#/coach': () => <Coach />,
+  '#/mistakes': () => <Mistakes />,
   '#/exam': () => <Exam />,
   '#/exam/writing': () => <Gate track="exam"><Writing /></Gate>,
   '#/exam/speaking': () => <Gate track="exam"><Speaking /></Gate>,

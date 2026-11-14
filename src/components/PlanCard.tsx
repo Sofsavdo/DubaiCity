@@ -5,6 +5,7 @@ import { loadAdaptive } from '../lib/adaptive/store';
 import { planDay, type PlanTask } from '../lib/adaptive/recommend';
 import { levelIndex, type Cefr } from '../lib/levels';
 import { useProfile } from '../lib/store';
+import { dueMistakes } from '../lib/mistakes';
 
 const ERR_UZ: Record<string, string> = {
   'G.tense': 'zamonlar', 'G.article': 'artikllar', 'G.preposition': 'predloglar', 'G.sva': 'ega-kesim moslashuvi', 'G.word_order': 'so‘z tartibi', 'G.modal': 'modal fe’llar',
@@ -37,6 +38,7 @@ export function PlanCard() {
       </section>
     );
   }
+  const mistakesDue = dueMistakes().length;
   const u = levelIndex(p.level as Cefr);
   const isSkill = (s: string): boolean => s === 'reading' || s === 'listening';
   // levels that already have structured General English lessons: the lessons replace the loose legacy grammar topics in the plan (answers there still count)
@@ -54,6 +56,7 @@ export function PlanCard() {
   return (
     <section className="card">
       <h3><CalendarCheck size={18} /> Bugungi reja <span className="pill">taxminiy · {plan.reduce((s, t) => s + t.minutes, 0)} daqiqa</span></h3>
+      {mistakesDue > 0 && <a className="path-step" href="#/mistakes"><b>Xatolar ustida ishlash · {mistakesDue} ta</b><span>Avval qilgan xatolaringiz takrorlash vaqti keldi — eng foydali 5 daqiqa.</span></a>}
       {plan.length === 0 && <p className="muted">Bugun uchun yangi vazifa topilmadi. Grammar bo‘limida mashq qilib ko‘ring.</p>}
       <div className="stack">
         {plan.map((t) => {

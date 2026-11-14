@@ -33,3 +33,6 @@ Recompute daily plan after each completed session; weekly review: if completion 
 
 ### Validation tests
 Monotonicity (correct answers never decrease m); bounds [0,1]; a single answer cannot mark `mastered`; decay reduces m_eff; interval reset on error; graph acyclic; every taxonomy id has remedial content; determinism (same inputs → same plan); explanation present for every task; plan never schedules a node with unmet prerequisites; property test over 10⁴ random histories. Offline simulation compares plans for synthetic learners before any real user sees them.
+
+## Mistake repetition (implemented 2026-11-14)
+`src/lib/mistakes.ts`: every concrete mistake (lesson item, Grammar item, writing issue, AI Coach correction) is stored once (deduplicated by normalised content) and scheduled: due now → after a correct answer 1, 3, 7 days → resolved after 3 correct in a row; a wrong answer makes it due again in 10 minutes and resets the streak; repeating a resolved mistake re-opens it. Reviews of lesson/Grammar items also update mastery of their nodes; wrong "fix" reviews log their error type. Due mistakes appear first on the Home plan.

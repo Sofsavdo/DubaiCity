@@ -3,10 +3,11 @@
 import { complete, AiError, type AiConfig, type CompleteOpts } from './ai';
 import { FORBIDDEN } from '../src/content/roasts';
 import { COACH_EMOTIONS, personaById, type CoachEmotion, type PersonaId } from '../src/content/personas';
+import { TAXONOMY_IDS, isTaxonomyId, type TaxonomyId } from '../src/lib/adaptive/taxonomy';
 
 export type CoachMode = 'practice' | 'exam';
 export interface CoachTurn { role: 'learner' | 'coach'; text: string }
-export interface CoachReply { reply: string; question: string | null; emotion: CoachEmotion; correction: { wrong: string; right: string; whyUz: string } | null }
+export interface CoachReply { reply: string; question: string | null; emotion: CoachEmotion; correction: { wrong: string; right: string; whyUz: string; errorType: TaxonomyId | null } | null }
 
 const STYLE: Record<PersonaId, string> = {
   friendly: 'You are a patient, warm and encouraging English coach for beginners. Use short, simple sentences (A2 level). Praise effort, correct at most ONE mistake per turn, gently.',
@@ -25,7 +26,7 @@ const RULES = [
   '- Keep the conversation in English. Write "why_uz" in simple Uzbek (Latin script).',
 ].join('\n');
 
-const FORMAT = 'Reply with ONE JSON object only: {"reply": "<your spoken reply in English, max 45 words>", "emotion": "<one of: ' + COACH_EMOTIONS.join(', ') + '>", "correction": {"wrong": "<learner phrase>", "right": "<corrected phrase>", "why_uz": "<short Uzbek explanation>"} or null, "question": "<one next question in English, max 20 words>"}';
+const FORMAT = 'Reply with ONE JSON object only: {"reply": "<your spoken reply in English, max 45 words>", "emotion": "<one of: ' + COACH_EMOTIONS.join(', ') + '>", "correction": {"wrong": "<learner phrase>", "right": "<corrected phrase>", "why_uz": "<short Uzbek explanation>", "error_type": "<one of: ' + TAXONOMY_IDS.join(', ') + '>"} or null, "question": "<one next question in English, max 20 words>"}';
 
 /** Which persona may actually run. Adult-only personas need the learner's 18+ confirmation; exam mode only allows exam-safe personas. */
 export function resolvePersona(requested: string, ctx: { adult: boolean; mode: CoachMode }): { id: PersonaId; downgraded: string | null } {
@@ -61,10 +62,10 @@ export function parseCoachReply(raw: string): CoachReply | null {
   const q = typeof j.question === 'string' ? j.question.trim() : '';
   const question = q && q.length <= 200 && !linkRe.test(q) && !unsafe(q) ? q : null;
   let correction: CoachReply['correction'] = null;
-  const c = j.correction as { wrong?: unknown; right?: unknown; why_uz?: unknown } | null;
+  const c = j.correction as { wrong?: unknown; right?: unknown; why_uz?: unknown; error_type?: unknown } | null;
   if (c && typeof c.wrong === 'string' && typeof c.right === 'string' && c.wrong.trim() && c.right.trim()) {
     const why = typeof c.why_uz === 'string' ? c.why_uz.trim().slice(0, 240) : '';
-    if (!unsafe(why) && !unsafe(c.wrong + ' ' + c.right) && !linkRe.test(c.wrong + c.right + why)) correction = { wrong: c.wrong.trim().slice(0, 160), right: c.right.trim().slice(0, 160), whyUz: why };
+    if (!unsafe(why) && !unsafe(c.wrong + ' ' + c.right) && !linkRe.test(c.wrong + c.right + why)) correction = { wrong: c.wrong.trim().slice(0, 160), right: c.right.trim().slice(0, 160), whyUz: why, errorType: typeof c.error_type === 'string' && isTaxonomyId(c.error_type) ? c.error_type : null };
   }
   return { reply, question, emotion, correction };
 }

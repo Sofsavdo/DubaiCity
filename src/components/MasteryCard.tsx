@@ -40,6 +40,7 @@ export function MasteryCard() {
     <div className="card">
       <span className="eyebrow"><Brain size={15} /> Bilim xaritam</span>
       <SkillLine />
+      <p><a className="btn sm" href="#/mistakes">Xatolar ustida ishlash</a></p>
       {rows.length === 0 ? (
         <p className="muted">Hali ma’lumot yo‘q. Dars, Grammar, o‘yin yoki Reading/Listening testini bajaring — shu yerda har bir mavzu bo‘yicha o‘zlashtirish darajangiz ko‘rinadi.</p>
       ) : (

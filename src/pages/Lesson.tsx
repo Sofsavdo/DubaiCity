@@ -1,9 +1,10 @@
-import { ArrowLeft, ArrowRight, CheckCircle2, RotateCcw, Volume2, XCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, RotateCcw, Volume2 } from 'lucide-react';
+import { ItemView } from '../components/LessonItem';
 import { say, stopSpeaking, ttsSupported } from '../lib/speech';
 import { useMemo, useState } from 'react';
-import type { Item } from '../content/lessons/types';
 import { lessonById, lessonNodeId, lessonWordIds, ALL_LESSONS } from '../content/lessons';
-import { checkItem, correctAnswerText, isUnlocked, loadProgress, PASS_RATE, saveAttempt, scoreCheck, type ItemAnswer } from '../lib/lessons';
+import { checkItem, isUnlocked, loadProgress, PASS_RATE, saveAttempt, scoreCheck, type ItemAnswer } from '../lib/lessons';
+import { addMistake } from '../lib/mistakes';
 import { recordAnswer } from '../lib/adaptive/store';
 import { addToReview, addXp } from '../lib/store';
 import { saveResult } from '../lib/storage';
@@ -12,48 +13,6 @@ import { LessonWrite } from '../components/LessonWrite';
 
 type Step = 'learn' | 'practice' | 'speak' | 'write' | 'check' | 'result';
 const STEP_UZ: Record<Exclude<Step, 'result'>, string> = { learn: 'Tushuntirish', practice: 'Mashq', speak: 'Gapirish', write: 'Yozish', check: 'Tekshiruv' };
-
-function ItemView({ item, value, onChange, revealed }: { item: Item; value: ItemAnswer; onChange: (v: ItemAnswer) => void; revealed: boolean }) {
-  const ok = revealed && checkItem(item, value);
-  return (
-    <div className="q">
-      <p><b>{item.kind === 'order' ? 'So‘zlardan to‘g‘ri gap tuzing:' : item.prompt}</b></p>
-      {item.kind === 'choice' && (
-        <div className="stack">
-          {item.options.map((o, i) => (
-            <button key={o} type="button" className={`opt ${revealed ? (i === item.answer ? 'right' : i === value ? 'bad' : '') : value === i ? 'sel' : ''}`} disabled={revealed} onClick={() => onChange(i)}>{o}</button>
-          ))}
-        </div>
-      )}
-      {item.kind === 'gap' && (
-        <input type="text" autoComplete="off" disabled={revealed} value={typeof value === 'string' ? value : ''} placeholder="Javobni yozing" onChange={(e) => onChange(e.target.value)} />
-      )}
-      {item.kind === 'order' && <OrderInput item={item} value={Array.isArray(value) ? value : []} onChange={onChange} disabled={revealed} />}
-      {revealed && (
-        <p style={{ marginTop: 8 }}>
-          {ok ? <span className="ok"><CheckCircle2 size={16} /> To‘g‘ri. </span> : <span className="bad"><XCircle size={16} /> Noto‘g‘ri. To‘g‘ri javob: «{correctAnswerText(item)}». </span>}
-          <span className="muted">{item.explainUz}</span>
-        </p>
-      )}
-    </div>
-  );
-}
-
-function OrderInput({ item, value, onChange, disabled }: { item: Extract<Item, { kind: 'order' }>; value: string[]; onChange: (v: string[]) => void; disabled: boolean }) {
-  const pool = item.words.map((w, i) => ({ w, i }));
-  const [picked, setPicked] = useState<number[]>([]);
-  const add = (i: number) => { if (disabled || picked.includes(i)) return; const n = [...picked, i]; setPicked(n); onChange(n.map((k) => item.words[k]!)); };
-  const undo = () => { if (disabled) return; const n = picked.slice(0, -1); setPicked(n); onChange(n.map((k) => item.words[k]!)); };
-  return (
-    <div>
-      <div className="card" style={{ minHeight: 48, padding: 10, margin: '6px 0' }}>{value.length ? value.join(' ') : <span className="muted">So‘zlarni tartib bilan bosing</span>}</div>
-      <div className="row">
-        {pool.map(({ w, i }) => <button key={i} type="button" className="chipbtn" disabled={disabled || picked.includes(i)} style={picked.includes(i) ? { opacity: 0.35 } : undefined} onClick={() => add(i)}>{w}</button>)}
-        <button type="button" className="btn sm" disabled={disabled || !picked.length} onClick={undo}><RotateCcw size={14} /> Orqaga</button>
-      </div>
-    </div>
-  );
-}
 
 export default function LessonPage({ id }: { id: string }) {
   const found = lessonById(id);
@@ -75,6 +34,7 @@ export default function LessonPage({ id }: { id: string }) {
     const r = scoreCheck(lesson.check, cAns);
     const now = Date.now();
     lesson.check.forEach((it, i) => recordAnswer(lessonNodeId(lesson.id), checkItem(it, cAns[i]), lesson.taxonomyIds, now));
+    lesson.check.forEach((it, i) => { if (!checkItem(it, cAns[i])) addMistake('lesson', { kind: 'lesson', lessonId: lesson.id, part: 'check', index: i }, lesson.taxonomyIds, now); }); // wrong answers come back in “Xatolar ustida ishlash”
     saveAttempt(lesson.id, r, now);
     saveResult({ kind: 'grammar', title: `Dars: ${lesson.titleUz}`, correct: r.correct, total: r.total });
     addXp(r.correct * 3 + (r.passed ? 15 : 0));

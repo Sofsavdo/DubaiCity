@@ -1,7 +1,7 @@
 import { getAccount } from './account';
 import type { CoachEmotion, PersonaId } from '../content/personas';
 
-export interface CoachReply { reply: string; question: string | null; emotion: CoachEmotion; correction: { wrong: string; right: string; whyUz: string } | null; persona: PersonaId; notice: string | null }
+export interface CoachReply { reply: string; question: string | null; emotion: CoachEmotion; correction: { wrong: string; right: string; whyUz: string; errorType: string | null } | null; persona: PersonaId; notice: string | null }
 export interface CoachStatus { ai: boolean; coach: boolean }
 
 let st: Promise<CoachStatus> | null = null;

@@ -27,6 +27,9 @@ assert.match(ps.find((_, i) => PERSONAS[i]!.id === 'savage')!.system, /ADULTS/);
 // output validation
 const ok = parseCoachReply('blah {"reply":"Seriously? You said \\"he go\\" again!","emotion":"angry","correction":{"wrong":"he go","right":"he goes","why_uz":"he bilan fe’lga -s qo‘shiladi"},"question":"Where does he work?"}');
 assert.ok(ok && ok.emotion === 'angry' && ok.correction?.right === 'he goes' && ok.question);
+assert.equal(ok!.correction!.errorType, null, 'missing error_type → null');
+assert.equal(parseCoachReply('{"reply":"ok","emotion":"happy","correction":{"wrong":"a","right":"b","why_uz":"c","error_type":"G.sva"}}')!.correction!.errorType, 'G.sva');
+assert.equal(parseCoachReply('{"reply":"ok","emotion":"happy","correction":{"wrong":"a","right":"b","why_uz":"c","error_type":"X.bad"}}')!.correction!.errorType, null, 'unknown taxonomy rejected');
 assert.equal(parseCoachReply('{"reply":"visit www.evil.com","emotion":"happy"}'), null, 'links rejected');
 assert.equal(parseCoachReply('not json'), null);
 assert.equal(parseCoachReply('{"reply":"ok","emotion":"furious"}')!.emotion, 'neutral', 'unknown emotion normalised');
