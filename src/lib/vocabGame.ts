@@ -19,6 +19,8 @@ export function buildOptions(target: Word, dir: 'en' | 'uz', pool: readonly Word
 
 /** Misol gapda so'zni yashiradi (yechim ochilib qolmasligi uchun o'zak bo'yicha). */
 export function blankExample(w: Word): string {
+  // Ibora (ko'p so'zli): butun iborani yashiramiz
+  if (w.word.includes(' ')) return w.example.replace(new RegExp(w.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'), '_____');
   const stem = w.word.slice(0, Math.max(4, w.word.length - 2)).replace(/[^a-z-]/gi, '');
   const re = new RegExp(`${stem}[a-z-]*`, 'i');
   return w.example.replace(re, '_____');

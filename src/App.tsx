@@ -10,6 +10,7 @@ import Exam from './pages/Exam';
 import Mocks from './pages/Mocks';
 import Pricing from './pages/Pricing';
 import Placement from './pages/Placement';
+import Practice from './pages/Practice';
 import Profile from './pages/Profile';
 import League from './pages/League';
 import DuelHub, { DuelRoom } from './pages/Duel';
@@ -44,6 +45,7 @@ const routes: Record<string, () => ReactNode> = {
   '#/duel': () => <DuelHub />,
   '#/profile': () => <Profile />,
   '#/placement': () => <Placement />,
+  '#/practice': () => <Practice />,
 };
 
 /** #/exam|mocks/reading|listening[/id] yo'nalishi: ro'yxat yoki bitta test, tegishli obuna bilan */

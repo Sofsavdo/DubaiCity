@@ -1,10 +1,11 @@
-import { Mic, ShieldCheck } from 'lucide-react';
+import { Lightbulb, Mic, ShieldCheck, Sparkles } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { EvalCard } from '../components/EvalCard';
 import { JoinForm } from '../components/JoinForm';
 import { getAccount } from '../lib/account';
 import { aiEnabled, aiEvaluateSpeaking, aiFollowup, type Evaluation } from '../lib/ai';
 import { Mascot, type Mood } from '../components/Mascot';
+import { reviewAll } from '../lib/speakingReview';
 import { Examiner, summarize, type Summary, type TurnStat } from '../lib/examiner';
 import { SpeechError, hasVoice, listenTurn, say, sayReaction, stopSpeaking, sttSupported, type MicStatus, type Signal, type TurnResult } from '../lib/speech';
 import type { Reaction } from '../content/roasts';
@@ -239,10 +240,27 @@ export default function Speaking() {
           <ul>{summary.notes.map((n) => <li key={n}>{n}</li>)}</ul>
         </div>
         <div className="card">
-          <details>
-            <summary>Matn ko‘rinishi (faqat shu sahifada, saqlanmaydi)</summary>
-            {turns.map((t, i) => <p key={i}><b>Part {t.part}:</b> {t.q}<br /><i>{t.text || '(javob yo‘q)'}</i></p>)}
-          </details>
+          <h3>Javoblar tahlili</h3>
+          <p className="evidence">Har bir javob bo‘yicha: xatolar, ishlatgan kuchli so‘z va iboralaringiz va «bunday aytsa yaxshiroq» namuna. Matn faqat shu sahifada ko‘rinadi, saqlanmaydi.</p>
+        </div>
+        {reviewAll(turns).map((r, i) => (
+          <div className="card review" key={i}>
+            <div className="row"><span className="pill">Part {r.part}</span><b>{r.q}</b></div>
+            <div className="fb-block"><small>Sizning javobingiz</small><p>{r.text || '(javob yo‘q)'}</p></div>
+            {r.lengthNote && <p className="fb-line">• {r.lengthNote}</p>}
+            {r.issues.map((x) => <div key={x.id} className="fb-line"><b><del>{x.wrong}</del> → <ins>{x.right}</ins></b><br /><span>{x.ruleUz}</span></div>)}
+            {(r.advanced.length > 0 || r.phrases.length > 0) && <p className="fb-line ok">Yaxshi: {[...r.phrases, ...r.advanced].map((w) => <span key={w} className="chip-ok">{w}</span>)}</p>}
+            {r.model && (
+              <div className="fb-block up">
+                <small><Sparkles size={13} /> Bunday aytsa yaxshiroq (namuna)</small>
+                <p>{r.model.model}</p>
+                <p className="fb-line">{r.model.phrases.map((w) => <span key={w} className="chip-up">{w}</span>)}</p>
+                <p className="fb-line"><Lightbulb size={14} style={{ verticalAlign: -2 }} /> {r.model.tipUz}</p>
+              </div>
+            )}
+          </div>
+        ))}
+        <div className="card">
           <div className="row" style={{ marginTop: 10 }}><button className="btn primary" onClick={() => setStage('intro')}>Qayta o‘tish</button></div>
         </div>
       </div>
