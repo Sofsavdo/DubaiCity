@@ -9,7 +9,7 @@
     "preview": "vite preview --host 0.0.0.0 --port 3100",
     "server": "tsx --env-file-if-exists=.env server/index.ts",
     "start": "NODE_ENV=production tsx --env-file-if-exists=.env server/index.ts",
-    "test": "tsx src/lib/band.test.ts && tsx src/lib/grade.test.ts && tsx src/lib/game.test.ts && tsx src/lib/vocabGame.test.ts && tsx server/db.test.ts && tsx server/ai.test.ts && tsx server/tts.test.ts && tsx server/payments.test.ts && tsx server/static.test.ts && tsx src/lib/grammar.test.ts && tsx src/lib/examiner.test.ts && tsx src/lib/roast.test.ts && tsx src/lib/placement.test.ts && tsx src/i18n/i18n.test.ts && tsx src/lib/grammarCheck.test.ts && tsx src/lib/practice.test.ts && tsx src/lib/speakingModels.test.ts && tsx src/lib/speakingReview.test.ts && tsx src/lib/progress.test.ts"
+    "test": "tsx src/lib/band.test.ts && tsx src/lib/grade.test.ts && tsx src/lib/game.test.ts && tsx src/lib/vocabGame.test.ts && tsx server/db.test.ts && tsx server/ai.test.ts && tsx server/tts.test.ts && tsx server/payments.test.ts && tsx server/static.test.ts && tsx src/lib/grammar.test.ts && tsx src/lib/examiner.test.ts && tsx src/lib/roast.test.ts && tsx src/lib/placement.test.ts && tsx src/i18n/i18n.test.ts && tsx src/lib/grammarCheck.test.ts && tsx src/lib/practice.test.ts && tsx src/lib/speakingModels.test.ts && tsx src/lib/speakingReview.test.ts && tsx src/lib/progress.test.ts && tsx src/lib/writingGuide.test.ts && tsx src/lib/writingCheck.test.ts"
   },
   "engines": {
     "node": ">=22.12"

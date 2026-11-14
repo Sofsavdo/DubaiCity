@@ -404,3 +404,11 @@ ins { color: var(--ok); text-decoration: none; font-weight: 700; background: col
 .price-tabs { display: inline-flex; background: var(--surface-2); border-radius: 999px; padding: 4px; margin: 6px 0 14px; }
 .price-tabs button { border: 0; background: transparent; padding: 8px 18px; border-radius: 999px; font-weight: 700; cursor: pointer; color: var(--ink-2); }
 .price-tabs button.on { background: var(--brand); color: #fff; }
+
+/* ===== Writing darslari ===== */
+mark.kw { background: color-mix(in srgb, var(--purple) 16%, transparent); color: var(--purple); font-weight: 700; padding: 0 4px; border-radius: 4px; }
+.essay-model { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 18px; line-height: 1.75; }
+.essay-model p { margin: 0 0 12px; }
+.check { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--line-2); }
+.check.ok { color: var(--ok); } .check.no { color: var(--bad); }
+.check b { color: var(--ink); }

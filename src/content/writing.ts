@@ -1,5 +1,10 @@
+import { writingTopics, type EssayTypeId } from './writingGuide';
+
 export interface WritingPrompt {
   id: string;
+  /** Task 2 insho turi (tekshiruv shunga moslanadi) */
+  type?: EssayTypeId;
+  topicId?: string;
   task: 1 | 2;
   title: string;
   prompt: string;
@@ -8,7 +13,7 @@ export interface WritingPrompt {
   minutes: number;
 }
 
-export const writingPrompts: WritingPrompt[] = [
+const base: WritingPrompt[] = [
   {
     id: 'w1-internet',
     task: 1,
@@ -34,8 +39,19 @@ export const writingPrompts: WritingPrompt[] = [
   { id: 'w2-env', task: 2, title: 'Task 2: Environment', prompt: 'Some people say that individuals can do little to protect the environment and that only governments can solve the problem. To what extent do you agree or disagree?', minWords: 250, minutes: 40 },
 ];
 
+const TYPE_OF: Record<string, EssayTypeId> = { 'w2-tech': 'agree', 'w2-work': 'evaluate', 'w2-edu': 'discuss', 'w2-city': 'cause', 'w2-env': 'agree' };
+
+export const writingPrompts: WritingPrompt[] = [
+  ...base.map((w) => ({ ...w, type: TYPE_OF[w.id] })),
+  ...writingTopics.map((t): WritingPrompt => ({ id: `wt-${t.id}`, task: 2, title: `Task 2: ${t.title}`, prompt: t.prompt, minWords: 250, minutes: 40, type: t.type, topicId: t.id })),
+];
+
 export const linkingWords = [
   'however', 'moreover', 'furthermore', 'in addition', 'therefore', 'consequently', 'for example',
   'for instance', 'on the other hand', 'in contrast', 'as a result', 'in conclusion', 'to conclude',
   'although', 'while', 'whereas', 'despite', 'firstly', 'secondly', 'finally', 'overall',
+  'nevertheless', 'nonetheless', 'meanwhile', 'equally important', 'in particular', 'such as', 'as well as', 'thus', 'hence', 'similarly',
+  'likewise', 'by contrast', 'on balance', 'in my view', 'in my opinion', 'for these reasons', 'first of all', 'what is more',
+  'as a consequence', 'owing to', 'due to', 'at the same time', 'even so', 'to summarise', 'to sum up', 'on the one hand', 'provided that',
+  'in addition to', 'at least', 'since', 'which means', 'so that', 'in particular',
 ];
