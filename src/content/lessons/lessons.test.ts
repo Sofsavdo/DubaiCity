@@ -49,4 +49,8 @@ assert.ok(!inv.passed && inv.forbidden.length > 0, 'non-inverted "Never I have" 
 const acad = checkWriting(lessonById('c1-u1-l3')!.lesson.writing!, 'Lots of young people can\'t find jobs and there was a considerable increase in prices, so the situation became difficult.');
 assert.ok(!acad.passed && acad.forbidden.length > 0, 'informal words are flagged in the academic rewrite');
 assert.equal(wordCount("I'm from Tashkent, it’s big."), 5);
+const { nextLesson } = await import('../../lib/lessons');
+assert.equal(nextLesson(UNITS, {}, null)!.lessonId, 'a1-u1-l1');
+assert.equal(nextLesson(UNITS, {}, 'B1')!.lessonId, 'b1-u1-l1', 'starts at the learner level');
+assert.equal(nextLesson(UNITS, { 'b1-u1-l1': { attempts: 1, best: 1, passedAt: 1 } }, 'B1')!.lessonId, 'b1-u1-l2');
 console.log(`lessons.test: OK (${UNITS.length} units, ${ALL_LESSONS.length} lessons, ${ALL_LESSONS.reduce((s, x) => s + x.lesson.practice.length + x.lesson.check.length, 0)} items)`);

@@ -1,6 +1,6 @@
 import { BookOpenCheck, CheckCircle2, Lock, PlayCircle } from 'lucide-react';
 import { UNITS } from '../content/lessons';
-import { isUnlocked, loadProgress } from '../lib/lessons';
+import { isUnlocked, loadProgress, nextLesson } from '../lib/lessons';
 import { useProfile } from '../lib/store';
 
 /** General English path: level → unit → lesson. Pilot slice (A1–C1). */
@@ -8,6 +8,8 @@ export default function Learn() {
   const p = useProfile();
   const progress = loadProgress();
   const total = UNITS.reduce((s, u) => s + u.lessons.length, 0);
+  const next = nextLesson(UNITS, progress, p.level);
+  const nextTitle = next ? UNITS.find((u) => u.id === next.unitId)!.lessons.find((l) => l.id === next.lessonId)!.titleUz : null;
   const passed = UNITS.flatMap((u) => u.lessons).filter((l) => progress[l.id]?.passedAt).length;
   return (
     <div>
@@ -18,11 +20,12 @@ export default function Learn() {
           <span className="pill">{passed}/{total} dars tugallangan</span>
           {p.level ? <span className="pill">Darajangiz: {p.level}</span> : <a className="btn sm" href="#/placement">Darajani aniqlash</a>}
         </div>
+        {next && <a className="btn primary" style={{ marginTop: 12 }} href={`#/learn/${next.lessonId}`}><PlayCircle size={16} /> Davom ettirish: {nextTitle}</a>}
         <p className="muted" style={{ fontSize: 13, marginTop: 10 }}>Sinov (pilot) versiyasi: A1–C1 darslari Bandly uchun yozilgan va metodist tekshiruvini kutmoqda. C2 keyingi bosqichda qo‘shiladi.</p>
       </section>
       {UNITS.map((u) => (
         <section className="card" key={u.id}>
-          <h3><span className={`lvl-tag ${u.level}`}>{u.level}</span> {u.titleUz} <span className="muted" style={{ fontWeight: 500 }}>· {u.title}</span></h3>
+          <h3><span className={`lvl-tag ${u.level}`}>{u.level}</span> {u.titleUz} <span className="muted" style={{ fontWeight: 500 }}>· {u.title}</span>{p.level === u.level && <span className="pill" style={{ marginLeft: 8 }}>Sizning darajangiz</span>}</h3>
           <p className="muted">{u.situationUz}</p>
           <div className="stack">
             {u.lessons.map((l, i) => {

@@ -86,6 +86,20 @@ export function saveAttempt(lessonId: string, r: CheckResult, now = Date.now()):
   return next;
 }
 
+/** Next lesson to continue: the first unlocked, not-passed lesson at or above the learner's level (falls back to the very first open one). */
+export function nextLesson(units: Unit[], progress: ProgressMap, level: string | null | undefined): { unitId: string; lessonId: string } | null {
+  const order = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+  const min = level ? Math.max(0, order.indexOf(level)) : 0;
+  const pick = (from: number) => {
+    for (const u of units) {
+      if (order.indexOf(u.level) < from) continue;
+      for (let i = 0; i < u.lessons.length; i++) if (isUnlocked(u, i, progress) && !progress[u.lessons[i]!.id]?.passedAt) return { unitId: u.id, lessonId: u.lessons[i]!.id };
+    }
+    return null;
+  };
+  return pick(min) ?? pick(0);
+}
+
 /** A lesson is open when it is the first of its unit, or the previous lesson in the unit is passed. Units themselves are all browsable. */
 export function isUnlocked(unit: Unit, index: number, progress: ProgressMap): boolean {
   return index === 0 || !!progress[unit.lessons[index - 1]!.id]?.passedAt;
