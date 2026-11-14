@@ -365,6 +365,7 @@ ins { color: var(--ok); text-decoration: none; font-weight: 700; background: col
 .journey .bar { height: 14px; }
 .journey-marks { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-top: 4px; }
 .skills { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0; }
+@media (max-width: 600px) { .skills { grid-template-columns: repeat(2, minmax(0, 1fr)); } .skills[style] { min-width: 0 !important; } }
 .skill { padding: 10px 12px; border-radius: var(--r); background: var(--surface-2); border: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
 .skill b { font-family: var(--display); font-size: 18px; }
 .plan-note p { margin: 6px 0; font-size: 14.5px; }

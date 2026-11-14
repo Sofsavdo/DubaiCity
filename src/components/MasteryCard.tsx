@@ -13,7 +13,7 @@ function SkillLine() {
   return (
     <p className="row">
       <span className="pill">Reading: {s.reading?.level ?? '—'}</span><span className="pill">Listening: {s.listening?.level ?? '—'}</span>
-      <a className="btn sm" href="#/skills">{s.reading || s.listening ? 'Qayta tekshirish' : 'Reading / Listening darajasini aniqlash'}</a>
+      <a className="btn sm" style={{ whiteSpace: 'normal' }} href="#/skills">{s.reading || s.listening ? 'Qayta tekshirish' : 'Reading / Listening darajasini aniqlash'}</a>
     </p>
   );
 }

@@ -21,7 +21,7 @@ export default function Learn() {
           {p.level ? <span className="pill">Darajangiz: {p.level}</span> : <a className="btn sm" href="#/placement">Darajani aniqlash</a>}
           <a className="btn sm" href="#/skills">Reading / Listening darajasi</a>
         </div>
-        {next && <a className="btn primary" style={{ marginTop: 12 }} href={`#/learn/${next.lessonId}`}><PlayCircle size={16} /> Davom ettirish: {nextTitle}</a>}
+        {next && <a className="btn primary" style={{ marginTop: 12, whiteSpace: 'normal' }} href={`#/learn/${next.lessonId}`}><PlayCircle size={16} /> Davom ettirish: {nextTitle}</a>}
         <p className="muted" style={{ fontSize: 13, marginTop: 10 }}>Sinov (pilot) versiyasi: A1–C2 darslari Bandly uchun yozilgan va metodist tekshiruvini kutmoqda. Har bir darajada bo‘limlar soni bosqichma-bosqich ko‘payadi.</p>
       </section>
       {UNITS.map((u) => (
