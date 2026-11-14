@@ -109,6 +109,10 @@ assert.ok(w2.score > scoreNode(PILOT.find((x) => x.id === 'b1.writing.opinion')!
 // assumed prerequisites unlock dependants without practice
 const asm = planDay(PILOT, baseState({ assumed: ['a1.be.present'] }), opt).map((x) => x.nodeId);
 assert.ok(asm.includes('a2.past.simple'));
+// an assumed prerequisite that is NOT among the candidate nodes still counts (regression: B2 learner, reading nodes needing an A1 vocab node)
+const onlyDependant = PILOT.filter((x) => x.id === 'a2.past.simple');
+assert.deepEqual(planDay(onlyDependant, baseState({ assumed: ['a1.be.present'] }), opt).map((x) => x.nodeId), ['a2.past.simple']);
+assert.deepEqual(planDay(onlyDependant, baseState(), opt), [], 'unmet prerequisite outside the window still blocks');
 // load adjustment
 assert.deepEqual(adjustLoad({ slots: 4, difficultyStep: 0 }, 0.5, 0.9), { slots: 3, difficultyStep: 1 });
 assert.deepEqual(adjustLoad({ slots: 1, difficultyStep: 0 }, 0.1, 0.1), { slots: 1, difficultyStep: 0 });

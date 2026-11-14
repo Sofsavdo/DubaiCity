@@ -66,6 +66,28 @@ export const VOCAB_NODES: CurriculumNode[] = VOCAB_LEVELS.map((lv, i) => {
   };
 });
 export const vocabNodeForLevel = (lv: string): string | undefined => VOCAB_NODES.find((x) => x.level === lv)?.id;
-export const ALL_NODES: CurriculumNode[] = [...GRAMMAR_NODES, ...VOCAB_NODES];
+
+// Reading / Listening skill nodes, one per IELTS question type in the app. They are level-agnostic in practice (the planner shows them to every level);
+// `level: 'A2'` only anchors them in the graph (the easiest test in the app is A2). Question-type → error-type mapping is a HYPOTHESIS to be reviewed by an exam specialist.
+export type QType = 'tfng' | 'mcq' | 'fill' | 'match';
+const QTYPE_NAME: Record<QType, string> = { tfng: 'True / False / Not Given', mcq: 'Ko‘p tanlovli savollar', fill: 'Bo‘sh joyni to‘ldirish', match: 'Moslashtirish' };
+const SKILL_TAX: Record<'reading' | 'listening', Record<QType, TaxonomyId[]>> = {
+  reading: { tfng: ['R.inference'], mcq: ['R.detail'], fill: ['R.detail'], match: ['R.main_idea'] },
+  listening: { tfng: ['L.detail'], mcq: ['L.distractor'], fill: ['L.detail', 'V.spelling'], match: ['L.gist'] },
+};
+export const SKILL_NODES: CurriculumNode[] = (['reading', 'listening'] as const).flatMap((skill) =>
+  (Object.keys(QTYPE_NAME) as QType[]).map((qt) => ({
+    id: `ge.${skill}.${qt}`, level: 'A2' as Level, skill,
+    objective: `Answer ${skill} ${QTYPE_NAME[qt]} questions accurately within the time limit.`,
+    taxonomyIds: SKILL_TAX[skill][qt], prerequisites: ['ge.vocab.a1'], estMinutes: 15,
+    hasPractice: true, hasCheck: true, reviewStatus: 'legacy' as const,
+  })));
+export const skillNodeFor = (skill: 'reading' | 'listening', qt: QType): string => `ge.${skill}.${qt}`;
+export const skillNodeTitle = (nodeId: string): string | undefined => {
+  const m = /^ge\.(reading|listening)\.(\w+)$/.exec(nodeId);
+  return m ? `${m[1] === 'reading' ? 'Reading' : 'Listening'} · ${QTYPE_NAME[m[2] as QType]}` : undefined;
+};
+
+export const ALL_NODES: CurriculumNode[] = [...GRAMMAR_NODES, ...VOCAB_NODES, ...SKILL_NODES];
 export const nodeById = (nodeId: string): CurriculumNode | undefined => ALL_NODES.find((x) => x.id === nodeId);
 export const taxonomyOfNode = (nodeId: string): TaxonomyId[] => nodeById(nodeId)?.taxonomyIds ?? [];

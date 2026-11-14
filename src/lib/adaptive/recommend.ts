@@ -50,7 +50,7 @@ export function planDay(nodes: CurriculumNode[], s: LearnerState, opt: PlanOptio
   const allowed = new Set<ReviewStatus>(opt.allowStatuses ?? ['approved', 'published', 'legacy']);
   const byId = new Map(nodes.map((n) => [n.id, n]));
   const assumed = new Set(s.assumed ?? []);
-  const ready = (n: CurriculumNode): boolean => n.prerequisites.every((p) => byId.has(p) && (assumed.has(p) || effectiveMastery(mOf(s, p), s.now) >= PREREQ_MIN));
+  const ready = (n: CurriculumNode): boolean => n.prerequisites.every((p) => assumed.has(p) || effectiveMastery(mOf(s, p), s.now) >= PREREQ_MIN); // prerequisites may lie outside the candidate window
   const cands = nodes
     .filter((n) => allowed.has(n.reviewStatus) && ready(n))
     .map((n) => ({ n, ...scoreNode(n, s), isNew: mOf(s, n.id).attempts === 0, due: mOf(s, n.id).attempts > 0 && mOf(s, n.id).dueAt <= s.now }))

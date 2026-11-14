@@ -1,5 +1,5 @@
 import { CalendarCheck, ArrowRight } from 'lucide-react';
-import { ALL_NODES, nodeById, topicOfNode } from '../content/curriculum/inventory';
+import { ALL_NODES, nodeById, skillNodeTitle, topicOfNode } from '../content/curriculum/inventory';
 import { loadAdaptive } from '../lib/adaptive/store';
 import { planDay, type PlanTask } from '../lib/adaptive/recommend';
 import { levelIndex, type Cefr } from '../lib/levels';
@@ -9,6 +9,8 @@ const ERR_UZ: Record<string, string> = {
   'G.tense': 'zamonlar', 'G.article': 'artikllar', 'G.preposition': 'predloglar', 'G.sva': 'ega-kesim moslashuvi', 'G.word_order': 'so‘z tartibi', 'G.modal': 'modal fe’llar',
   'G.conditional': 'shart gaplar', 'G.plural': 'ko‘plik', 'G.pronoun': 'olmoshlar', 'G.quantifier': 'miqdor', 'G.passive': 'majhul nisbat', 'G.relative_clause': 'nisbiy gaplar',
   'G.comparison': 'taqqoslash', 'G.gerund_infinitive': 'gerund/infinitiv', 'G.complex_structure': 'murakkab tuzilmalar', 'V.word_choice': 'so‘z tanlash', 'V.spelling': 'imlo',
+  'R.inference': 'xulosa chiqarish (Reading)', 'R.detail': 'tafsilotni topish (Reading)', 'R.main_idea': 'asosiy g‘oya (Reading)',
+  'L.detail': 'tafsilotni eshitish (Listening)', 'L.gist': 'umumiy mazmun (Listening)', 'L.distractor': 'chalg‘ituvchi javoblar (Listening)',
 };
 const levelOf = (l: string): number => ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].indexOf(l);
 
@@ -35,12 +37,13 @@ export function PlanCard() {
     );
   }
   const u = levelIndex(p.level as Cefr);
-  const window = ALL_NODES.filter((n) => Math.abs(levelOf(n.level) - u) <= 1);
+  const isSkill = (s: string): boolean => s === 'reading' || s === 'listening';
+  const window = ALL_NODES.filter((n) => isSkill(n.skill) || Math.abs(levelOf(n.level) - u) <= 1); // reading/listening question types matter at every level
   const saved = loadAdaptive();
   const examDate = p.examDate ? new Date(p.examDate).getTime() : undefined;
   const plan = planDay(window, {
     mastery: saved.mastery, recentErrors: saved.errors, goalTags: ['general'], examDate, now: Date.now(),
-    assumed: ALL_NODES.filter((n) => levelOf(n.level) < u).map((n) => n.id),
+    assumed: ALL_NODES.filter((n) => !isSkill(n.skill) && levelOf(n.level) < u).map((n) => n.id),
   }, { minutes: 25 });
   return (
     <section className="card">
@@ -50,15 +53,17 @@ export function PlanCard() {
         {plan.map((t) => {
           const node = nodeById(t.nodeId);
           const isVocab = node?.skill === 'vocabulary';
-          const title = isVocab ? `So‘z boyligi · ${node!.level}` : (topicOfNode(t.nodeId) ?? t.nodeId);
+          const skillTitle = skillNodeTitle(t.nodeId);
+          const title = skillTitle ?? (isVocab ? `So‘z boyligi · ${node!.level}` : (topicOfNode(t.nodeId) ?? t.nodeId));
+          const href = node?.skill === 'reading' ? '#/exam/reading' : node?.skill === 'listening' ? '#/exam/listening' : isVocab ? '#/games' : '#/grammar';
           return (
-            <a key={t.nodeId} className="path-step" href={isVocab ? '#/games' : '#/grammar'} onClick={() => { if (!isVocab) { try { sessionStorage.setItem('bandly.nextTopic', title); } catch { /* ignore */ } } }}>
+            <a key={t.nodeId} className="path-step" href={href} onClick={() => { if (href === '#/grammar') { try { sessionStorage.setItem('bandly.nextTopic', title); } catch { /* ignore */ } } }}>
               <b>{title}</b><span>{t.minutes} daq · {whyUz(t)}</span>
             </a>
           );
         })}
       </div>
-      <p className="muted" style={{ fontSize: 13 }}>Reja daraja testingiz hamda Grammar, Gap tuzish va so‘z o‘yinlaridagi javoblaringiz asosida tuziladi; bilimingiz o‘zgarganda yangilanadi.</p>
+      <p className="muted" style={{ fontSize: 13 }}>Reja daraja testingiz hamda Grammar, Gap tuzish, so‘z o‘yinlari, Reading va Listening testlaridagi javoblaringiz asosida tuziladi; bilimingiz o‘zgarganda yangilanadi.</p>
     </section>
   );
 }
