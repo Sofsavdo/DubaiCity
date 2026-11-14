@@ -3,7 +3,7 @@ import { UNITS } from '../content/lessons';
 import { isUnlocked, loadProgress, nextLesson } from '../lib/lessons';
 import { useProfile } from '../lib/store';
 
-/** General English path: level → unit → lesson. Pilot slice (A1–C1). */
+/** General English path: level → unit → lesson. Pilot slice (A1–C2). */
 export default function Learn() {
   const p = useProfile();
   const progress = loadProgress();
@@ -22,7 +22,7 @@ export default function Learn() {
           <a className="btn sm" href="#/skills">Reading / Listening darajasi</a>
         </div>
         {next && <a className="btn primary" style={{ marginTop: 12 }} href={`#/learn/${next.lessonId}`}><PlayCircle size={16} /> Davom ettirish: {nextTitle}</a>}
-        <p className="muted" style={{ fontSize: 13, marginTop: 10 }}>Sinov (pilot) versiyasi: A1–C1 darslari Bandly uchun yozilgan va metodist tekshiruvini kutmoqda. C2 keyingi bosqichda qo‘shiladi.</p>
+        <p className="muted" style={{ fontSize: 13, marginTop: 10 }}>Sinov (pilot) versiyasi: A1–C2 darslari Bandly uchun yozilgan va metodist tekshiruvini kutmoqda. Har bir darajada bo‘limlar soni bosqichma-bosqich ko‘payadi.</p>
       </section>
       {UNITS.map((u) => (
         <section className="card" key={u.id}>

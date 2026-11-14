@@ -172,4 +172,22 @@ export const WRITING: Record<string, WritingTask> = {
     require: [{ re: String.raw`(^|[.!?]\s+)(Built|Founded|Written|Designed|Made|Known|Located|Opened|Created|Established)\b`, labelUz: 'V3 oborot (Built in…, Founded in…)' }, { re: String.raw`\bHaving \w+(ed|en|wn|t|ne|ght|id|un)\b`, labelUz: 'Having + V3' }],
     model: 'Built in the fifteenth century, the Ulugh Beg Madrasa attracts thousands of visitors. Having studied its history at school, I finally visited it last year. Walking through the courtyard, I imagined the scholars who once worked there.',
   },
+  'c2-u1-l1': {
+    promptUz: 'Mijozlarga rasmiy e’lon yozing (masalan, xizmat vaqtincha to‘xtashi haqida): Should …, Were … to … va Had … tuzilmalaridan kamida ikkitasini ishlating.', minWords: 30,
+    require: [{ re: String.raw`(^|[.!?]\s+)(Should|Were|Had) (you|we|I|he|she|they|it|the|any|our|this)\b`, labelUz: 'shart inversiyasi (Should / Were / Had + ega)' }, { re: String.raw`\b(will|would|would have|please|do not)\b`, labelUz: 'natija qismi' }],
+    forbid: [{ re: String.raw`\bHadn't (it|we|I|you|they|he|she) been\b`, labelUz: '“Hadn’t it been” emas: Had it not been' }, { re: String.raw`(^|[.!?]\s+)If (should|were|had) \w+`, labelUz: 'inversiyada if ishlatilmaydi' }],
+    model: 'Dear customers, our online service will be unavailable on Sunday from 2 to 4 a.m. Should you experience any problems after this time, please contact our support team. Had we been able to avoid this interruption, we would certainly have done so.',
+  },
+  'c2-u1-l2': {
+    promptUz: 'O‘tmishdagi bitta qaroringiz hozirgi hayotingizga qanday ta’sir qilganini 3 ta aralash shart gap bilan yozing.', minWords: 30,
+    require: [{ re: String.raw`\bif (I|we|you|he|she|they) had(n't)? \w+`, labelUz: 'If + had + V3 (o‘tmish shart)' }, { re: String.raw`\bwould(n't)? (be|have|live|know|work|speak|feel|own|need)\b(?! (been|had|known|lived|worked|done|gone|seen|made))`, labelUz: 'would + fe’l (hozirgi natija)' }],
+    forbid: [{ re: String.raw`\bif\b[^,.]*\bwould\b`, labelUz: 'if qismida would ishlatilmaydi' }],
+    model: 'If I hadn’t moved to Tashkent five years ago, I wouldn’t have such a good job now. If I had chosen a different university, I would probably know different people today. And if I weren’t so stubborn, I would have listened to my parents back then.',
+  },
+  'c2-u1-l3': {
+    promptUz: 'Atrof-muhit muammosi haqida qisqa akademik abzats yozing: pose a threat, raise awareness, take into account, play a role kabi kollokatsiyalardan kamida 3 tasini ishlating.', minWords: 35,
+    require: [{ re: String.raw`\b(pose[sd]?|posing) (a |an )?(serious |major |significant )?threat\b|\braise[sd]? awareness\b|\btak(e|es|en|ing) [\w\s]{0,30}into account\b|\bplay[sed]* (a |an )?(\w+ )?role\b|\bdraw[ns]? (a |any )?conclusions?\b|\bconduct(ed|s)? (a |an )?(\w+ )?(study|research|survey)\b|\bstrong evidence\b|\bhighly (unlikely|likely|effective)\b`, labelUz: 'kamida bitta kuchli kollokatsiya' }],
+    forbid: [{ re: String.raw`\b(make|makes|made|do|does|did) (a )?(threat|research|crime|conclusion)\b|\bdo (a )?mistakes?\b`, labelUz: 'g‘ayritabiiy kollokatsiya (make a threat, do research, do a mistake…)' }],
+    model: 'Plastic waste poses a serious threat to rivers and lakes in Central Asia. Several local organisations have conducted research on the problem, and there is strong evidence that most waste comes from households. Schools can play a key role in raising awareness, but governments must also take the cost of recycling into account.',
+  },
 };

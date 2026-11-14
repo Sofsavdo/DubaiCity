@@ -273,7 +273,7 @@ a.plan-step[href]:hover { transform: translateX(4px); border-color: var(--brand)
 .lvl-tag { display: inline-flex; align-items: center; padding: 1px 8px; border-radius: 8px; font-size: 11px; font-weight: 800; letter-spacing: .04em; background: var(--blue-50); color: var(--blue); }
 .lvl-tag.A1, .lvl-tag.A2 { background: var(--green-50); color: var(--green); }
 .lvl-tag.B1, .lvl-tag.B2 { background: var(--yellow-50); color: #b07d00; }
-.lvl-tag.C1 { background: var(--purple-50); color: var(--purple); }
+.lvl-tag.C1, .lvl-tag.C2 { background: var(--purple-50); color: var(--purple); }
 .banner { display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap; padding: 18px 22px; border-radius: var(--r-lg); background: linear-gradient(120deg, var(--brand), #ff8a3d); color: #fff; margin: 16px 0; box-shadow: 0 14px 34px color-mix(in srgb, var(--brand) 35%, transparent); }
 .banner h3 { margin: 0 0 4px; color: #fff; }
 .banner p { margin: 0; opacity: .92; }
