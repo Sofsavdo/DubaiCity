@@ -117,3 +117,13 @@ M8 / paid launch OD-07, OD-01 answered, OD-11 for non-UZ
 | OD-13 | Trial, promo-code and annual-billing policy | Phase 7 | **PROD** | Open |
 | OD-14 | Creator program rules: budget, fraud rules, verification method, eligible countries, minimum payout, payout provider, campaign limits (rewards table is an unapproved hypothesis) | Creator phase | **IMPL** of payouts only | Open |
 | OD-15 | Priority order for product phases (v3 list vs recommended order in `ROADMAP_RECONCILIATION.md`) | before Phase 1 sign-off | **IMPL** sequencing only | Open |
+
+## 6. Additions from the three consolidated conversations (see `master-spec-v2/SOURCE_CONSOLIDATION.md`)
+
+| ID | Name | Required before | Blocks | Status |
+|---|---|---|---|---|
+| OD-16 | Launch order and first paid product (General English first vs IELTS AI first vs bundle) and first country | roadmap sign-off | **IMPL** sequencing of Phase 3–6 | Open — source C2 §14 asked, no answer |
+| OD-17 | First-stage budget band (UZS) and team model | Phase 1 start | planning only | Open — C2 suggests 34–50 M UZS (unverified estimate) |
+| OD-18 | Speaking allowance per plan (30/60/120 min or fair-use) and free demo size | before first real voice key | **PROD** | Open — part of OD-09 |
+| OD-19 | Whether any score-guarantee style marketing offer is allowed | before launch marketing | **PROD** | Open — legal review; default: no |
+| OD-20 | B2B "Bandly for Schools": scope, pricing model, data-processing terms with centres | after M3 | **PROD** of B2B | Open |

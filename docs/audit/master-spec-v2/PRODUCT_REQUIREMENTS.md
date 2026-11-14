@@ -23,3 +23,5 @@ IDs are stable; each links to its spec. Priority P1–P10 follows the owner's v3
 | REQ-017 | Analytics with documented definitions | — | ANALYTICS_SPEC | MISSING |
 | REQ-018 | Security, privacy, consent, retention, age safety | — | SECURITY_AND_PRIVACY_SPEC | MISSING |
 | REQ-019 | Preserve working features; no destructive change without approval | all | `docs/audit/phase-0.2/M1_READY_CHECKLIST.md` | n/a |
+| REQ-020 | B2B "Bandly for Schools": teacher/centre dashboard, group analytics, per-student tracking, bulk packages | after M3 | SOURCE_CONSOLIDATION N1, DECISION_REGISTER DR-25 | MISSING |
+| REQ-021 | Reading tools (highlight, notes, flag-for-review, navigator), Writing autosave/revision history, per-skill Learn/Practice/Exam modes | 5 | EXAM_PREPARATION_SPEC | MISSING/PARTIAL |

@@ -8,3 +8,6 @@ Legend: **[F]** verified · **[R]** recommendation · **[U]** unresolved. Nothin
 - *Global proficiency:* CEFR descriptors (Council of Europe CEFR + Companion Volume) used for General English levels A1–C2. Internal level labels are "CEFR-aligned", never "certified".
 - *Country-specific CEFR exams:* e.g., national multilevel/CEFR exam formats used in Uzbekistan, Kazakhstan, etc. **[U]** exact formats, issuers and rules per country are unknown and must be obtained from the official issuer before any module is designed; each country gets its own `exam_format` record.
 Question banks: original items only; provenance and licence recorded per item.
+
+## Acceptance additions from source C3
+Each IELTS skill offers **Learn / Practice / Exam** modes. Reading: passage+questions side by side, highlight and notes, question navigator, flag for review, timer, saved answers, per-question explanations, accuracy by question type. Listening: four sections, audio player, replay limits in exam mode, transcript only after the exercise/learn mode, spelling-error detection. Writing: Task 1/2 separate, word count, timer, draft autosave, rubric feedback labelled "AI estimate", revision history and first-vs-revised comparison. Full exam: real-exam environment, answer sheet, detailed result.

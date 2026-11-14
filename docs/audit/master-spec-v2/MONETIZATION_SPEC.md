@@ -37,3 +37,6 @@ Provider abstraction `PaymentProvider {createCheckout, verifyWebhook, parseEvent
 
 ## 6. Open owner decisions
 OD-08 (plan ↔ feature mapping), OD-09 (credits, ceilings), OD-11 (international provider/entity), OD-04 (Hamyon shop for Bandly), new OD-12 (tax settings per country), OD-13 (trial/promo policy).
+
+## Scenario note (source C2)
+A UZS "market benchmark" price set (39 000 / 49 000 / 89 000 / 149 000 per month; annual = 10× monthly) exists in the sources. It includes a Grammar-only tier, which the architecture rejects, so it is kept only as a competitor-price reference. Fair-use rule: even "unlimited" marketing language needs an internal limit; recommended not to sell unlimited AI voice. Credits in the source (5 min speaking = 5, 1 writing = 5, deep grammar = 1, plan = 1, objective checks = 0) are illustrative; real credit prices come from `credit_prices` and verified provider costs.

@@ -21,3 +21,6 @@ Single column ≤600; two columns 600–979; nav switches at 980 (as today); exa
 
 ## 6. Acceptance criteria
 Every screen passes: no horizontal scroll at 360 px; 44 px targets; keyboard reachable; contrast checks; ru strings (longest) don't clip; dark mode readable; screenshot tests at 360/1280.
+
+## Additions from source C3
+Mascot has states (Happy, Thinking, Listening, Disappointed, Celebrating) and is an assistant, not the main subject: it must not replace the examiner on Speaking screens or dominate adult-learner screens. XP/achievement notices are small toasts that auto-dismiss; confetti only for major milestones. Mobile footer must be compact (accordion links) with a persistent compact bottom navigation. Speaking screen on mobile: large microphone button, live waveform, listening state, answer timer, examiner animation, collapsible transcript, end button — no free-text answer box in a Speaking exercise.

@@ -20,3 +20,6 @@ Architecture seam: `SttProvider`, `TtsProvider`, `RealtimeProvider` interfaces w
 - **Order of work (owner):** (1) test English real-time speaking quality first; (2) only then Uzbek, Russian and other local voices. Uzbek emotional voice is **R&D, not a promised feature**; fallback is English voice + on-screen explanation in the chosen language.
 - **Character in voice** (friendly / angry / funny / serious / sarcastic) is "as far as possible"; each voice style needs its own listening test; unsupported styles are not advertised.
 - **Transcript/audio retention:** default **no raw audio stored**; transcripts stored only per OD-07 retention; user can delete. Every provider field is `UNVERIFIED` until a dated source is recorded.
+
+## Listening-test method (source C1 §5)
+Before any local-language voice is advertised, run 5–10 real spoken scenarios per language and judge: natural pronunciation, correct stress, emotional intonation (anger, laughter, sarcasm), switching between English words and local-language explanation, and character consistency across one conversation. Source claim that one vendor's live-voice language list excludes Uzbek is **[S] unverified**; re-check each vendor's current official language list on the test date.

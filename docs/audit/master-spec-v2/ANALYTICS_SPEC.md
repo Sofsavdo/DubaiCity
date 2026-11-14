@@ -35,3 +35,6 @@ Active = at least one **learning event** (lesson_done, practice answered, mock s
 
 ## 3. Quality rules
 Backfill-safe (events idempotent by id); metrics recomputable from raw events; each dashboard tile shows definition and data freshness; no sampling without label; PII-free exports; admin-only access (ADMIN_CMS_SPEC). A tile with no data shows "no data", not 0 or demo values.
+
+## Acquisition efficiency (source C2 §10.1)
+Registration CAC = marketing spend / registrations; paid CAC = spend / new paying users; LTV = average monthly contribution × expected lifetime in months (from observed churn); payback = paid CAC / monthly contribution. Campaign success is judged by CAC, LTV and payback, not by views or registrations.

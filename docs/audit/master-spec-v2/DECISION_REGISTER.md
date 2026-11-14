@@ -28,9 +28,20 @@ Stable IDs: **OD-01…OD-11** are owner questions (authoritative detail in `docs
 | DR-20 | Analytics | none | none | event-based metrics, no fakes | — | events in M3+ | pending (OD-01 processors) | | |
 | DR-21 | Savage unlock standard | Savage opt-in (earlier) | client-side 18+ checkbox | v3: only adult users who **confirmed their age** and enabled the mode | "confirmed" undefined; self-declared age is not verification | OD-06b; keep disabled until decided | pending | legal, OD-06 | persona gating |
 | DR-22 | Product priority order | Phase 0 roadmap order | — | v3 list (Foundation → GE → Adaptive → AI/Voice → Exam → Mock → Money → Gamification → Localization → Growth) | Mock Arena, entitlements, XP integrity and string catalogue have earlier technical dependencies | `ROADMAP_RECONCILIATION.md` §6 | pending (OD-15) | M-series | sequencing |
-| DR-23 | Source material | v3 says strategy lives in `Loyiha tahlili.txt` | file never supplied | — | decisions in that file cannot be consolidated | owner sends the text | **blocked** | owner | register incomplete until imported |
+| DR-23 | Source material | superseded — see the additions table below | | | | | | | |
 | DR-24 | Voice order | English realtime first, local voices later | browser STT/TTS | v3 §6 | none | adopt | **approved (owner text)** | OD-09 | `VOICE_ENGINE_SPEC.md` |
 | OD-01…OD-11 | Owner questions | see `phase-0.2/OWNER_DECISION_REGISTER.md` | | | | | all **pending** | | unchanged IDs |
 
 ## Remaining conflicts
 1. Scope vs. foundation order (DR-15). 2. Free Mock Arena vs. existing paid `mocks` (DR-01/19). 3. Savage mode vs. unverified age policy (DR-04/16). 4. International ambition vs. unanswered residency law (DR-06/07). 5. Hypothesis prices/rewards must not reach code as constants (DR-05/11).
+
+## Additions from the consolidated conversations (2026-11-14)
+| ID | Topic | Original (source) | Current implementation | New requirement / conflict | Recommended | Approval | Dependencies | Impact |
+|---|---|---|---|---|---|---|---|---|
+| DR-23 | Source material | v3 cited `Loyiha tahlili.txt` | file not supplied; the three conversations were pasted | — | consolidated in `SOURCE_CONSOLIDATION.md`; txt still unread | **partially imported** | owner | register complete except the txt |
+| DR-25 | B2B Bandly for Schools | C2 §9, §12: teacher dashboard, group analytics, centre packages | none | not in earlier specs | add `REQ-020`; plan after M3/M5; OD-20 | pending | M3, M5 | roles, groups, reports |
+| DR-26 | 7-day AI Speaking Challenge | C2 §3.3 growth product | none | needs voice + ledger | design after M7 | hypothesis | voice engine, ledger | marketing feature |
+| DR-27 | Pricing scenario | C1 USD vs C2 UZS (incl. Grammar tier) | UZS demo tracks | conflict (Grammar sold alone) | USD scenario working; UZS table = benchmark only | pending (OD-09/16) | owner | plans/prices data |
+| DR-28 | First paid product | C1: General English first; C2: IELTS AI first | IELTS-centric code | conflict | owner decides OD-16; default: follow C1 (general English path) but Mock Arena earlier | pending | owner | sequencing |
+| DR-29 | Score guarantee marketing | C2 notes competitor practice | none | claims/legal risk | do not adopt without legal review (OD-19) | rejected as default | legal | marketing |
+| DR-30 | Grammar-only subscription | C2/C3 | `grammar` track in code | contradicts architecture | rejected | **rejected** (owner v2/v3) | — | remove track at M5 |
