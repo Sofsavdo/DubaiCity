@@ -3,7 +3,7 @@ import { UNITS } from '../content/lessons';
 import { isUnlocked, loadProgress } from '../lib/lessons';
 import { useProfile } from '../lib/store';
 
-/** General English path: level → unit → lesson. Pilot slice (A1–A2). */
+/** General English path: level → unit → lesson. Pilot slice (A1–B1). */
 export default function Learn() {
   const p = useProfile();
   const progress = loadProgress();
@@ -18,7 +18,7 @@ export default function Learn() {
           <span className="pill">{passed}/{total} dars tugallangan</span>
           {p.level ? <span className="pill">Darajangiz: {p.level}</span> : <a className="btn sm" href="#/placement">Darajani aniqlash</a>}
         </div>
-        <p className="muted" style={{ fontSize: 13, marginTop: 10 }}>Sinov (pilot) versiyasi: A1–A2 darslari Bandly uchun yozilgan va metodist tekshiruvini kutmoqda. B1–C2 keyingi bosqichlarda qo‘shiladi.</p>
+        <p className="muted" style={{ fontSize: 13, marginTop: 10 }}>Sinov (pilot) versiyasi: A1–B1 darslari Bandly uchun yozilgan va metodist tekshiruvini kutmoqda. B2–C2 keyingi bosqichlarda qo‘shiladi.</p>
       </section>
       {UNITS.map((u) => (
         <section className="card" key={u.id}>
