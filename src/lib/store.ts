@@ -135,7 +135,7 @@ export function markDone(task: string): void {
   if (done.includes(key)) { if (state.today.day !== today) commit({ ...state, today: { day: today, done } }); return; }
   commit({ ...state, today: { day: today, done: [...done, key] } });
 }
-const TASK_BY_KIND: Record<string, string> = { reading: 'reading', listening: 'listening', speaking: 'speaking', grammar: 'grammar', practice: 'practice' };
+const TASK_BY_KIND: Record<string, string> = { reading: 'reading', listening: 'listening', speaking: 'speaking', grammar: 'grammar', practice: 'practice', writing: 'writing' };
 export function setTarget(target: number, examDate: string | null): void {
   commit({ ...state, target, examDate });
 }

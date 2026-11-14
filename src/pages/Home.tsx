@@ -1,6 +1,7 @@
 import { ArrowRight, CalendarDays, PenLine, Compass, Map as MapIcon, BookOpen, Brain, Flame, Gamepad2, Headphones, Languages, Mic, Plus, Puzzle, ShieldCheck, Star, Swords, Target, Timer, Zap } from 'lucide-react';
 import { BRAND } from '../brand';
 import { Mascot } from '../components/Mascot';
+import { DailyCards } from '../components/DailyCards';
 import { ProgressCard } from '../components/ProgressCard';
 import { Tile } from '../components/Tile';
 import { grammar } from '../content/grammar';
@@ -96,9 +97,11 @@ export default function Home() {
               </a>
             ))}
           </div>
-          <div className="row"><a className="btn sm" href="#/placement">Darajani qayta aniqlash</a></div>
+          <div className="row"><a className="btn sm primary" href="#/homework">Uyga vazifa</a><a className="btn sm" href="#/results">Natijalar</a><a className="btn sm" href="#/placement">Darajani qayta aniqlash</a></div>
         </section>
       )}
+
+      <DailyCards />
 
       <ProgressCard />
 

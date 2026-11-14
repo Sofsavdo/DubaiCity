@@ -9,6 +9,7 @@ import { commonMistakes, essayTypes, writingTopics, type EssayTypeId } from '../
 import { analyzeTask2, analyzeWriting, type Task2Report, type WritingReport } from '../lib/writingCheck';
 import { fmt, useCountdown } from '../components/hooks';
 import { addXp } from '../lib/store';
+import { saveResult } from '../lib/storage';
 
 type Tab = 'practice' | 'types' | 'topics';
 
@@ -49,7 +50,7 @@ export default function Writing() {
   };
   const practiceTopic = (tid: string) => { choose(`wt-${tid}`); setTab('practice'); };
   const check = () => {
-    if (p.task === 2) { const r = analyzeTask2(text, p.type, p.topicId); setT2(r); setReport(null); if (r.words >= p.minWords) addXp(10 + r.passed * 2); }
+    if (p.task === 2) { const r = analyzeTask2(text, p.type, p.topicId); setT2(r); setReport(null); if (r.words >= p.minWords) { addXp(10 + r.passed * 2); saveResult({ kind: 'writing', title: p.title, correct: r.passed, total: r.checks.length }); } }
     else { const r = analyzeWriting(text, p.minWords); setReport(r); setT2(null); if (r.words >= p.minWords) addXp(20); }
   };
 

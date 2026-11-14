@@ -13,6 +13,8 @@ import Pricing from './pages/Pricing';
 import Placement from './pages/Placement';
 import Practice from './pages/Practice';
 import FullExam from './pages/FullExam';
+import Homework from './pages/Homework';
+import Results from './pages/Results';
 import Profile from './pages/Profile';
 import League from './pages/League';
 import DuelHub, { DuelRoom } from './pages/Duel';
@@ -49,6 +51,8 @@ const routes: Record<string, () => ReactNode> = {
   '#/profile': () => <Profile />,
   '#/placement': () => <Placement />,
   '#/practice': () => <Practice />,
+  '#/homework': () => <Homework />,
+  '#/results': () => <Results />,
 };
 
 /** #/exam|mocks/reading|listening[/id] yo'nalishi: ro'yxat yoki bitta test, tegishli obuna bilan */

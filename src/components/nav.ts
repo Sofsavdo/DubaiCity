@@ -1,4 +1,4 @@
-import { BookOpen, PenLine, Gamepad2, House, Puzzle, Swords, Target, Timer, Trophy, User, type LucideIcon } from 'lucide-react';
+import { BookOpen, ClipboardList, LineChart as ChartIcon, PenLine, Gamepad2, House, Puzzle, Swords, Target, Timer, Trophy, User, type LucideIcon } from 'lucide-react';
 
 import type { Key } from '../i18n';
 
@@ -16,6 +16,8 @@ export const HOME: NavItem = { href: '#/', label: 'nav.home', icon: House };
 export const PROFILE: NavItem = { href: '#/profile', label: 'nav.profile', icon: User };
 export const TABS: NavItem[] = [HOME, NAV[0], NAV[3], NAV[4], PROFILE];
 export const PRACTICE: NavItem = { href: '#/practice', label: 'nav.practice', icon: PenLine };
+export const HOMEWORK: NavItem = { href: '#/homework', label: 'nav.homework', icon: ClipboardList };
+export const RESULTS: NavItem = { href: '#/results', label: 'nav.results', icon: ChartIcon };
 export const TOOLS: NavItem = { href: '#/tools', label: 'nav.tools', icon: BookOpen };
 
 export const isActive = (hash: string, base: string): boolean =>

@@ -1,4 +1,5 @@
 import { vocab, type Word } from '../content/vocab';
+import { say } from './speech';
 
 export const shuffle = <T,>(a: readonly T[]): T[] => {
   const r = [...a];
@@ -26,11 +27,5 @@ export function blankExample(w: Word): string {
   return w.example.replace(re, '_____');
 }
 
-export const speak = (text: string): void => {
-  if (!('speechSynthesis' in window)) return;
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'en-GB';
-  u.rate = 0.9;
-  window.speechSynthesis.cancel();
-  window.speechSynthesis.speak(u);
-};
+/** So'zni eshittirish: avval tayyor neyron ovoz, bo'lmasa brauzer ovozi. */
+export const speak = (text: string): void => { void say(text, { cancelled: false }, 'en-GB'); };

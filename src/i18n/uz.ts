@@ -12,6 +12,8 @@ export const uz = {
   'nav.profile': 'Profil',
   'nav.tools': 'Band kalkulyatori',
   'nav.practice': 'Gap tuzish',
+  'nav.homework': 'Uyga vazifa',
+  'nav.results': 'Natijalar',
   'nav.menu': 'Menyu',
   'nav.close': 'Yopish',
   'nav.main': 'Asosiy menyu',
