@@ -2,6 +2,7 @@ import { BookOpen, Headphones, Mic, PenLine } from 'lucide-react';
 import { useState } from 'react';
 import { Tile } from '../components/Tile';
 import { useProfile } from '../lib/store';
+import { ReadinessCard } from '../components/ReadinessCard';
 
 const skills = [
   { href: '#/exam/reading', icon: BookOpen, tone: 'blue', title: 'Reading', text: 'Matn va savollar, taymer, dalil izohlari' },
@@ -24,6 +25,7 @@ export default function Exam() {
         </div>
         {tab !== 'ielts' && <p style={{ marginTop: 14 }}>{tab.toUpperCase()} bo‘limi ishlab chiqilmoqda. Imtihon tayyorgarligi obunasi bilan qo‘shilganda qo‘shimcha to‘lovsiz ochiladi.</p>}
       </div>
+      {tab === 'ielts' && <ReadinessCard />}
       {tab === 'ielts' && (
         <div className="grid">
           {skills.map((s) => <Tile key={s.href} href={s.href} icon={s.icon} tone={s.tone} title={s.title} text={s.text} badge={!p.plan.exam && <span className="badge">Obuna kerak</span>} />)}

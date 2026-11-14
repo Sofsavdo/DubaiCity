@@ -1,0 +1,106 @@
+// Lesson engine: deterministic checking, mastery-check scoring and local progress. Pure functions + a small localStorage store.
+import type { Item, Lesson, Unit, WritingTask } from '../content/lessons/types';
+import { findIssues, type Issue } from './grammarCheck';
+
+export const PASS_RATE = 0.8; // mastery check pass mark (hypothesis; reviewed with the curriculum)
+
+/** Lower-case, unify apostrophes, collapse spaces, drop final punctuation. "I'm  Ali." == "i’m ali" */
+export const normalize = (s: string): string =>
+  s.toLowerCase().replace(/[’‘`´]/g, "'").replace(/\s+/g, ' ').trim().replace(/[.!?]+$/, '').trim();
+
+export type ItemAnswer = number | string | string[] | undefined;
+
+export function checkItem(item: Item, a: ItemAnswer): boolean {
+  if (a === undefined) return false;
+  switch (item.kind) {
+    case 'choice': return a === item.answer;
+    case 'gap': return typeof a === 'string' && item.accept.some((x) => normalize(x) === normalize(a));
+    case 'order': return normalize(Array.isArray(a) ? a.join(' ') : String(a)) === normalize(item.answer);
+  }
+}
+
+export function correctAnswerText(item: Item): string {
+  return item.kind === 'choice' ? item.options[item.answer]! : item.kind === 'gap' ? item.accept[0]! : item.answer;
+}
+
+export interface CheckResult { correct: number; total: number; rate: number; passed: boolean }
+export function scoreCheck(items: Item[], answers: ItemAnswer[]): CheckResult {
+  const correct = items.filter((it, i) => checkItem(it, answers[i])).length;
+  const total = items.length;
+  const rate = total ? correct / total : 0;
+  return { correct, total, rate, passed: total > 0 && rate >= PASS_RATE };
+}
+
+/** Problems in lesson content (empty = valid). Used by tests so broken content never ships. */
+export function validateLesson(l: Lesson): string[] {
+  const p: string[] = [];
+  const need = (c: boolean, m: string) => { if (!c) p.push(`${l.id}: ${m}`); };
+  need(!!l.objectiveUz.trim() && !!l.objective.trim(), 'objective missing');
+  need(l.explanationUz.length > 0, 'explanation missing');
+  need(l.examples.length >= 3, 'needs ≥ 3 examples');
+  need(l.practice.length >= 4, 'needs ≥ 4 practice items');
+  need(l.check.length >= 5, 'mastery check needs ≥ 5 items');
+  need(l.taxonomyIds.length > 0, 'no taxonomy ids');
+  need(l.minutes > 0, 'minutes must be > 0');
+  for (const [i, it] of [...l.practice, ...l.check].entries()) {
+    if (!it.explainUz.trim()) p.push(`${l.id} item ${i}: no explanation`);
+    if (it.kind === 'choice') { if (it.answer < 0 || it.answer >= it.options.length) p.push(`${l.id} item ${i}: answer index out of range`); if (new Set(it.options).size !== it.options.length) p.push(`${l.id} item ${i}: duplicate options`); }
+    if (it.kind === 'gap') { if (!it.prompt.includes('___')) p.push(`${l.id} item ${i}: gap prompt lacks ___`); if (!it.accept.length) p.push(`${l.id} item ${i}: no accepted answer`); }
+    if (it.kind === 'order') { const w = normalize(it.words.join(' ')).split(' ').sort().join(' '); const a = normalize(it.answer).split(' ').sort().join(' '); if (w !== a) p.push(`${l.id} item ${i}: words do not form the answer`); }
+  }
+  if (l.writing) {
+    const w = l.writing;
+    try { [...w.require, ...(w.forbid ?? [])].forEach((r) => new RegExp(r.re, 'i')); } catch { p.push(`${l.id}: writing regex does not compile`); return p; }
+    const c = checkWriting(w, w.model);
+    if (!c.passed) p.push(`${l.id}: writing model answer fails its own check (${JSON.stringify({ words: c.words, reqs: c.reqs.filter((r) => !r.ok).map((r) => r.labelUz), forbidden: c.forbidden, issues: c.issues.map((i) => i.id) })})`);
+  }
+  return p;
+}
+
+// ---------- writing (rule-based, not AI) ----------
+export interface WritingCheck { words: number; enoughWords: boolean; reqs: { labelUz: string; ok: boolean }[]; forbidden: string[]; issues: Issue[]; passed: boolean }
+const unifyQuotes = (s: string): string => s.replace(/[’‘`´]/g, "'");
+export const wordCount = (s: string): number => (unifyQuotes(s).trim().match(/[A-Za-z']+/g) ?? []).length;
+export function checkWriting(task: WritingTask, raw: string): WritingCheck {
+  const text = unifyQuotes(raw);
+  const words = wordCount(text);
+  const reqs = task.require.map((r) => ({ labelUz: r.labelUz, ok: new RegExp(r.re, 'i').test(text) }));
+  const forbidden = (task.forbid ?? []).filter((f) => new RegExp(f.re, 'i').test(text)).map((f) => f.labelUz);
+  const issues = findIssues(text);
+  const enoughWords = words >= task.minWords;
+  return { words, enoughWords, reqs, forbidden, issues, passed: enoughWords && reqs.every((r) => r.ok) && !forbidden.length && !issues.length };
+}
+
+// ---------- local progress (moves server-side with accounts) ----------
+const KEY = 'bandly.lessons.v1';
+export interface LessonProgress { attempts: number; best: number; passedAt: number | null }
+export type ProgressMap = Record<string, LessonProgress>;
+export function loadProgress(): ProgressMap {
+  try { const raw = localStorage.getItem(KEY); const d = raw ? JSON.parse(raw) as ProgressMap : {}; return d && typeof d === 'object' ? d : {}; } catch { return {}; }
+}
+export function saveAttempt(lessonId: string, r: CheckResult, now = Date.now()): LessonProgress {
+  const all = loadProgress(); const prev = all[lessonId] ?? { attempts: 0, best: 0, passedAt: null };
+  const next: LessonProgress = { attempts: prev.attempts + 1, best: Math.max(prev.best, r.rate), passedAt: prev.passedAt ?? (r.passed ? now : null) };
+  all[lessonId] = next;
+  try { localStorage.setItem(KEY, JSON.stringify(all)); } catch { /* storage unavailable */ }
+  return next;
+}
+
+/** Next lesson to continue: the first unlocked, not-passed lesson at or above the learner's level (falls back to the very first open one). */
+export function nextLesson(units: Unit[], progress: ProgressMap, level: string | null | undefined): { unitId: string; lessonId: string } | null {
+  const order = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+  const min = level ? Math.max(0, order.indexOf(level)) : 0;
+  const pick = (from: number) => {
+    for (const u of units) {
+      if (order.indexOf(u.level) < from) continue;
+      for (let i = 0; i < u.lessons.length; i++) if (isUnlocked(u, i, progress) && !progress[u.lessons[i]!.id]?.passedAt) return { unitId: u.id, lessonId: u.lessons[i]!.id };
+    }
+    return null;
+  };
+  return pick(min) ?? pick(0);
+}
+
+/** A lesson is open when it is the first of its unit, or the previous lesson in the unit is passed. Units themselves are all browsable. */
+export function isUnlocked(unit: Unit, index: number, progress: ProgressMap): boolean {
+  return index === 0 || !!progress[unit.lessons[index - 1]!.id]?.passedAt;
+}

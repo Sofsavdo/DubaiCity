@@ -8,6 +8,7 @@ import { fmt, useCountdown } from '../../components/hooks';
 import { pickSession } from '../../lib/srs';
 import { addXp, consumeGame, getProfile, recordReview, useProfile } from '../../lib/store';
 import { buildOptions } from '../../lib/vocabGame';
+import { recordWordItem } from '../../lib/adaptive/record';
 
 const SECONDS = 60;
 type Phase = 'intro' | 'play' | 'end';
@@ -57,6 +58,7 @@ export default function WordRush() {
     setPicked(id);
     stats.current.total += 1;
     recordReview(cur.id, ok);
+    recordWordItem(cur.id, ok);
     let nextLives = lives;
     if (ok) {
       const mult = 1 + Math.min(4, Math.floor(combo / 3));

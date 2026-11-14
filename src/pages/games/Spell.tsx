@@ -8,6 +8,7 @@ import { norm } from '../../lib/grade';
 import { pickSession } from '../../lib/srs';
 import { addXp, consumeGame, getProfile, recordReview, useProfile } from '../../lib/store';
 import { blankExample, speak } from '../../lib/vocabGame';
+import { recordWordItem } from '../../lib/adaptive/record';
 
 const SIZE = 8;
 
@@ -37,6 +38,7 @@ export default function Spell() {
     const w = vocabById[ids[i]];
     const ok = norm(text) === norm(w.word);
     recordReview(w.id, ok);
+    recordWordItem(w.id, ok, 'spelling');
     setResult(ok ? 'ok' : 'bad');
     if (ok) { correctRef.current += 1; setCorrect(correctRef.current); }
     setMood(ok ? 'happy' : profile.hardMode ? 'angry' : 'sad');

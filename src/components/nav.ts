@@ -1,10 +1,12 @@
-import { BookOpen, Clapperboard, ClipboardList, LineChart as ChartIcon, PenLine, Gamepad2, House, Puzzle, Swords, Target, Timer, Trophy, User, type LucideIcon } from 'lucide-react';
+import { Bot, BookOpenCheck, BookOpen, Clapperboard, ClipboardList, LineChart as ChartIcon, PenLine, Gamepad2, House, Puzzle, Swords, Target, Timer, Trophy, User, type LucideIcon } from 'lucide-react';
 
 import type { Key } from '../i18n';
 
 export interface NavItem { href: string; label: Key; icon: LucideIcon }
 
 export const NAV: NavItem[] = [
+  { href: '#/learn', label: 'nav.learn', icon: BookOpenCheck },
+  { href: '#/coach', label: 'nav.coach', icon: Bot },
   { href: '#/exam', label: 'nav.exam', icon: Target },
   { href: '#/grammar', label: 'nav.grammar', icon: Puzzle },
   { href: '#/mocks', label: 'nav.mocks', icon: Timer },
@@ -14,7 +16,7 @@ export const NAV: NavItem[] = [
 ];
 export const HOME: NavItem = { href: '#/', label: 'nav.home', icon: House };
 export const PROFILE: NavItem = { href: '#/profile', label: 'nav.profile', icon: User };
-export const TABS: NavItem[] = [HOME, NAV[0], NAV[3], NAV[4], PROFILE];
+export const TABS: NavItem[] = [HOME, NAV[0]!, NAV[1]!, NAV[2]!, PROFILE]; // Home, General English, AI Coach, Exam, Profile
 export const PRACTICE: NavItem = { href: '#/practice', label: 'nav.practice', icon: PenLine };
 export const HOMEWORK: NavItem = { href: '#/homework', label: 'nav.homework', icon: ClipboardList };
 export const RESULTS: NavItem = { href: '#/results', label: 'nav.results', icon: ChartIcon };

@@ -24,6 +24,10 @@ export function createDb(path = ':memory:'): DatabaseSync {
       delta INTEGER NOT NULL
     );
     CREATE INDEX IF NOT EXISTS xp_log_ts ON xp_log (ts);
+    CREATE TABLE IF NOT EXISTS ai_global_usage (
+      day TEXT PRIMARY KEY,
+      calls INTEGER NOT NULL DEFAULT 0
+    );
     CREATE TABLE IF NOT EXISTS ai_usage (
       player_id INTEGER NOT NULL REFERENCES players(id),
       day TEXT NOT NULL,
@@ -200,6 +204,16 @@ export function submitDuel(db: DatabaseSync, token: string, code: string, score:
 }
 
 // ---------------- AI foydalanish limiti ----------------
+/** Platform-wide daily ceiling for AI calls. FAIL-CLOSED: no configured limit (or 0) means no call is allowed. */
+export function useGlobalAi(db: DatabaseSync, limit: number, now = Date.now()): number {
+  if (!Number.isFinite(limit) || limit <= 0) throw new ApiError(503, 'AI ustoz hali sozlanmagan: umumiy kunlik chegara belgilanmagan.');
+  const day = new Date(now).toISOString().slice(0, 10);
+  const row = db.prepare('SELECT calls FROM ai_global_usage WHERE day = ?').get(day) as { calls: number } | undefined;
+  if ((row?.calls ?? 0) >= limit) throw new ApiError(503, 'Bugungi umumiy AI chegarasi tugadi. Ertaga qayta urinib ko‘ring.');
+  db.prepare('INSERT INTO ai_global_usage (day, calls) VALUES (?, 1) ON CONFLICT(day) DO UPDATE SET calls = calls + 1').run(day);
+  return (row?.calls ?? 0) + 1;
+}
+
 export const AI_DAILY_LIMIT = Number(process.env.AI_DAILY_LIMIT ?? 120);
 
 /** Har bir AI so'rovdan oldin chaqiriladi: token tekshiriladi va kunlik limit hisoblanadi. */

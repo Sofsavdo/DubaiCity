@@ -132,7 +132,7 @@ export default function Placement() {
           ))}
         </div>
         <div className="row" style={{ marginTop: 16 }}>
-          {!saved ? <button className="btn primary lg" onClick={finish}><Rocket size={18} /> Dasturni saqlash</button> : <a className="btn primary lg" href="#/">Boshlash <ArrowRight size={18} /></a>}
+          {!saved ? <button className="btn primary lg" onClick={finish}><Rocket size={18} /> Dasturni saqlash</button> : <><a className="btn primary lg" href="#/">Boshlash <ArrowRight size={18} /></a> <a className="btn lg" href="#/skills">Reading va Listening’ni ham tekshirish</a></>}
           <button className="btn lg" onClick={() => { setAnswers({}); setSaved(false); }}>Qayta topshirish</button>
         </div>
       </div>

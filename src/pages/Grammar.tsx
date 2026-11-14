@@ -5,15 +5,23 @@ import { fits } from '../lib/levels';
 import { LockCard } from '../components/Gate';
 import { saveResult } from '../lib/storage';
 import { addXp, recordReview, useProfile } from '../lib/store';
+import { recordGrammarItem } from '../lib/adaptive/record';
+import { addMistake } from '../lib/mistakes';
+import { nodeForGrammarTopic, taxonomyOfNode } from '../content/curriculum/inventory';
 
 const FREE_TOPICS: string[] = ['To be va there is', 'Artikllar'];
 const MISTAKES = 'Xatolarim';
 const FOR_YOU = 'Sizga mos';
 
+/** Topic chosen on the Home plan card (one-shot handoff via sessionStorage). */
+function takeNextTopic(): string | undefined {
+  try { const t = sessionStorage.getItem('bandly.nextTopic'); sessionStorage.removeItem('bandly.nextTopic'); return t && (grammarTopics as readonly string[]).includes(t) ? t : undefined; } catch { return undefined; }
+}
+
 export default function Grammar() {
   const profile = useProfile();
   const unlocked = profile.plan.grammar;
-  const [topic, setTopic] = useState<string>(() => (profile.level && profile.plan.grammar ? FOR_YOU : profile.level && ['A1', 'A2'].includes(profile.level) ? FREE_TOPICS[0] : FREE_TOPICS[1]));
+  const [topic, setTopic] = useState<string>(() => takeNextTopic() ?? (profile.level && profile.plan.grammar ? FOR_YOU : profile.level && ['A1', 'A2'].includes(profile.level) ? FREE_TOPICS[0] : FREE_TOPICS[1]));
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [done, setDone] = useState(false);
 
@@ -33,6 +41,8 @@ export default function Grammar() {
     if (answers[id] !== undefined) return;
     setAnswers((p) => ({ ...p, [id]: i }));
     recordReview(`g${id}`, i === answer);
+    recordGrammarItem(id, i === answer);
+    if (i !== answer) { const g = grammar.find((x) => x.id === id); const node = g && nodeForGrammarTopic(g.topic); addMistake('grammar', { kind: 'grammar', grammarId: id }, node ? taxonomyOfNode(node) : []); }
     if (i === answer) addXp(3);
   };
   const finish = () => {

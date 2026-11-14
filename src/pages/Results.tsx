@@ -8,6 +8,8 @@ import { useProfile } from '../lib/store';
 const fmtD = (ms: number) => new Date(ms).toLocaleDateString('uz-UZ', { day: '2-digit', month: '2-digit' });
 const KIND: Record<string, string> = { reading: 'Reading', listening: 'Listening', speaking: 'Speaking', writing: 'Writing', grammar: 'Grammar', practice: 'Gap tuzish' };
 
+import { MasteryCard } from '../components/MasteryCard';
+
 export default function Results() {
   const p = useProfile();
   const mocks = loadMocks();
@@ -37,6 +39,7 @@ export default function Results() {
         </div>
         <p className="evidence">Taxminiy ballar: qurilmadagi natijalardan hisoblangan, rasmiy IELTS natijasi emas.</p>
       </div>
+      <MasteryCard />
       <div className="card">
         <h3 style={{ marginTop: 0 }}>Overall o‘sishi</h3>
         <LineChart points={series} />

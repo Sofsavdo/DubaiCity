@@ -6,6 +6,7 @@ import { fmt } from '../../components/hooks';
 import { pickSession } from '../../lib/srs';
 import { addXp, consumeGame, getProfile, recordReview } from '../../lib/store';
 import { shuffle } from '../../lib/vocabGame';
+import { recordWordItem } from '../../lib/adaptive/record';
 
 export default function Pairs() {
   const [phase, setPhase] = useState<'intro' | 'play' | 'end'>('intro');
@@ -40,6 +41,7 @@ export default function Pairs() {
     if (!selL || matched.includes(id)) return;
     if (id === selL) {
       recordReview(id, !mistakesRef.current[id]);
+      recordWordItem(id, !mistakesRef.current[id]);
       const next = [...matched, id];
       setMatched(next);
       setSelL(null);

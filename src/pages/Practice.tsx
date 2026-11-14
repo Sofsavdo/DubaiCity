@@ -7,6 +7,7 @@ import { CEFR, LEVEL_INFO, fits, type Cefr } from '../lib/levels';
 import { check, xpFor, type DiffOp, type Result } from '../lib/practice';
 import { saveResult } from '../lib/storage';
 import { addXp, getProfile, recordReview, useProfile } from '../lib/store';
+import { recordPracticeItem } from '../lib/adaptive/record';
 import { shuffle } from '../lib/vocabGame';
 
 const KINDS: { id: Kind | 'mix'; label: string; hint: string }[] = [
@@ -94,6 +95,7 @@ export default function Practice() {
     setRes({ r, answer });
     setLog((l) => [...l, { e: cur, v: r.verdict }]);
     recordReview(`p${cur.id}`, r.verdict === 'correct');
+    recordPracticeItem(cur.id, r.verdict === 'correct');
     const gain = xpFor(r.verdict);
     if (gain) { addXp(gain); setXp((x) => x + gain); }
     if (!unlocked) useFree();

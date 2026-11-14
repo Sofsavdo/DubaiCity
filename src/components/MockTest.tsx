@@ -1,11 +1,12 @@
 import { useState, type ReactNode } from 'react';
 import type { Question } from '../content/types';
-import { gradeAll, type Answer } from '../lib/grade';
+import { gradeAll, isCorrect, type Answer } from '../lib/grade';
 import { scaledBand } from '../lib/band';
 import type { Cefr } from '../lib/levels';
 import { BAND_CAP, capBand } from '../lib/progress';
 import { saveResult } from '../lib/storage';
-import { addXp } from '../lib/store';
+import { addXp, getProfile } from '../lib/store';
+import { recordTestAnswers } from '../lib/adaptive/record';
 import { fmt, useCountdown } from './hooks';
 import { QuestionList } from './QuestionList';
 
@@ -36,6 +37,7 @@ export function MockTest({ kind, title, minutes, groups, questions, table, level
     const correct = gradeAll(questions, answers);
     saveResult({ kind, title, correct, total: questions.length, band: capBand(scaledBand(correct, questions.length, table), level), level });
     addXp(correct * 5 + (correct / questions.length >= 0.8 ? 20 : 0));
+    recordTestAnswers(kind, questions.map((q) => ({ type: q.type, correct: isCorrect(q, answers[q.id]) })), level, getProfile().level);
   };
 
   const [left_, reset] = useCountdown(minutes * 60, started && !submitted, submit);

@@ -3,6 +3,7 @@ import { basicWords } from './vocabBasic';
 import { phraseWords } from './vocabPhrases';
 import { writingWords } from './vocabWriting';
 import { sceneWords } from './vocabScenes';
+import { lessonWords } from './vocabLessons';
 
 export interface Word {
   id: string;
@@ -192,7 +193,7 @@ const C1_IDS = new Set(['dissertation', 'obsolete', 'breakthrough', 'sedentary',
 const B1_IDS = new Set(['pollution', 'climate', 'recycle', 'tuition', 'scholarship', 'graduate', 'lecture', 'device', 'digital', 'stress', 'salary', 'passport', 'luggage', 'currency', 'museum', 'festival', 'tax', 'crime', 'fine', 'colleague', 'deadline', 'accommodation', 'sightseeing', 'headline', 'vaccine', 'symptom', 'experiment', 'research', 'budget', 'profit', 'community', 'tradition', 'poverty', 'rent', 'public', 'suburb', 'therefore', 'essential', 'significant', 'estimate', 'tourism', 'journalist', 'audience', 'publish', 'export', 'import', 'afford', 'industry', 'evidence', 'justice', 'violence', 'ancient', 'cuisine', 'festival', 'commute', 'landscape', 'resident', 'software', 'database', 'wireless', 'unemployment', 'immigrant', 'democracy', 'generation', 'internship', 'resign', 'promotion']);
 const leveled = ieltsWords.map((x): Word => ({ ...x, level: C1_IDS.has(x.id) ? 'C1' : B1_IDS.has(x.id) ? 'B1' : 'B2' }));
 
-export const vocab: Word[] = [...basicWords, ...phraseWords, ...leveled, ...writingWords, ...sceneWords];
+export const vocab: Word[] = [...basicWords, ...phraseWords, ...leveled, ...writingWords, ...sceneWords, ...lessonWords];
 
 /** Foydalanuvchi darajasiga mos so'zlar: bir pog'ona past/yuqori (A1 uchun A1–A2, C1 uchun B2–C1). */
 export function vocabForLevel(level: Cefr | null | undefined): Word[] {
