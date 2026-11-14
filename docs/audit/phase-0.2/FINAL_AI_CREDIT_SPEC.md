@@ -328,3 +328,6 @@ ON CONFLICT (user_id, local_date) DO NOTHING RETURNING 1;
 - **[U] OD-09**: exact prices, provider/model choice, ceilings, daily free amount, credit expiry rule, `unknown` policy confirmation.
 - **[U]** provider usage reporting and request-id lookup.
 - **[U]** `btree_gist` availability.
+
+## 10. Usage record fields (added from owner v3 spec)
+Every AI operation writes one `app.ai_usage_records` row (separate from the credit ledger, linked by `reservation_id`): `user_id, product, session_id, provider, model, usage_type (llm|stt|tts|realtime|pronunciation|writing_eval), input_tokens, output_tokens, audio_seconds, latency_ms, status (ok|error|timeout|unknown), est_cost_micro_usd, actual_cost_micro_usd NULL, idempotency_key, created_at`. Needed for admin cost reporting, provider health and per-session/per-user limits; unknown provider-reported values stay NULL (never guessed). Limits enforced at reservation: per user (daily/monthly), per session, per provider and global (§4).

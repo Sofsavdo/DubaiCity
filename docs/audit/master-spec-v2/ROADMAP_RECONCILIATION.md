@@ -17,7 +17,7 @@ Neither roadmap replaces the other. **Milestones M1–M8** (`docs/audit/phase-0.
 | 8 Gamification & social | XP validation, achievements, duels | M4 (XP server-side) | anti-cheat after M4 |
 | 9 Subscriptions, payments, AI economics | plans, local pricing, webhooks, ledger | entitlement tables **M5**; ledger **M7**; webhook inbox/reconciliation **M2** (FINAL_MIGRATION §6) | OD-04, OD-07, OD-11; reconciliation test before any live money |
 | 10 Creator & referral | tracking, rewards | after M3 and Phase 9 pricing; payouts blocked on owner approval | DR-11 |
-| 11 Central Asia localization | uz/ru done in M6; kk/ky/tg, country config, local prices | M6 + country config (STRATEGIC_GAPS §6) | OD-10, OD-01, per-country legal |
+| 11 Central Asia localization | uz/ru done in M6; kk/ky/tg, country config, local prices | M6 + country config (`PRODUCT_ARCHITECTURE.md`) | OD-10, OD-01, per-country legal |
 | 12 Hardening & launch | security, load, a11y, restore, reconciliation | **= M8** | all prior gates |
 
 ## 2. Recommended sequencing
@@ -47,3 +47,16 @@ M1 baseline + backups + CI before anything; no PG before OD-01/OD-02; M2b needs 
 
 ## 5. Proposed Phase 1 (blueprint) scope for owner review
 Documents only: `PRODUCT_REQUIREMENTS.md`, `INFORMATION_ARCHITECTURE.md`, `USER_FLOWS.md`, `UI_UX_DESIGN_SYSTEM.md` (starting from the **existing** brand in `src/brand.ts`/`styles.css`/`Mascot.tsx`, audited first), `COMPONENT_CATALOG.md`, `SCREEN_SPECIFICATIONS.md` (31 screens listed in Master Spec §4.8). Exit criterion: owner approves navigation (7 primary items), dashboard content and the design tokens. No UI code.
+
+## 6. Owner v3 priority list vs this reconciliation
+Owner order: 1 Foundation → 2 General English → 3 Adaptive → 4 AI Personality & Voice → 5 Exam Prep → 6 Mock Arena → 7 Monetization → 8 Gamification → 9 Localization → 10 Growth. This sequence is kept as the **product** priority. Conflicts with technical dependencies (owner decision OD-15):
+
+| Owner order | Dependency problem | Proposed handling |
+|---|---|---|
+| Mock Arena at 6 | it needs only M5 and is the free acquisition product | build when M5 completes, in parallel with General English content authoring; does not displace priorities 2–4 for engineering effort that is content-bound |
+| Monetization at 7 | entitlements (M5) are needed earlier; AI cost control is already inside priority 4 | server entitlements + ledger ship earlier; **paid checkout** still waits for 7 |
+| Gamification at 8 | XP validation is part of M4 (server data) | integrity part early, new mechanics late |
+| Localization at 9 | string catalogue (M6) is a foundation; adding uz/en/ru to new UI later is costlier | catalogue + uz/en/ru early, kk/ky/tg at 9 |
+| Voice before exams | voice provider tests need network access and owner approval; English first | English realtime test only after OD-09 and ledger |
+
+All M1 gates, OD-01 and OD-02 stay ahead of everything.

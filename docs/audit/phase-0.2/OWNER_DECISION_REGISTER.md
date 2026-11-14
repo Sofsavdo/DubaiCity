@@ -107,3 +107,13 @@ M5 ............. OD-08
 M7 ............. none to build; OD-09 before real key
 M8 / paid launch OD-07, OD-01 answered, OD-11 for non-UZ
 ```
+
+## 5. Additions from the owner's v3 specification (Phase master-spec-v2)
+
+| ID | Name | Required before | Blocks | Status |
+|---|---|---|---|---|
+| OD-06b | Standard for "age-confirmed adult" required to unlock Savage Coach: self-declared date of birth (not verifiable) vs identity-based verification (vendor, privacy burden) vs remove the mode | M3 (age collection); any personality release | **PROD** of Savage mode (stays off meanwhile) | Open — legal input |
+| OD-12 | Tax settings per country (VAT/other, price-inclusive or not) | Phase 7 payments | **PROD** of paid launch per country | Open — tax/legal advice |
+| OD-13 | Trial, promo-code and annual-billing policy | Phase 7 | **PROD** | Open |
+| OD-14 | Creator program rules: budget, fraud rules, verification method, eligible countries, minimum payout, payout provider, campaign limits (rewards table is an unapproved hypothesis) | Creator phase | **IMPL** of payouts only | Open |
+| OD-15 | Priority order for product phases (v3 list vs recommended order in `ROADMAP_RECONCILIATION.md`) | before Phase 1 sign-off | **IMPL** sequencing only | Open |

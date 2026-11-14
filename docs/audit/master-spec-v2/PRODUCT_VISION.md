@@ -22,7 +22,7 @@ Beginner · everyday learner · university applicant (IELTS/SAT) · CEFR candida
 
 ## 4. Market strategy
 - Order *[approved sequence]*: Uzbekistan → Kazakhstan → Kyrgyzstan → Tajikistan → Turkmenistan; architecture international from day one, **launch per country only after validation**.
-- Per-country configuration (language defaults, currency, pricing, payment methods, legal text, content variants, support, availability) — never hard-coded to Uzbekistan. Model in `STRATEGIC_GAPS_SPEC.md` §6.
+- Per-country configuration (language defaults, currency, pricing, payment methods, legal text, content variants, support, availability) — never hard-coded to Uzbekistan. Model in `PRODUCT_ARCHITECTURE.md`.
 - Data-residency and age rules per country are **unresolved legal questions** (OD-01, OD-06); no compliance claim is made.
 
 ## 5. Four independent language settings *[approved]*

@@ -2,6 +2,8 @@
 
 Based on the findings in `PRODUCT_AUDIT.md`. Sizes are relative (S, M, L, XL), not dates. Nothing here starts until Phase 0 is approved.
 
+> **Update (Master Spec v2/v3 reconciliation):** the D1–D8 labels below are retired (see `audit/phase-0.2/OWNER_DECISION_REGISTER.md` §2) and phases are mapped to technical milestones in `audit/master-spec-v2/ROADMAP_RECONCILIATION.md`. This document is otherwise unchanged.
+
 ## Guiding order
 
 The specification lists phases 1–8. The audit changes **what Phase 1 must contain**: three Critical findings (browser-only data, client-side entitlements, no accounts) sit underneath everything else. Building curriculum, AI or payments on top of them would have to be redone.
