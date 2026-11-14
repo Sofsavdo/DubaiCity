@@ -4,6 +4,7 @@ export const uz = {
   'nav.home': 'Bosh sahifa',
   'nav.home.short': 'Asosiy',
   'nav.learn': 'Ingliz tili',
+  'nav.coach': 'AI ustoz',
   'nav.exam': 'Imtihon',
   'nav.grammar': 'Grammar',
   'nav.mocks': 'Mock testlar',

@@ -1,5 +1,6 @@
+import { resolvePersona, coachTurn, once, MAX_HISTORY } from './coach';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
-import { ApiError, createDb, createDuel, getDuel, join, leaderboard, submitDuel, sync, useAi } from './db';
+import { ApiError, byToken, createDb, createDuel, getDuel, join, leaderboard, submitDuel, sync, useAi, useGlobalAi } from './db';
 import { fileURLToPath } from 'node:url';
 import { serveStatic } from './static';
 import { dirname } from 'node:path';
@@ -11,6 +12,9 @@ import { AiError, configFromEnv, evaluateSpeaking, evaluateWriting, followUp, fo
 
 const PORT = Number(process.env.PORT ?? 3101);
 const ai = configFromEnv();
+// AI Coach limits (env). Global ceiling is FAIL-CLOSED: unset or 0 = coach disabled even with a key (owner decision OD-09).
+const COACH_GLOBAL_DAILY = Number(process.env.AI_GLOBAL_DAILY_CALLS ?? 0);
+const COACH_DAILY_LIMIT = Number(process.env.AI_COACH_DAILY_LIMIT ?? 30);
 const HOST = process.env.HOST ?? (process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1');
 const DIST = fileURLToPath(new URL('../dist', import.meta.url));
 const TRUST_PROXY = process.env.TRUST_PROXY === '1';
@@ -104,7 +108,25 @@ createServer(async (req, res) => {
       const b = await readJson(req);
       return send(res, 200, submitDuel(db, String(b.token ?? ''), dm[1], Number(b.score), Number(b.correct), Number(b.ms)));
     }
-    if (req.method === 'GET' && url.pathname === '/api/ai/status') return send(res, 200, { enabled: ai.provider !== 'none', provider: ai.provider });
+    if (req.method === 'GET' && url.pathname === '/api/ai/status') return send(res, 200, { enabled: ai.provider !== 'none', provider: ai.provider, coach: ai.provider !== 'none' && COACH_GLOBAL_DAILY > 0 });
+    if (req.method === 'POST' && url.pathname === '/api/ai/coach') {
+      if (ai.provider === 'none') throw new AiError(503, 'AI ustoz hali ulanmagan');
+      const b = await readJson(req, 16_384);
+      const token = String(b.token ?? '');
+      const player = byToken(db, token);
+      const turnId = String(b.turnId ?? '').slice(0, 64);
+      if (!/^[\w-]{8,64}$/.test(turnId)) throw new ApiError(400, 'turnId kerak');
+      const mode = b.mode === 'exam' ? 'exam' : 'practice';
+      const resolved = resolvePersona(String(b.persona ?? 'friendly'), { adult: b.adult === true, mode }); // adult = learner's self-declaration (OD-06b pending)
+      const history = Array.isArray(b.history) ? b.history.slice(-MAX_HISTORY).map((t) => ({ role: (t as { role?: unknown }).role === 'coach' ? 'coach' as const : 'learner' as const, text: String((t as { text?: unknown }).text ?? '') })) : [];
+      const text = String(b.text ?? '');
+      const reply = await once(`${player.id}:${turnId}`, async () => {
+        useGlobalAi(db, COACH_GLOBAL_DAILY);                       // platform ceiling first (fail-closed)
+        useAi(db, token, Date.now(), COACH_DAILY_LIMIT, 'coach');  // per-learner daily limit
+        return coachTurn(ai, resolved.id, history, text, { level: typeof b.level === 'string' ? b.level : null, mode });
+      });
+      return send(res, 200, { ...reply, persona: resolved.id, notice: resolved.downgraded });
+    }
     if (req.method === 'POST' && url.pathname.startsWith('/api/ai/')) {
       if (ai.provider === 'none') throw new AiError(503, 'AI yoqilmagan');
       const b = await readJson(req, 16_384);
