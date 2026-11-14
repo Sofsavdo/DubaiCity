@@ -28,3 +28,11 @@ export const LESSON_NODES: CurriculumNode[] = ALL_LESSONS.map(({ unit, lesson },
   hasCheck: lesson.check.length >= 5,
   reviewStatus: unit.status,
 }));
+
+import { vocab } from '../vocab';
+const baseWord = (en: string): string => en.split(/\s+[–-]\s+/)[0]!.trim().toLowerCase();
+/** Vocabulary ids (shared word list) for the words a lesson introduces. Words not in the list are skipped. */
+export function lessonWordIds(lessonId: string): string[] {
+  const l = lessonById(lessonId)?.lesson;
+  return (l?.vocab ?? []).map((v) => vocab.find((w) => w.word.toLowerCase() === baseWord(v.en))?.id).filter((x): x is string => !!x);
+}

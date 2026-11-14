@@ -53,4 +53,8 @@ const { nextLesson } = await import('../../lib/lessons');
 assert.equal(nextLesson(UNITS, {}, null)!.lessonId, 'a1-u1-l1');
 assert.equal(nextLesson(UNITS, {}, 'B1')!.lessonId, 'b1-u1-l1', 'starts at the learner level');
 assert.equal(nextLesson(UNITS, { 'b1-u1-l1': { attempts: 1, best: 1, passedAt: 1 } }, 'B1')!.lessonId, 'b1-u1-l2');
+const { lessonWordIds } = await import('./index');
+const { vocab } = await import('../vocab');
+for (const { lesson } of ALL_LESSONS) assert.equal(lessonWordIds(lesson.id).length, (lesson.vocab ?? []).length, `${lesson.id}: every lesson word exists in the shared word list`);
+assert.equal(new Set(vocab.map((w) => w.id)).size, vocab.length, 'vocab ids stay unique');
 console.log(`lessons.test: OK (${UNITS.length} units, ${ALL_LESSONS.length} lessons, ${ALL_LESSONS.reduce((s, x) => s + x.lesson.practice.length + x.lesson.check.length, 0)} items)`);

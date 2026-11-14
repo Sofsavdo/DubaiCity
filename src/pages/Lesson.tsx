@@ -2,10 +2,10 @@ import { ArrowLeft, ArrowRight, CheckCircle2, RotateCcw, Volume2, XCircle } from
 import { say, stopSpeaking, ttsSupported } from '../lib/speech';
 import { useMemo, useState } from 'react';
 import type { Item } from '../content/lessons/types';
-import { lessonById, lessonNodeId, ALL_LESSONS } from '../content/lessons';
+import { lessonById, lessonNodeId, lessonWordIds, ALL_LESSONS } from '../content/lessons';
 import { checkItem, correctAnswerText, isUnlocked, loadProgress, PASS_RATE, saveAttempt, scoreCheck, type ItemAnswer } from '../lib/lessons';
 import { recordAnswer } from '../lib/adaptive/store';
-import { addXp } from '../lib/store';
+import { addToReview, addXp } from '../lib/store';
 import { saveResult } from '../lib/storage';
 import { LessonSpeak } from '../components/LessonSpeak';
 import { LessonWrite } from '../components/LessonWrite';
@@ -63,6 +63,7 @@ export default function LessonPage({ id }: { id: string }) {
   const [cAns, setCAns] = useState<ItemAnswer[]>([]);
   const [result, setResult] = useState<ReturnType<typeof scoreCheck> | null>(null);
   const [round, setRound] = useState(0);
+  const [vocabMsg, setVocabMsg] = useState('');
   const tts = typeof window !== 'undefined' && ttsSupported();
   const next = useMemo(() => { const i = ALL_LESSONS.findIndex((x) => x.lesson.id === id); return i >= 0 ? ALL_LESSONS[i + 1] : undefined; }, [id]);
 
@@ -77,6 +78,7 @@ export default function LessonPage({ id }: { id: string }) {
     saveAttempt(lesson.id, r, now);
     saveResult({ kind: 'grammar', title: `Dars: ${lesson.titleUz}`, correct: r.correct, total: r.total });
     addXp(r.correct * 3 + (r.passed ? 15 : 0));
+    if (r.passed) addToReview(lessonWordIds(lesson.id), now); // lesson words join the spaced-repetition deck
     setResult(r); setStep('result');
   };
   const retry = () => { setCAns([]); setResult(null); setRound((x) => x + 1); setStep('check'); };
@@ -106,7 +108,8 @@ export default function LessonPage({ id }: { id: string }) {
           <h3>Misollar</h3>
           <ul>{lesson.examples.map((e) => <li key={e.en}>{tts && <button type="button" className="btn sm" aria-label={`Eshitish: ${e.en}`} style={{ padding: '2px 8px', marginRight: 6 }} onClick={() => { stopSpeaking(); void say(e.en, { cancelled: false }); }}><Volume2 size={14} /></button>}<b>{e.en}</b> <span className="muted">— {e.uz}</span></li>)}</ul>
           {tts && <p className="muted" style={{ fontSize: 13 }}>Ovoz qurilmangiz brauzeridagi sintezator orqali o‘qiladi; sifat qurilmaga bog‘liq.</p>}
-          {lesson.vocab && (<><h3>Yangi so‘zlar</h3><p className="row">{lesson.vocab.map((v) => <span key={v.en} className="pill">{v.en} · {v.uz}</span>)}</p></>)}
+          {lesson.vocab && (<><h3>Yangi so‘zlar</h3><p className="row">{lesson.vocab.map((v) => <span key={v.en} className="pill">{v.en} · {v.uz}</span>)}</p>
+            <p className="row"><button type="button" className="btn sm" onClick={() => { const n = addToReview(lessonWordIds(lesson.id)); setVocabMsg(n ? `${n} ta so‘z takrorlash ro‘yxatiga qo‘shildi — ular O‘yinlar bo‘limida (Pairs, Spell, Word Rush) takrorlash uchun chiqadi.` : 'Bu so‘zlar allaqachon takrorlash ro‘yxatida.'); }}>So‘zlarni takrorlashga qo‘shish</button>{vocabMsg && <span className="muted">{vocabMsg}</span>}</p></>)}
           <button className="btn primary" onClick={() => setStep('practice')}>Mashqqa o‘tish <ArrowRight size={14} /></button>
         </section>
       )}

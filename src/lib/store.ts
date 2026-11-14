@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react';
 import { applyXp, dayKey } from './game';
-import { review } from './srs';
+import { newCard, review } from './srs';
 import { effectiveLevel } from './roast';
 import { defaultProfile, type Profile, type TrackId } from './types';
 import { FREE_GAMES_PER_DAY } from '../config';
@@ -79,6 +79,16 @@ export function addXp(amount: number): void {
   pushToast(`+${Math.round(amount)} XP`, 'xp');
   if (r.levelUp) { pushToast(`Yangi daraja: ${r.levelUp}!`, 'level'); sfx('level'); confetti(90); }
   r.unlocked.forEach((a) => { pushToast(`Yutuq: ${a.title}`, 'ach'); if (!r.levelUp) { sfx('ach'); confetti(50); } });
+}
+
+/** Put words into the spaced-repetition deck (due now) without recording an answer; words already in the deck are left unchanged. Returns how many were added. */
+export function addToReview(wordIds: string[], now = Date.now()): number {
+  const fresh = wordIds.filter((id) => !state.srs[id]);
+  if (!fresh.length) return 0;
+  const srs = { ...state.srs };
+  for (const id of fresh) srs[id] = newCard(now);
+  commit({ ...state, srs });
+  return fresh.length;
 }
 
 export function recordReview(wordId: string, correct: boolean): void {
