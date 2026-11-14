@@ -4,8 +4,19 @@ import { ALL_LESSONS } from '../content/lessons';
 import { effectiveMastery, stateOf, type MasteryState } from '../lib/adaptive/mastery';
 import { loadAdaptive } from '../lib/adaptive/store';
 import { TAXONOMY, type TaxonomyId } from '../lib/adaptive/taxonomy';
+import { loadSkills } from '../lib/skillCheck';
 
 const STATE_UZ: Record<MasteryState, string> = { new: 'yangi', learning: 'o‘rganilmoqda', known: 'biladi', needs_revision: 'takrorlash kerak', mastered: 'o‘zlashtirilgan' };
+
+function SkillLine() {
+  const s = loadSkills();
+  return (
+    <p className="row">
+      <span className="pill">Reading: {s.reading?.level ?? '—'}</span><span className="pill">Listening: {s.listening?.level ?? '—'}</span>
+      <a className="btn sm" href="#/skills">{s.reading || s.listening ? 'Qayta tekshirish' : 'Reading / Listening darajasini aniqlash'}</a>
+    </p>
+  );
+}
 
 function titleOf(id: string): string {
   const l = ALL_LESSONS.find((x) => `ge.lesson.${x.lesson.id}` === id);
@@ -28,6 +39,7 @@ export function MasteryCard() {
   return (
     <div className="card">
       <span className="eyebrow"><Brain size={15} /> Bilim xaritam</span>
+      <SkillLine />
       {rows.length === 0 ? (
         <p className="muted">Hali ma’lumot yo‘q. Dars, Grammar, o‘yin yoki Reading/Listening testini bajaring — shu yerda har bir mavzu bo‘yicha o‘zlashtirish darajangiz ko‘rinadi.</p>
       ) : (

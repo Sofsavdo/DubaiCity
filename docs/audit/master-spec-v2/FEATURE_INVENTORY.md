@@ -76,3 +76,5 @@ Target products: **GE** General English · **EP** Exam Preparation · **MA** Moc
 | Language settings + Intl helpers | `src/i18n/settings.ts`, `format.ts` | BACKEND ONLY (not used by screens yet) | `format.test.ts` | no en/ru/kk/ky/tg catalogues |
 | Backups | `scripts/backup/*` | WORKING (tool) | `backup.test.ts` | not scheduled; no off-site copy (OD-01/OD-04) |
 | CI | `.github/workflows/ci.yml` | BROKEN (external) | runs never start: GitHub account billing lock | owner must resolve billing |
+| Skill check (Reading + Listening) | `#/skills` `SkillCheck.tsx`, `src/lib/skillCheck.ts`, `src/content/skillCheck.ts` | WORKING (pilot) | `skillCheck.test.ts`, Playwright walkthrough | 3 original sets (A2, B1, B2), 4 questions each per skill; estimate rule: ≥ 3/4 → set level, else one below; listening via browser speech synthesis (2 plays); separate from the grammar/vocabulary placement level; not an official result |
+| Lesson words in SRS | `src/content/vocabLessons.ts`, `addToReview` in `store.ts` | WORKING | `lessons.test.ts`, Playwright | 21 new words + 7 existing; added on lesson pass or by button |

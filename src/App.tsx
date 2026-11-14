@@ -34,10 +34,12 @@ import Pairs from './pages/games/Pairs';
 import Spell from './pages/games/Spell';
 import Learn from './pages/Learn';
 import LessonPage from './pages/Lesson';
+import SkillCheck from './pages/SkillCheck';
 
 const routes: Record<string, () => ReactNode> = {
   '#/': () => <Home />,
   '#/learn': () => <Learn />,
+  '#/skills': () => <SkillCheck />,
   '#/exam': () => <Exam />,
   '#/exam/writing': () => <Gate track="exam"><Writing /></Gate>,
   '#/exam/speaking': () => <Gate track="exam"><Speaking /></Gate>,
