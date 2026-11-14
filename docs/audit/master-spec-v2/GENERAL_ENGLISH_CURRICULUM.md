@@ -28,3 +28,6 @@ Learning objective present · CEFR alignment note · difficulty progression chec
 
 ## 6. Production plan [R]
 Pilot slice first (A1–A2 grammar+vocabulary+speaking for 2 units) to prove the schema and review workflow, then scale by level. Effort is content labour, not engineering; estimates require owner input on reviewers (OD-10).
+
+## Implemented pilot (2026-11-14)
+`src/content/lessons/` — 6 units, 18 lessons, 198 deterministic items, all `pilot`: A1 *Meeting people* (to be, questions/negatives, a/an + possessives), A1 *Daily life* (present simple, 3rd-person -s, do/does), A2 *Last weekend* (regular/irregular past, did), A2 *In the city* (there is/are + some/any, prepositions of place, how much/many), B1 *Experiences* (present perfect, vs past simple, for/since/already/yet/just), B1 *Plans and possibilities* (going to vs will, first conditional, comparisons). Each lesson: objective, Uzbek explanation, form table, ≥3 examples, ≥4 practice items with instant feedback, ≥5-item mastery check (pass 80 %), error-taxonomy ids. Lessons are curriculum nodes in one A1-rooted chain and feed the adaptive planner. **Needs specialist review before the `pilot` label is removed.**

@@ -63,3 +63,16 @@ Target products: **GE** General English · **EP** Exam Preparation · **MA** Moc
 
 ## 3. Counts
 30 existing rows: WORKING 12, PARTIALLY WORKING 10, MOCK / DEMO 1, BACKEND ONLY 4, NEEDS VERIFICATION 2, MISSING 1 (CI/backups), BROKEN 0 (none observed; absence of evidence is not proof).
+
+## 4. Added after the baseline (branch `ccr-f38ad651-jv2w3f`, not deployed)
+| Feature | Route / module | Status | Evidence | Limitations |
+|---|---|---|---|---|
+| General English path | `#/learn` `Learn.tsx`, `src/content/lessons/*` | WORKING (pilot content) | `lessons.test.ts` (content validation, answer keys, graph), Playwright walkthrough | 18 lessons A1–B1 (6 units), status `pilot`: methodologist review pending; B2–C2 missing; progress in localStorage only |
+| Lesson player | `#/learn/<id>` `Lesson.tsx`, `src/lib/lessons.ts` | WORKING | tests + Playwright (6/6 pass → next lesson unlocked) | no audio for examples yet; no speaking/writing activities inside lessons |
+| Adaptive engine | `src/lib/adaptive/*` | WORKING (logic) | `adaptive.test.ts` (10⁴ random histories), `record.test.ts` | constants are hypotheses; device-local |
+| "Bugungi reja" (today's plan) | `PlanCard.tsx` on `#/` | WORKING | Playwright (A1/A2/B1/B2 cases) | reading/listening links go to the exam track, which is paywalled in demo mode |
+| Answer recording | Grammar, Practice, word games, Duel, Reading/Listening tests, lessons | WORKING | `record.test.ts`, Playwright | self-reports ("Bilaman") deliberately excluded |
+| Knowledge map | `MasteryCard.tsx` on `#/results` | WORKING | Playwright | — |
+| Language settings + Intl helpers | `src/i18n/settings.ts`, `format.ts` | BACKEND ONLY (not used by screens yet) | `format.test.ts` | no en/ru/kk/ky/tg catalogues |
+| Backups | `scripts/backup/*` | WORKING (tool) | `backup.test.ts` | not scheduled; no off-site copy (OD-01/OD-04) |
+| CI | `.github/workflows/ci.yml` | BROKEN (external) | runs never start: GitHub account billing lock | owner must resolve billing |

@@ -122,7 +122,8 @@ export default function LessonPage({ id }: { id: string }) {
         <section className="card" key={round}>
           <p className="muted">{lesson.check.length} ta savol. O‘tish uchun kamida {Math.ceil(PASS_RATE * lesson.check.length)} ta to‘g‘ri javob kerak. Javoblar oxirida ko‘rsatiladi.</p>
           {lesson.check.map((it, i) => <ItemView key={i} item={it} value={cAns[i]} revealed={false} onChange={(v) => setCAns((a) => { const n = [...a]; n[i] = v; return n; })} />)}
-          <button className="btn primary" style={{ marginTop: 14 }} onClick={submitCheck}>Natijani ko‘rish</button>
+          <button className="btn primary" style={{ marginTop: 14 }} disabled={!cAns.some((a) => a !== undefined && !(Array.isArray(a) && !a.length))} onClick={submitCheck}>Natijani ko‘rish</button>
+          <p className="muted" style={{ fontSize: 13 }}>Javob berilmagan savollar noto‘g‘ri hisoblanadi.</p>
         </section>
       )}
 

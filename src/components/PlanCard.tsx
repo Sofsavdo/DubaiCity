@@ -43,10 +43,13 @@ export function PlanCard() {
   const lessonLevels = new Set(ALL_LESSONS.map((x) => x.unit.level as string));
   const window = ALL_NODES.filter((n) => (isSkill(n.skill) || Math.abs(levelOf(n.level) - u) <= 1) && !(n.id.startsWith('ge.grammar.') && lessonLevels.has(n.level))); // reading/listening question types matter at every level
   const saved = loadAdaptive();
+  const assumedIds = ALL_NODES.filter((n) => !isSkill(n.skill) && levelOf(n.level) < u).map((n) => n.id);
+  // below-level nodes count as known (placement evidence) and are only planned once real answers show they are weak
+  const candidates = window.filter((n) => !assumedIds.includes(n.id) || !!saved.mastery[n.id]);
   const examDate = p.examDate ? new Date(p.examDate).getTime() : undefined;
-  const plan = planDay(window, {
+  const plan = planDay(candidates, {
     mastery: saved.mastery, recentErrors: saved.errors, goalTags: ['general'], examDate, now: Date.now(),
-    assumed: ALL_NODES.filter((n) => !isSkill(n.skill) && levelOf(n.level) < u).map((n) => n.id),
+    assumed: assumedIds,
   }, { minutes: 25 });
   return (
     <section className="card">
