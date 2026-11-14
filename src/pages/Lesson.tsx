@@ -7,8 +7,11 @@ import { checkItem, correctAnswerText, isUnlocked, loadProgress, PASS_RATE, save
 import { recordAnswer } from '../lib/adaptive/store';
 import { addXp } from '../lib/store';
 import { saveResult } from '../lib/storage';
+import { LessonSpeak } from '../components/LessonSpeak';
+import { LessonWrite } from '../components/LessonWrite';
 
-type Step = 'learn' | 'practice' | 'check' | 'result';
+type Step = 'learn' | 'practice' | 'speak' | 'write' | 'check' | 'result';
+const STEP_UZ: Record<Exclude<Step, 'result'>, string> = { learn: 'Tushuntirish', practice: 'Mashq', speak: 'Gapirish', write: 'Yozish', check: 'Tekshiruv' };
 
 function ItemView({ item, value, onChange, revealed }: { item: Item; value: ItemAnswer; onChange: (v: ItemAnswer) => void; revealed: boolean }) {
   const ok = revealed && checkItem(item, value);
@@ -86,8 +89,8 @@ export default function LessonPage({ id }: { id: string }) {
         <h2>{lesson.titleUz}</h2>
         <p><b>Maqsad:</b> {lesson.objectiveUz}</p>
         <div className="tabs" role="tablist">
-          {(['learn', 'practice', 'check'] as const).map((s, i) => (
-            <button key={s} role="tab" aria-selected={step === s} className={`chipbtn ${step === s || (step === 'result' && s === 'check') ? 'on' : ''}`} onClick={() => setStep(s)}>{i + 1}. {s === 'learn' ? 'Tushuntirish' : s === 'practice' ? 'Mashq' : 'Tekshiruv'}</button>
+          {(['learn', 'practice', 'speak', ...(lesson.writing ? ['write' as const] : []), 'check'] as const).map((s, i) => (
+            <button key={s} role="tab" aria-selected={step === s} className={`chipbtn ${step === s || (step === 'result' && s === 'check') ? 'on' : ''}`} onClick={() => setStep(s)}>{i + 1}. {STEP_UZ[s]}</button>
           ))}
         </div>
       </section>
@@ -117,6 +120,20 @@ export default function LessonPage({ id }: { id: string }) {
               {!pShown[i] && <button className="btn sm" disabled={pAns[i] === undefined || (Array.isArray(pAns[i]) && !(pAns[i] as string[]).length)} onClick={() => setPShown((s) => { const n = [...s]; n[i] = true; return n; })}>Tekshirish</button>}
             </div>
           ))}
+          <button className="btn primary" style={{ marginTop: 14 }} onClick={() => setStep('speak')}>Gapirish mashqiga o‘tish <ArrowRight size={14} /></button>
+        </section>
+      )}
+
+      {step === 'speak' && (
+        <section className="card">
+          <LessonSpeak sentences={lesson.examples.map((e) => e.en)} />
+          <button className="btn primary" style={{ marginTop: 14 }} onClick={() => setStep(lesson.writing ? 'write' : 'check')}>{lesson.writing ? 'Yozish mashqiga o‘tish' : 'Yakuniy tekshiruvga o‘tish'} <ArrowRight size={14} /></button>
+        </section>
+      )}
+
+      {step === 'write' && lesson.writing && (
+        <section className="card">
+          <LessonWrite task={lesson.writing} />
           <button className="btn primary" style={{ marginTop: 14 }} onClick={() => setStep('check')}>Yakuniy tekshiruvga o‘tish <ArrowRight size={14} /></button>
         </section>
       )}

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { UNITS, ALL_LESSONS, LESSON_NODES, lessonById } from './index';
-import { validateLesson, checkItem, scoreCheck, normalize, isUnlocked, PASS_RATE, correctAnswerText } from '../../lib/lessons';
+import { validateLesson, checkItem, scoreCheck, normalize, isUnlocked, PASS_RATE, correctAnswerText, checkWriting, wordCount } from '../../lib/lessons';
 import { validateGraph } from '../../lib/adaptive/graph';
 import { ALL_NODES } from '../curriculum/inventory';
 
@@ -35,4 +35,14 @@ const u = UNITS[0]!;
 assert.ok(isUnlocked(u, 0, {})); assert.ok(!isUnlocked(u, 1, {}));
 assert.ok(isUnlocked(u, 1, { [u.lessons[0]!.id]: { attempts: 1, best: 1, passedAt: 1 } }));
 assert.ok(!isUnlocked(u, 1, { [u.lessons[0]!.id]: { attempts: 2, best: 0.5, passedAt: null } }));
+// writing: every lesson has a task; checker catches typical errors and missing structures
+assert.ok(ALL_LESSONS.every((x) => !!x.lesson.writing), 'every pilot lesson has a writing task');
+const wt = lessonById('b1-u2-l2')!.lesson.writing!;
+const bad = checkWriting(wt, 'If it will rain tomorrow, we will stay at home. If I will pass, I will be happy and I will celebrate a lot.');
+assert.equal(bad.passed, false); assert.ok(bad.forbidden.length > 0, 'if + will is flagged');
+const short = checkWriting(lessonById('a1-u1-l1')!.lesson.writing!, 'I am Ali.');
+assert.equal(short.enoughWords, false); assert.ok(short.reqs.some((r) => !r.ok));
+const err = checkWriting(lessonById('a1-u2-l2')!.lesson.writing!, 'My brother work in a bank. He go to work by bus. She likes tea and reads books every day.');
+assert.ok(err.issues.length > 0 && !err.passed, 'known learner error (3rd person -s) is caught');
+assert.equal(wordCount("I'm from Tashkent, it’s big."), 5);
 console.log(`lessons.test: OK (${UNITS.length} units, ${ALL_LESSONS.length} lessons, ${ALL_LESSONS.reduce((s, x) => s + x.lesson.practice.length + x.lesson.check.length, 0)} items)`);

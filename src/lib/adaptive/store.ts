@@ -19,6 +19,14 @@ function save(s: Saved): void { try { localStorage.setItem(KEY, JSON.stringify(s
 
 export const localDayKey = (now: number): string => { const d = new Date(now); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
 
+/** Log error-taxonomy ids without a mastery update (e.g. rule-based writing feedback). */
+export function logErrors(taxonomy: TaxonomyId[]): void {
+  if (!taxonomy.length) return;
+  const s = loadAdaptive();
+  s.errors = [...s.errors, ...taxonomy].slice(-MAX_ERRORS);
+  save(s);
+}
+
 /** Record one answered item for a curriculum node. Wrong answers also log the node's error-taxonomy ids. */
 export function recordAnswer(nodeId: string, correct: boolean, taxonomy: TaxonomyId[], now = Date.now(), difficulty = 0.5): void {
   const s = loadAdaptive();

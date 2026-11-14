@@ -1,5 +1,6 @@
 // Lesson engine: deterministic checking, mastery-check scoring and local progress. Pure functions + a small localStorage store.
-import type { Item, Lesson, Unit } from '../content/lessons/types';
+import type { Item, Lesson, Unit, WritingTask } from '../content/lessons/types';
+import { findIssues, type Issue } from './grammarCheck';
 
 export const PASS_RATE = 0.8; // mastery check pass mark (hypothesis; reviewed with the curriculum)
 
@@ -47,7 +48,27 @@ export function validateLesson(l: Lesson): string[] {
     if (it.kind === 'gap') { if (!it.prompt.includes('___')) p.push(`${l.id} item ${i}: gap prompt lacks ___`); if (!it.accept.length) p.push(`${l.id} item ${i}: no accepted answer`); }
     if (it.kind === 'order') { const w = normalize(it.words.join(' ')).split(' ').sort().join(' '); const a = normalize(it.answer).split(' ').sort().join(' '); if (w !== a) p.push(`${l.id} item ${i}: words do not form the answer`); }
   }
+  if (l.writing) {
+    const w = l.writing;
+    try { [...w.require, ...(w.forbid ?? [])].forEach((r) => new RegExp(r.re, 'i')); } catch { p.push(`${l.id}: writing regex does not compile`); return p; }
+    const c = checkWriting(w, w.model);
+    if (!c.passed) p.push(`${l.id}: writing model answer fails its own check (${JSON.stringify({ words: c.words, reqs: c.reqs.filter((r) => !r.ok).map((r) => r.labelUz), forbidden: c.forbidden, issues: c.issues.map((i) => i.id) })})`);
+  }
   return p;
+}
+
+// ---------- writing (rule-based, not AI) ----------
+export interface WritingCheck { words: number; enoughWords: boolean; reqs: { labelUz: string; ok: boolean }[]; forbidden: string[]; issues: Issue[]; passed: boolean }
+const unifyQuotes = (s: string): string => s.replace(/[’‘`´]/g, "'");
+export const wordCount = (s: string): number => (unifyQuotes(s).trim().match(/[A-Za-z']+/g) ?? []).length;
+export function checkWriting(task: WritingTask, raw: string): WritingCheck {
+  const text = unifyQuotes(raw);
+  const words = wordCount(text);
+  const reqs = task.require.map((r) => ({ labelUz: r.labelUz, ok: new RegExp(r.re, 'i').test(text) }));
+  const forbidden = (task.forbid ?? []).filter((f) => new RegExp(f.re, 'i').test(text)).map((f) => f.labelUz);
+  const issues = findIssues(text);
+  const enoughWords = words >= task.minWords;
+  return { words, enoughWords, reqs, forbidden, issues, passed: enoughWords && reqs.every((r) => r.ok) && !forbidden.length && !issues.length };
 }
 
 // ---------- local progress (moves server-side with accounts) ----------

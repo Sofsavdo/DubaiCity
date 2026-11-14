@@ -7,6 +7,15 @@ export type Item =
   | { kind: 'gap'; prompt: string; accept: string[]; explainUz: string }    // prompt contains "___"
   | { kind: 'order'; words: string[]; answer: string; explainUz: string };   // arrange words into the answer sentence
 
+/** Short guided writing task, checked by rules (no AI): length, required structures, forbidden patterns, known learner errors. */
+export interface WritingTask {
+  promptUz: string;
+  minWords: number;
+  require: { re: string; labelUz: string }[];   // case-insensitive regex sources; ALL must match
+  forbid?: { re: string; labelUz: string }[];   // must NOT match
+  model: string;                                 // model answer shown after checking
+}
+
 export interface Lesson {
   id: string;                  // stable, e.g. 'a1-u1-l1'
   title: string;               // English title
@@ -21,6 +30,7 @@ export interface Lesson {
   vocab?: { en: string; uz: string }[];
   practice: Item[];            // guided practice, instant feedback
   check: Item[];               // mastery check, scored at the end
+  writing?: WritingTask;
 }
 
 export interface Unit {
