@@ -5,8 +5,7 @@ import { fits } from '../lib/levels';
 import { LockCard } from '../components/Gate';
 import { saveResult } from '../lib/storage';
 import { addXp, recordReview, useProfile } from '../lib/store';
-import { recordAnswer } from '../lib/adaptive/store';
-import { nodeForGrammarTopic, taxonomyOfNode } from '../content/curriculum/inventory';
+import { recordGrammarItem } from '../lib/adaptive/record';
 
 const FREE_TOPICS: string[] = ['To be va there is', 'Artikllar'];
 const MISTAKES = 'Xatolarim';
@@ -40,8 +39,7 @@ export default function Grammar() {
     if (answers[id] !== undefined) return;
     setAnswers((p) => ({ ...p, [id]: i }));
     recordReview(`g${id}`, i === answer);
-    const item = grammar.find((g) => g.id === id); const node = item && nodeForGrammarTopic(item.topic);
-    if (node) recordAnswer(node, i === answer, taxonomyOfNode(node));
+    recordGrammarItem(id, i === answer);
     if (i === answer) addXp(3);
   };
   const finish = () => {

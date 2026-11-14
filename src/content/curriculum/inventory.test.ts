@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
-import { GRAMMAR_NODES, nodeForGrammarTopic, nodeForPracticeTopic } from './inventory';
+import { GRAMMAR_NODES, VOCAB_NODES, ALL_NODES, nodeForGrammarTopic, nodeForPracticeTopic, vocabNodeForLevel } from './inventory';
+import { vocab } from '../vocab';
 import { validateGraph, uncoveredTaxonomy } from '../../lib/adaptive/graph';
 import { grammar, grammarTopics } from '../grammar';
 import { exercises } from '../practice';
@@ -17,4 +18,8 @@ console.log(`inventory: ${GRAMMAR_NODES.length} grammar nodes; practice topics u
 const mappedEx = exercises.filter((e) => nodeForPracticeTopic(e.topic)).length;
 console.log(`practice exercises mapped to a grammar node: ${mappedEx}/${exercises.length}`);
 assert.ok(mappedEx / exercises.length >= 0.5, 'at least half of the practice exercises map to a node');
+assert.deepEqual(validateGraph(ALL_NODES), [], 'grammar + vocabulary graph valid');
+assert.equal(VOCAB_NODES.length, 5);
+for (const w of vocab) assert.ok(vocabNodeForLevel(w.level), `word ${w.id} level ${w.level} has a node`);
+assert.equal(new Set(ALL_NODES.map((n) => n.id)).size, ALL_NODES.length, 'unique ids');
 console.log('inventory.test: OK');

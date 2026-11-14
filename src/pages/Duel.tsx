@@ -6,6 +6,7 @@ import { JoinForm } from '../components/JoinForm';
 import { createDuel, duelUrl, fetchDuel, getAccount, submitDuel, type DuelInfo } from '../lib/account';
 import { addXp, recordReview } from '../lib/store';
 import { buildOptions } from '../lib/vocabGame';
+import { recordWordItem } from '../lib/adaptive/record';
 
 const SECONDS = 12;
 
@@ -60,6 +61,7 @@ function Play({ info, onDone }: { info: DuelInfo; onDone: (i: DuelInfo) => void 
     const rem = Math.max(0, SECONDS - (Date.now() - qStart.current) / 1000);
     const ok = id === word.id;
     recordReview(word.id, ok);
+    recordWordItem(word.id, ok);
     setPicked(id ?? '__timeout');
     if (ok) {
       const pts = 100 + Math.min(50, Math.max(0, Math.round((rem / SECONDS) * 50)));

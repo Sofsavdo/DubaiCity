@@ -51,4 +51,21 @@ const PRACTICE_TOPIC: Record<string, string> = {
 export const nodeForGrammarTopic = (topic: string): string | undefined => { const s = SPECS.find((x) => x.topic === topic); return s ? id(s.slug) : undefined; };
 export const nodeForPracticeTopic = (topic: string): string | undefined => { const s = PRACTICE_TOPIC[topic]; return s ? id(s) : undefined; };
 export const topicOfNode = (nodeId: string): string | undefined => SPECS.find((s) => id(s.slug) === nodeId)?.topic;
-export const taxonomyOfNode = (nodeId: string): TaxonomyId[] => GRAMMAR_NODES.find((n) => n.id === nodeId)?.taxonomyIds ?? [];
+
+// Vocabulary: one node per CEFR level over the app's word list (src/content/vocab.ts). Word-level spacing stays in the existing SRS; these nodes give the planner a level-wide signal.
+import { vocab } from '../vocab';
+const VOCAB_LEVELS: Level[] = ['A1', 'A2', 'B1', 'B2', 'C1'];
+export const VOCAB_NODES: CurriculumNode[] = VOCAB_LEVELS.map((lv, i) => {
+  const n = vocab.filter((w) => w.level === lv).length;
+  return {
+    id: `ge.vocab.${lv.toLowerCase()}`, level: lv, skill: 'vocabulary' as const,
+    objective: `Recognise, spell and use the ${n} ${lv} words in the Bandly word list in context.`,
+    taxonomyIds: ['V.word_choice', 'V.spelling'] as TaxonomyId[],
+    prerequisites: i === 0 ? [] : [`ge.vocab.${VOCAB_LEVELS[i - 1]!.toLowerCase()}`],
+    estMinutes: 8, hasPractice: n > 0, hasCheck: n >= 5, reviewStatus: 'legacy' as const,
+  };
+});
+export const vocabNodeForLevel = (lv: string): string | undefined => VOCAB_NODES.find((x) => x.level === lv)?.id;
+export const ALL_NODES: CurriculumNode[] = [...GRAMMAR_NODES, ...VOCAB_NODES];
+export const nodeById = (nodeId: string): CurriculumNode | undefined => ALL_NODES.find((x) => x.id === nodeId);
+export const taxonomyOfNode = (nodeId: string): TaxonomyId[] => nodeById(nodeId)?.taxonomyIds ?? [];
