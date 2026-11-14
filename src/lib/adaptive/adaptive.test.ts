@@ -113,6 +113,11 @@ assert.ok(asm.includes('a2.past.simple'));
 const onlyDependant = PILOT.filter((x) => x.id === 'a2.past.simple');
 assert.deepEqual(planDay(onlyDependant, baseState({ assumed: ['a1.be.present'] }), opt).map((x) => x.nodeId), ['a2.past.simple']);
 assert.deepEqual(planDay(onlyDependant, baseState(), opt), [], 'unmet prerequisite outside the window still blocks');
+// a practised, strong, not-due node is not re-served; a weak one is
+const strong = planDay(PILOT, baseState({ mastery: m }), opt).map((x) => x.nodeId);
+assert.ok(!strong.includes('a1.be.present') && !strong.includes('a1.articles.basic'), 'fresh strong nodes are not re-planned');
+const weakRec = att(newRecord(), false, T0 - 1000);
+assert.ok(planDay(PILOT, baseState({ mastery: { 'a1.vocab.daily': weakRec } }), opt).some((x) => x.nodeId === 'a1.vocab.daily'), 'weak practised node is planned');
 // load adjustment
 assert.deepEqual(adjustLoad({ slots: 4, difficultyStep: 0 }, 0.5, 0.9), { slots: 3, difficultyStep: 1 });
 assert.deepEqual(adjustLoad({ slots: 1, difficultyStep: 0 }, 0.1, 0.1), { slots: 1, difficultyStep: 0 });

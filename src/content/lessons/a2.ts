@@ -1,0 +1,248 @@
+import type { Unit } from './types';
+import { ch, gap, ord } from './helpers';
+
+// PILOT content — original, written for Bandly. Status 'pilot': shown with a "methodologist review pending" label.
+
+export const A2_U1: Unit = {
+  id: 'a2-u1', level: 'A2', title: 'Last weekend', titleUz: 'O‘tgan dam olish kunlari',
+  situationUz: 'Do‘stingizga dam olish kunlari, sayohat yoki kecha nima bo‘lganini aytib berish.',
+  status: 'pilot',
+  lessons: [
+    {
+      id: 'a2-u1-l1', title: 'Regular past: -ed', titleUz: 'Past Simple: to‘g‘ri fe’llar (-ed)',
+      objectiveUz: 'To‘g‘ri fe’llarga -ed ni imlo qoidalari bilan qo‘shib, o‘tgan voqealarni aytasiz.',
+      objective: 'Form the past simple of regular verbs with correct -ed spelling.',
+      taxonomyIds: ['G.tense', 'V.spelling'], minutes: 10,
+      explanationUz: [
+        'Past Simple tugagan o‘tgan voqealar uchun: yesterday, last week, two days ago, in 2020.',
+        'To‘g‘ri fe’llarga -ed qo‘shiladi va u barcha egalar uchun bir xil: I worked, she worked, they worked.',
+        'Imlo: -e bilan tugasa faqat -d (live → lived); undosh + y → ied (study → studied); qisqa “undosh-unli-undosh” bo‘lsa oxirgi undosh ikkilanadi (stop → stopped, plan → planned). Unli + y bo‘lsa -ed: play → played.',
+      ],
+      table: [
+        { form: 'fe’l + ed', example: 'walk → walked, watch → watched' },
+        { form: '-e: + d', example: 'dance → danced, arrive → arrived' },
+        { form: 'undosh + y → ied', example: 'try → tried, study → studied' },
+        { form: 'undosh ikkilanadi', example: 'stop → stopped, plan → planned' },
+      ],
+      examples: [
+        { en: 'I visited my grandparents last weekend.', uz: 'O‘tgan dam olish kuni bobom va buvimnikiga bordim.' },
+        { en: 'We watched a film yesterday.', uz: 'Kecha film ko‘rdik.' },
+        { en: 'She studied for three hours.', uz: 'U uch soat dars qildi.' },
+        { en: 'The bus stopped near the bazaar.', uz: 'Avtobus bozor yonida to‘xtadi.' },
+      ],
+      vocab: [{ en: 'yesterday', uz: 'kecha' }, { en: 'last weekend', uz: 'o‘tgan dam olish kunlari' }, { en: 'ago', uz: 'avval (… oldin)' }, { en: 'visit', uz: 'tashrif buyurmoq' }],
+      practice: [
+        ch('Yesterday I ___ football with my friends.', ['play', 'played', 'playied'], 1, 'unli + y: play → played.'),
+        ch('We ___ in Samarkand two years ago.', ['live', 'lived', 'liveed'], 1, '-e bilan tugaydi: faqat -d → lived.'),
+        ch('She ___ English last night.', ['studyed', 'studied', 'studies'], 1, 'undosh + y: study → studied.'),
+        gap('The car ___ (stop) at the traffic lights.', ['stopped'], 'stop: qisqa so‘z, oxirgi p ikkilanadi → stopped.'),
+        gap('They ___ (wait) for the bus for 20 minutes.', ['waited'], 'wait + ed → waited.'),
+      ],
+      check: [
+        ch('I ___ my homework an hour ago.', ['finish', 'finished', 'finishd'], 1, 'Tugagan voqea, ago: finished.'),
+        ch('We ___ a trip to Khiva last summer.', ['planed', 'planned', 'planing'], 1, 'plan → planned (n ikkilanadi).'),
+        ch('Choose the correct spelling.', ['tryed', 'tried', 'triied'], 1, 'undosh + y: try → tried.'),
+        gap('He ___ (arrive) late yesterday.', ['arrived'], 'arrive -e bilan tugaydi: arrived.'),
+        gap('My sister ___ (cook) plov on Sunday.', ['cooked'], 'cook + ed.'),
+        ord(['last', 'We', 'Monday', 'visited', 'museum', 'the'], 'We visited the museum last Monday', 'Ega + fe’l(ed) + to‘ldiruvchi + vaqt.'),
+      ],
+    },
+    {
+      id: 'a2-u1-l2', title: 'Irregular past', titleUz: 'Past Simple: noto‘g‘ri fe’llar',
+      objectiveUz: 'Eng ko‘p ishlatiladigan 10 ta noto‘g‘ri fe’lning o‘tgan shaklini to‘g‘ri qo‘llaysiz.',
+      objective: 'Use the past simple of common irregular verbs.',
+      taxonomyIds: ['G.tense', 'V.form'], minutes: 12,
+      explanationUz: [
+        'Ko‘p ishlatiladigan fe’llar -ed olmaydi, ularning o‘tgan shaklini yodlash kerak: go → went, have → had.',
+        'Bu shakl ham barcha egalar uchun bir xil: I went, he went, they went.',
+        'Eng muhimlari: go – went, have – had, see – saw, buy – bought, make – made, come – came, eat – ate, take – took, get – got, meet – met.',
+      ],
+      table: [
+        { form: 'go → went, come → came', example: 'We went to the mountains.' },
+        { form: 'have → had, make → made', example: 'I had a great time.' },
+        { form: 'buy → bought, see → saw', example: 'She bought a new dress.' },
+        { form: 'eat → ate, take → took', example: 'They took a lot of photos.' },
+      ],
+      examples: [
+        { en: 'We went to Chimgan on Saturday.', uz: 'Shanba kuni Chimyonga bordik.' },
+        { en: 'I saw an interesting film.', uz: 'Qiziqarli film ko‘rdim.' },
+        { en: 'He bought a present for his mother.', uz: 'U onasiga sovg‘a sotib oldi.' },
+        { en: 'They ate samsa for lunch.', uz: 'Ular tushlikka somsa yeyishdi.' },
+      ],
+      practice: [
+        ch('Last weekend we ___ to Bukhara.', ['goed', 'went', 'gone'], 1, 'go → went.'),
+        ch('I ___ my old teacher in the street.', ['meeted', 'met', 'meet'], 1, 'meet → met.'),
+        ch('She ___ a cake for my birthday.', ['made', 'maked', 'make'], 0, 'make → made.'),
+        gap('We ___ (have) dinner at a restaurant.', ['had'], 'have → had.'),
+        gap('He ___ (take) a taxi to the airport.', ['took'], 'take → took.'),
+      ],
+      check: [
+        ch('They ___ home very late.', ['comed', 'came', 'come'], 1, 'come → came.'),
+        ch('I ___ two books at the bookshop.', ['buyed', 'bought', 'brought'], 1, 'buy → bought. (brought — bring fe’lidan)'),
+        ch('We ___ a lot of beautiful places.', ['saw', 'seed', 'seen'], 0, 'see → saw. (seen — 3-shakl)'),
+        gap('My brother ___ (get) a new job last month.', ['got'], 'get → got.'),
+        gap('We ___ (eat) too much at the party.', ['ate'], 'eat → ate.'),
+        ord(['went', 'cinema', 'I', 'the', 'to', 'yesterday'], 'I went to the cinema yesterday', 'Ega + went + joy + vaqt.'),
+      ],
+    },
+    {
+      id: 'a2-u1-l3', title: 'Did you…? I didn’t…', titleUz: 'did bilan savol va inkor',
+      objectiveUz: 'did / didn’t yordamida o‘tgan zamonda savol berasiz va inkor gap tuzasiz.',
+      objective: 'Ask past simple questions and make negatives with did/didn’t.',
+      taxonomyIds: ['G.tense', 'G.word_order'], minutes: 12,
+      explanationUz: [
+        'O‘tgan zamonda savol va inkor uchun did ishlatiladi — barcha egalar uchun bir xil.',
+        'did dan keyin fe’l har doim ODDIY shaklda bo‘ladi: “Did you went?” — xato, “Did you go?” — to‘g‘ri. O‘tgan zamon belgisi did da bor.',
+        'Inkor: didn’t + oddiy fe’l: I didn’t see him. Qisqa javob: Yes, I did. / No, I didn’t.',
+      ],
+      table: [
+        { form: 'Did + ega + oddiy fe’l?', example: 'Did you enjoy the trip?' },
+        { form: 'Ega + didn’t + oddiy fe’l', example: 'She didn’t come.' },
+        { form: 'Wh- + did + ega + fe’l?', example: 'Where did you go?' },
+      ],
+      examples: [
+        { en: 'Did you have a good weekend? — Yes, I did.', uz: 'Dam olish kunlaringiz yaxshi o‘tdimi? — Ha.' },
+        { en: 'What did you do on Sunday?', uz: 'Yakshanba kuni nima qildingiz?' },
+        { en: 'I didn’t go out. I stayed at home.', uz: 'Tashqariga chiqmadim, uyda qoldim.' },
+        { en: 'He didn’t call me.', uz: 'U menga qo‘ng‘iroq qilmadi.' },
+      ],
+      practice: [
+        ch('___ you see the match yesterday?', ['Do', 'Did', 'Was'], 1, 'O‘tgan zamon savoli: Did.'),
+        ch('Did she ___ the exam?', ['passed', 'pass', 'passes'], 1, 'did dan keyin oddiy shakl: pass.'),
+        ch('We ___ to the party.', ['didn’t went', 'didn’t go', 'don’t went'], 1, 'didn’t + oddiy fe’l: didn’t go.'),
+        gap('Where ___ you go last summer?', ['did'], 'Wh- + did + ega + fe’l.'),
+        ord(['you', 'What', 'buy', 'did'], 'What did you buy', 'What + did + you + buy.'),
+      ],
+      check: [
+        ch('Choose the correct question.', ['Did you went home?', 'Did you go home?', 'Do you went home?'], 1, 'Did + you + go.'),
+        ch('Did they enjoy the concert? — No, they ___.', ['didn’t', 'don’t', 'weren’t'], 0, 'Qisqa javob: No, they didn’t.'),
+        ch('I ___ breakfast this morning.', ['didn’t have', 'didn’t had', 'haven’t'], 0, 'didn’t + have.'),
+        gap('She ___ (not / buy) anything at the market.', ['didn’t buy', "didn't buy", 'did not buy'], 'didn’t + buy.'),
+        gap('What time ___ you get up yesterday?', ['did'], 'O‘tgan zamon savoli: did.'),
+        ord(['didn’t', 'He', 'the', 'answer', 'phone'], 'He didn’t answer the phone', 'Ega + didn’t + fe’l + to‘ldiruvchi.'),
+      ],
+    },
+  ],
+};
+
+export const A2_U2: Unit = {
+  id: 'a2-u2', level: 'A2', title: 'In the city', titleUz: 'Shaharda',
+  situationUz: 'Shahardagi joylarni tasvirlash, yo‘l tushuntirish va do‘konda xarid qilish.',
+  status: 'pilot',
+  lessons: [
+    {
+      id: 'a2-u2-l1', title: 'There is / there are; some / any', titleUz: 'There is / there are, some / any',
+      objectiveUz: 'Joyda nima borligini there is / there are bilan aytasiz va some / any ni to‘g‘ri tanlaysiz.',
+      objective: 'Describe places with there is/are and some/any.',
+      taxonomyIds: ['G.sva', 'G.quantifier'], minutes: 10,
+      explanationUz: [
+        'Biror joyda nimadir “bor” deyish uchun: there is + bitta narsa, there are + ko‘p narsa. O‘zbekcha “bor” so‘zini “have” bilan tarjima qilish — keng tarqalgan xato.',
+        'some — ijobiy gaplarda: There are some shops. any — savol va inkorda: Are there any cafés? There aren’t any parks.',
+        'Savol: Is there…? / Are there…? Qisqa javob: Yes, there is. / No, there aren’t.',
+      ],
+      table: [
+        { form: 'There is + a/an + birlik', example: 'There is a bank on this street.' },
+        { form: 'There are + some + ko‘plik', example: 'There are some good restaurants.' },
+        { form: 'Are there any …? / There aren’t any …', example: 'Are there any hotels near here?' },
+      ],
+      examples: [
+        { en: 'There is a pharmacy next to the school.', uz: 'Maktab yonida dorixona bor.' },
+        { en: 'There are some beautiful parks in Tashkent.', uz: 'Toshkentda chiroyli bog‘lar bor.' },
+        { en: 'Is there a metro station near here?', uz: 'Bu yer yaqinida metro bekati bormi?' },
+        { en: 'There aren’t any buses after midnight.', uz: 'Yarim tundan keyin avtobus yo‘q.' },
+      ],
+      practice: [
+        ch('___ a supermarket near my house.', ['There is', 'There are', 'It has'], 0, 'Bitta narsa: There is.'),
+        ch('There are ___ nice cafés in the centre.', ['some', 'any', 'a'], 0, 'Ijobiy gap, ko‘plik: some.'),
+        ch('Are there ___ banks on this street?', ['some', 'any', 'a'], 1, 'Savolda any.'),
+        gap('___ there a hospital in your town?', ['Is', 'is'], 'a hospital — birlik: Is there…?'),
+        ord(['any', 'There', 'parks', 'aren’t', 'here'], 'There aren’t any parks here', 'Inkor + any.'),
+      ],
+      check: [
+        ch('In my street ___ two schools.', ['there is', 'there are', 'have'], 1, 'two schools — ko‘plik: there are.'),
+        ch('We don’t have ___ bread at home.', ['some', 'any', 'a'], 1, 'Inkorda any.'),
+        ch('Choose the correct sentence.', ['In the city has a big park.', 'There is a big park in the city.', 'There are a big park in the city.'], 1, '“bor” → there is (birlik).'),
+        gap('There ___ some apples on the table.', ['are'], 'some apples — ko‘plik: are.'),
+        gap('Is there a café here? — No, there ___.', ['isn’t', "isn't", 'is not'], 'Qisqa javob: No, there isn’t.'),
+        ord(['any', 'Are', 'museums', 'there'], 'Are there any museums', 'Are there + any + ko‘plik.'),
+      ],
+    },
+    {
+      id: 'a2-u2-l2', title: 'Prepositions of place', titleUz: 'Joy predloglari',
+      objectiveUz: 'in, on, at, next to, between, opposite, behind, in front of bilan joylashuvni aniq aytasiz.',
+      objective: 'Describe location with common prepositions of place.',
+      taxonomyIds: ['G.preposition'], minutes: 10,
+      explanationUz: [
+        'in — biror narsaning ichida yoki shahar/mamlakatda: in the bag, in Tashkent. on — sirtda yoki ko‘chada: on the table, on Navoi Street. at — aniq nuqtada: at the bus stop, at home, at school.',
+        'next to — yonida, between — orasida (ikki narsa), opposite — ro‘parasida, behind — orqasida, in front of — oldida.',
+        'O‘zbek tilida bular qo‘shimcha (-da, -ning yonida) bilan beriladi, ingliz tilida esa so‘zdan OLDIN keladi: “the bank next to”, emas “next to the bank”.',
+      ],
+      table: [
+        { form: 'in / on / at', example: 'in the park, on the wall, at the station' },
+        { form: 'next to / opposite', example: 'The café is opposite the cinema.' },
+        { form: 'between A and B', example: 'The shop is between the bank and the school.' },
+        { form: 'behind / in front of', example: 'There is a garden behind the house.' },
+      ],
+      examples: [
+        { en: 'The pharmacy is next to the supermarket.', uz: 'Dorixona supermarket yonida.' },
+        { en: 'I’m waiting at the bus stop.', uz: 'Bekatda kutyapman.' },
+        { en: 'My flat is on Amir Temur Street.', uz: 'Kvartiram Amir Temur ko‘chasida.' },
+        { en: 'The car is in front of the hotel.', uz: 'Mashina mehmonxona oldida.' },
+      ],
+      practice: [
+        ch('My keys are ___ my bag.', ['in', 'on', 'at'], 0, 'Ichida: in my bag.'),
+        ch('Meet me ___ the station at 6.', ['in', 'on', 'at'], 2, 'Aniq nuqta: at the station.'),
+        ch('The bank is ___ the post office and the café.', ['between', 'next', 'opposite of'], 0, 'Ikki narsa orasida: between … and …'),
+        gap('The picture is ___ the wall.', ['on'], 'Sirtda: on the wall.'),
+        ord(['is', 'opposite', 'The', 'school', 'park', 'the'], 'The school is opposite the park', '“opposite” dan keyin “of” kerak emas.'),
+      ],
+      check: [
+        ch('She lives ___ Bukhara.', ['in', 'on', 'at'], 0, 'Shahar: in Bukhara.'),
+        ch('The cat is sleeping ___ the sofa (orqasida).', ['in front of', 'behind', 'between'], 1, 'orqasida = behind.'),
+        ch('Choose the correct phrase.', ['next the bank', 'next to the bank', 'next of the bank'], 1, 'next to + joy.'),
+        gap('I’m ___ home now.', ['at'], 'at home — turg‘un ibora.'),
+        gap('Our office is ___ Mustaqillik Street.', ['on'], 'Ko‘cha nomi bilan: on … Street.'),
+        gap('There is a bus stop in ___ of the hospital.', ['front'], 'in front of — oldida.'),
+      ],
+    },
+    {
+      id: 'a2-u2-l3', title: 'Shopping: how much / how many', titleUz: 'Xarid: how much / how many',
+      objectiveUz: 'Sanaladigan va sanalmaydigan otlarni ajratib, how much / how many va narx so‘rashni to‘g‘ri ishlatasiz.',
+      objective: 'Use how much/how many with countable and uncountable nouns and ask prices.',
+      taxonomyIds: ['G.quantifier', 'G.plural'], minutes: 12,
+      explanationUz: [
+        'Sanaladigan otlar (apple, bottle, ticket) ko‘plik oladi va how many bilan so‘raladi: How many tickets do you need?',
+        'Sanalmaydigan otlar (water, rice, bread, money, sugar) ko‘plik olmaydi va how much bilan so‘raladi: How much rice do you want? “breads”, “moneys” — xato.',
+        'Narx so‘rash: How much is this? / How much are these shoes? Sanalmaydigan narsani sanash uchun idish yoki birlik ishlatiladi: a bottle of water, a kilo of rice, a loaf of bread.',
+      ],
+      table: [
+        { form: 'How many + ko‘plik ot', example: 'How many eggs do we need?' },
+        { form: 'How much + sanalmaydigan ot', example: 'How much milk is there?' },
+        { form: 'How much is / are …?', example: 'How much are these apples?' },
+        { form: 'a bottle / kilo / loaf of', example: 'Two kilos of potatoes, please.' },
+      ],
+      examples: [
+        { en: 'How much is this melon? — Fifteen thousand som.', uz: 'Bu qovun qancha turadi? — O‘n besh ming so‘m.' },
+        { en: 'How many apples would you like?', uz: 'Nechta olma olasiz?' },
+        { en: 'Can I have a bottle of water, please?', uz: 'Bir shisha suv bering, iltimos.' },
+        { en: 'We don’t have much money.', uz: 'Bizda pul ko‘p emas.' },
+      ],
+      vocab: [{ en: 'price', uz: 'narx' }, { en: 'cheap', uz: 'arzon' }, { en: 'expensive', uz: 'qimmat' }, { en: 'change', uz: 'qaytim' }],
+      practice: [
+        ch('How ___ bananas do you want?', ['much', 'many', 'lot'], 1, 'bananas — sanaladi: how many.'),
+        ch('How ___ sugar do you need?', ['much', 'many', 'lots'], 0, 'sugar — sanalmaydi: how much.'),
+        ch('How much ___ these jeans?', ['is', 'are', 'does'], 1, 'jeans — ko‘plik: How much are…?'),
+        gap('Can I have two ___ of water, please?', ['bottles'], 'water sanalmaydi, idish sanaladi: two bottles of water.'),
+        ord(['this', 'How', 'is', 'much', 'bag'], 'How much is this bag', 'Narx so‘rash: How much is + narsa.'),
+      ],
+      check: [
+        ch('Choose the correct sentence.', ['I need some breads.', 'I need some bread.', 'I need a bread.'], 1, 'bread sanalmaydi: some bread (yoki a loaf of bread).'),
+        ch('How ___ people are in your family?', ['much', 'many', 'more'], 1, 'people — sanaladi: how many.'),
+        ch('How ___ money do you have?', ['much', 'many', 'lot of'], 0, 'money — sanalmaydi: how much.'),
+        gap('How much ___ the tomatoes?', ['are'], 'tomatoes — ko‘plik: are.'),
+        gap('A ___ of rice, please. (kilogramm)', ['kilo', 'kilogram'], 'a kilo of rice.'),
+        ord(['eggs', 'many', 'How', 'need', 'we', 'do'], 'How many eggs do we need', 'How many + ko‘plik ot + do + ega + fe’l.'),
+      ],
+    },
+  ],
+};

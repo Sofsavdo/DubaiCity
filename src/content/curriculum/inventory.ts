@@ -88,6 +88,7 @@ export const skillNodeTitle = (nodeId: string): string | undefined => {
   return m ? `${m[1] === 'reading' ? 'Reading' : 'Listening'} · ${QTYPE_NAME[m[2] as QType]}` : undefined;
 };
 
-export const ALL_NODES: CurriculumNode[] = [...GRAMMAR_NODES, ...VOCAB_NODES, ...SKILL_NODES];
+import { LESSON_NODES } from '../lessons';
+export const ALL_NODES: CurriculumNode[] = [...LESSON_NODES, ...GRAMMAR_NODES, ...VOCAB_NODES, ...SKILL_NODES];
 export const nodeById = (nodeId: string): CurriculumNode | undefined => ALL_NODES.find((x) => x.id === nodeId);
 export const taxonomyOfNode = (nodeId: string): TaxonomyId[] => nodeById(nodeId)?.taxonomyIds ?? [];

@@ -1,5 +1,6 @@
 import { CalendarCheck, ArrowRight } from 'lucide-react';
 import { ALL_NODES, nodeById, skillNodeTitle, topicOfNode } from '../content/curriculum/inventory';
+import { ALL_LESSONS } from '../content/lessons';
 import { loadAdaptive } from '../lib/adaptive/store';
 import { planDay, type PlanTask } from '../lib/adaptive/recommend';
 import { levelIndex, type Cefr } from '../lib/levels';
@@ -38,7 +39,9 @@ export function PlanCard() {
   }
   const u = levelIndex(p.level as Cefr);
   const isSkill = (s: string): boolean => s === 'reading' || s === 'listening';
-  const window = ALL_NODES.filter((n) => isSkill(n.skill) || Math.abs(levelOf(n.level) - u) <= 1); // reading/listening question types matter at every level
+  // levels that already have structured General English lessons: the lessons replace the loose legacy grammar topics in the plan (answers there still count)
+  const lessonLevels = new Set(ALL_LESSONS.map((x) => x.unit.level as string));
+  const window = ALL_NODES.filter((n) => (isSkill(n.skill) || Math.abs(levelOf(n.level) - u) <= 1) && !(n.id.startsWith('ge.grammar.') && lessonLevels.has(n.level))); // reading/listening question types matter at every level
   const saved = loadAdaptive();
   const examDate = p.examDate ? new Date(p.examDate).getTime() : undefined;
   const plan = planDay(window, {
@@ -54,8 +57,9 @@ export function PlanCard() {
           const node = nodeById(t.nodeId);
           const isVocab = node?.skill === 'vocabulary';
           const skillTitle = skillNodeTitle(t.nodeId);
-          const title = skillTitle ?? (isVocab ? `So‘z boyligi · ${node!.level}` : (topicOfNode(t.nodeId) ?? t.nodeId));
-          const href = node?.skill === 'reading' ? '#/exam/reading' : node?.skill === 'listening' ? '#/exam/listening' : isVocab ? '#/games' : '#/grammar';
+          const lesson = ALL_LESSONS.find((x) => `ge.lesson.${x.lesson.id}` === t.nodeId);
+          const title = lesson ? `Dars: ${lesson.lesson.titleUz}` : skillTitle ?? (isVocab ? `So‘z boyligi · ${node!.level}` : (topicOfNode(t.nodeId) ?? t.nodeId));
+          const href = lesson ? `#/learn/${lesson.lesson.id}` : node?.skill === 'reading' ? '#/exam/reading' : node?.skill === 'listening' ? '#/exam/listening' : isVocab ? '#/games' : '#/grammar';
           return (
             <a key={t.nodeId} className="path-step" href={href} onClick={() => { if (href === '#/grammar') { try { sessionStorage.setItem('bandly.nextTopic', title); } catch { /* ignore */ } } }}>
               <b>{title}</b><span>{t.minutes} daq · {whyUz(t)}</span>
@@ -63,7 +67,7 @@ export function PlanCard() {
           );
         })}
       </div>
-      <p className="muted" style={{ fontSize: 13 }}>Reja daraja testingiz hamda Grammar, Gap tuzish, so‘z o‘yinlari, Reading va Listening testlaridagi javoblaringiz asosida tuziladi; bilimingiz o‘zgarganda yangilanadi.</p>
+      <p className="muted" style={{ fontSize: 13 }}>Reja daraja testingiz hamda General English darslari, Grammar, Gap tuzish, so‘z o‘yinlari, Reading va Listening testlaridagi javoblaringiz asosida tuziladi; bilimingiz o‘zgarganda yangilanadi.</p>
     </section>
   );
 }

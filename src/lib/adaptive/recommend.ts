@@ -47,13 +47,15 @@ export function scoreNode(n: CurriculumNode, s: LearnerState): { score: number; 
 
 /** Build today's plan: due revisions first, then by score; at most 1 new node per 3 slots; prerequisites must be ≥ PREREQ_MIN; fills the minute budget. */
 export function planDay(nodes: CurriculumNode[], s: LearnerState, opt: PlanOptions): PlanTask[] {
-  const allowed = new Set<ReviewStatus>(opt.allowStatuses ?? ['approved', 'published', 'legacy']);
+  const allowed = new Set<ReviewStatus>(opt.allowStatuses ?? ['approved', 'published', 'legacy', 'pilot']);
   const byId = new Map(nodes.map((n) => [n.id, n]));
   const assumed = new Set(s.assumed ?? []);
   const ready = (n: CurriculumNode): boolean => n.prerequisites.every((p) => assumed.has(p) || effectiveMastery(mOf(s, p), s.now) >= PREREQ_MIN); // prerequisites may lie outside the candidate window
   const cands = nodes
     .filter((n) => allowed.has(n.reviewStatus) && ready(n))
     .map((n) => ({ n, ...scoreNode(n, s), isNew: mOf(s, n.id).attempts === 0, due: mOf(s, n.id).attempts > 0 && mOf(s, n.id).dueAt <= s.now }))
+    // a practised node takes a slot only when it is due for revision or still weak — freshly learned material is not re-served the same day
+    .filter((c) => c.isNew || c.due || effectiveMastery(mOf(s, c.n.id), s.now) < PREREQ_MIN)
     .sort((a, b) => Number(b.due) - Number(a.due) || b.score - a.score || (a.n.id < b.n.id ? -1 : 1));
   const plan: PlanTask[] = [];
   const hasPracticed = cands.some((c) => !c.isNew); // cold start (nothing practised yet): the new-node cap is lifted so the day is not left nearly empty

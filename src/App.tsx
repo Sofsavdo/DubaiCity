@@ -32,9 +32,12 @@ import GamesHub from './pages/games/GamesHub';
 import WordRush from './pages/games/WordRush';
 import Pairs from './pages/games/Pairs';
 import Spell from './pages/games/Spell';
+import Learn from './pages/Learn';
+import LessonPage from './pages/Lesson';
 
 const routes: Record<string, () => ReactNode> = {
   '#/': () => <Home />,
+  '#/learn': () => <Learn />,
   '#/exam': () => <Exam />,
   '#/exam/writing': () => <Gate track="exam"><Writing /></Gate>,
   '#/exam/speaking': () => <Gate track="exam"><Speaking /></Gate>,
@@ -74,9 +77,10 @@ export default function App() {
   // Menyu bosilganda yangi sahifa har doim tepadan boshlansin
   useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: 'auto' }); }, [hash]);
   const shadowId = hash.match(/^#\/shadow\/([\w-]+)$/)?.[1];
+  const lessonId = hash.match(/^#\/learn\/([\w-]+)$/)?.[1];
   const duelCode = hash.match(/^#\/duel\/([A-Za-z0-9]{4,8})$/)?.[1];
   const tr = testRoute(hash);
-  const page = tr ? tr : shadowId ? <Gate track="exam"><ShadowHub id={shadowId} /></Gate> : duelCode ? <DuelRoom key={duelCode} code={duelCode.toUpperCase()} /> : (routes[hash] ?? routes['#/'])();
+  const page = tr ? tr : lessonId ? <LessonPage key={lessonId} id={lessonId} /> : shadowId ? <Gate track="exam"><ShadowHub id={shadowId} /></Gate> : duelCode ? <DuelRoom key={duelCode} code={duelCode.toUpperCase()} /> : (routes[hash] ?? routes['#/'])();
   return (
     <>
       <Header hash={hash} />

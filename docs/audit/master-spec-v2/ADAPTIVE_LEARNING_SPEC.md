@@ -1,6 +1,6 @@
 # Adaptive Learning Spec
 
-Legend: **[F]** verified · **[R]** recommendation · **[U]** unresolved. **Implemented (pure logic, not yet wired to any screen):** `src/lib/adaptive/*`, `src/content/curriculum/*`, tests in `src/lib/adaptive/adaptive.test.ts`. Implementation notes: the first review interval is `base·2^(streak−1)·(0.5+m_eff)` days; on a cold start (nothing practised) the one-new-per-three-slots cap is lifted so the first day is not left almost empty.
+Legend: **[F]** verified · **[R]** recommendation · **[U]** unresolved. **Implemented (pure logic, not yet wired to any screen):** `src/lib/adaptive/*`, `src/content/curriculum/*`, tests in `src/lib/adaptive/adaptive.test.ts`. Implementation notes: the first review interval is `base·2^(streak−1)·(0.5+m_eff)` days; on a cold start (nothing practised) the one-new-per-three-slots cap is lifted so the first day is not left almost empty; a practised node takes a slot only if it is due for revision or its m_eff < 0.6 (freshly learned material is not re-served the same day); on the Home plan, structured General English lessons replace the legacy grammar topics at levels where lessons exist.
 
 ### Error taxonomy (hierarchical, stable ids)
 `G.tense, G.article, G.preposition, G.sva, G.word_order, G.modal, G.conditional, G.plural` · `V.word_choice, V.collocation, V.spelling, V.form` · `P.stress, P.phoneme, P.intonation` · `S.hesitation, S.fluency, S.coherence` · `W.coherence, W.task_response, W.organisation, W.sentence_variety` · `R.inference, R.detail, R.main_idea` · `L.detail, L.gist, L.distractor`.

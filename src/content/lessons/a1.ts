@@ -1,0 +1,246 @@
+import type { Unit } from './types';
+import { ch, gap, ord } from './helpers';
+
+// PILOT content — original, written for Bandly. Status 'pilot': shown with a "methodologist review pending" label.
+
+export const A1_U1: Unit = {
+  id: 'a1-u1', level: 'A1', title: 'Meeting people', titleUz: 'Tanishuv',
+  situationUz: 'Yangi odam bilan tanishish: o‘zingizni tanishtirish, ism, yosh, kasb va qayerdanligingizni aytish.',
+  status: 'pilot',
+  lessons: [
+    {
+      id: 'a1-u1-l1', title: 'I am, you are', titleUz: '“To be” — men …man, sen …san',
+      objectiveUz: 'am / is / are ni to‘g‘ri tanlab, o‘zingiz va boshqalar haqida 5 ta oddiy gap tuzasiz.',
+      objective: 'Use am/is/are correctly to introduce yourself and others.',
+      taxonomyIds: ['G.sva'], minutes: 8,
+      explanationUz: [
+        'Ingliz tilida “men talabaman” degan gapda ham fe’l bo‘lishi shart. Bu fe’l — “to be”. U egaga qarab uch xil bo‘ladi: am, is, are.',
+        'I bilan faqat am; he, she, it va bitta odam yoki narsa bilan is; you, we, they va ko‘plik bilan are ishlatiladi.',
+        'Og‘zaki nutqda qisqa shakllar ko‘p ishlatiladi: I’m, you’re, he’s, she’s, it’s, we’re, they’re.',
+      ],
+      table: [
+        { form: 'I + am', example: 'I am Aziz. / I’m Aziz.' },
+        { form: 'he / she / it + is', example: 'She is a doctor. / She’s a doctor.' },
+        { form: 'you / we / they + are', example: 'We are from Tashkent. / We’re from Tashkent.' },
+      ],
+      examples: [
+        { en: 'I am twenty years old.', uz: 'Men yigirma yoshdaman.' },
+        { en: 'My name is Malika.', uz: 'Mening ismim Malika.' },
+        { en: 'They are my friends.', uz: 'Ular mening do‘stlarim.' },
+        { en: 'It is a big city.', uz: 'Bu katta shahar.' },
+      ],
+      vocab: [{ en: 'name', uz: 'ism' }, { en: 'student', uz: 'talaba' }, { en: 'friend', uz: 'do‘st' }, { en: 'from', uz: '…dan (joy)' }],
+      practice: [
+        ch('I ___ a student.', ['am', 'is', 'are'], 0, 'I bilan doim am ishlatiladi.'),
+        ch('She ___ from Samarkand.', ['am', 'is', 'are'], 1, 'She — bitta odam (u), shuning uchun is.'),
+        ch('We ___ friends.', ['am', 'is', 'are'], 2, 'We (biz) — ko‘plik, shuning uchun are.'),
+        gap('My name ___ Bobur.', ['is', '’s', "'s"], 'My name — bitta narsa (ism), shuning uchun is.'),
+        ord(['from', 'are', 'They', 'Bukhara'], 'They are from Bukhara', 'Gap tartibi: ega + to be + qolgan qism.'),
+      ],
+      check: [
+        ch('You ___ my teacher.', ['am', 'is', 'are'], 2, 'You bilan har doim are ishlatiladi — birlikda ham, ko‘plikda ham.'),
+        ch('It ___ a nice day.', ['am', 'is', 'are'], 1, 'It bilan is.'),
+        ch('Choose the correct short form: “I am” = ___', ['I’m', 'Im’', 'I’s'], 0, 'I am → I’m.'),
+        gap('Dilnoza and Aziza ___ sisters.', ['are', '’re', "'re"], 'Ikki odam — ko‘plik, shuning uchun are.'),
+        gap('I ___ 18 years old.', ['am', '’m', "'m"], 'I bilan am. Yosh aytilganda ham “to be” ishlatiladi.'),
+        ord(['is', 'Sardor', 'name', 'His'], 'His name is Sardor', 'His name (uning ismi) + is + ism.'),
+      ],
+    },
+    {
+      id: 'a1-u1-l2', title: 'Questions and negatives with “be”', titleUz: '“To be” bilan savol va inkor',
+      objectiveUz: '“Are you…?”, “Is she…?” savollarini bera olasiz va qisqa javob qaytarasiz; isn’t / aren’t bilan inkor gap tuzasiz.',
+      objective: 'Ask and answer yes/no questions and make negatives with be.',
+      taxonomyIds: ['G.sva', 'G.word_order'], minutes: 10,
+      explanationUz: [
+        'Savol tuzish uchun am / is / are ni egadan oldinga chiqaramiz: “You are a student.” → “Are you a student?”',
+        'Qisqa javob: “Yes, I am.” / “No, I’m not.” Ijobiy qisqa javobda qisqartma ishlatilmaydi: “Yes, I’m.” — xato.',
+        'Inkor uchun “not” qo‘shiladi: is not = isn’t, are not = aren’t, am not = ’m not (“amn’t” degan shakl yo‘q).',
+      ],
+      table: [
+        { form: 'Am I …? / Is he …? / Are you …?', example: 'Is she a teacher?' },
+        { form: 'Yes, I am. / No, I’m not.', example: 'Are you tired? — No, I’m not.' },
+        { form: 'He isn’t … / They aren’t …', example: 'They aren’t at home.' },
+      ],
+      examples: [
+        { en: 'Are you from Namangan? — Yes, I am.', uz: 'Siz Namangandanmisiz? — Ha.' },
+        { en: 'Is he your brother? — No, he isn’t.', uz: 'U akangizmi? — Yo‘q.' },
+        { en: 'I’m not busy now.', uz: 'Hozir band emasman.' },
+        { en: 'We aren’t late.', uz: 'Biz kechikmadik (kech emasmiz).' },
+      ],
+      practice: [
+        ch('___ you a student?', ['Am', 'Is', 'Are'], 2, 'Savolda are egadan oldin keladi: Are you…?'),
+        ch('Is she married? — No, she ___.', ['isn’t', 'aren’t', 'not'], 0, 'She bilan inkor: isn’t.'),
+        ch('Are you tired? — Yes, ___.', ['I am', 'I’m', 'I’m am'], 0, 'Ijobiy qisqa javobda qisqartma yo‘q: Yes, I am.'),
+        gap('They ___ at school today. (inkor)', ['aren’t', "aren't", 'are not'], 'They + are not = aren’t.'),
+        ord(['your', 'Is', 'name', 'Ali'], 'Is your name Ali', 'Savol: Is + ega (your name) + qolgan qism.'),
+      ],
+      check: [
+        ch('___ he your friend?', ['Am', 'Is', 'Are'], 1, 'He bilan is: Is he…?'),
+        ch('I ___ hungry. (inkor)', ['amn’t', 'am not', 'isn’t'], 1, 'I am not = I’m not. “amn’t” shakli yo‘q.'),
+        ch('Are they from Andijan? — Yes, ___.', ['they’re', 'they are', 'they is'], 1, 'Qisqa ijobiy javob: Yes, they are.'),
+        gap('___ it cold today?', ['Is', 'is'], 'It bilan savol: Is it…?'),
+        gap('My parents ___ at home now. (inkor)', ['aren’t', "aren't", 'are not'], 'My parents — ko‘plik: aren’t.'),
+        ord(['you', 'Are', 'teacher', 'a'], 'Are you a teacher', 'Savol tartibi: Are + you + a teacher.'),
+      ],
+    },
+    {
+      id: 'a1-u1-l3', title: 'Jobs: a / an, my / your', titleUz: 'Kasblar: a / an va my / your',
+      objectiveUz: 'Kasblar oldida a yoki an ni to‘g‘ri tanlaysiz va my, your, his, her bilan egalikni bildirasiz.',
+      objective: 'Use a/an with jobs and possessive adjectives my/your/his/her.',
+      taxonomyIds: ['G.article', 'G.pronoun'], minutes: 10,
+      explanationUz: [
+        'Bitta odamning kasbini aytganda kasb oldiga a yoki an qo‘yiladi: She is a nurse. O‘zbek tilida bu so‘z yo‘q, shuning uchun ko‘pincha tushirib qoldiriladi — bu eng ko‘p uchraydigan xato.',
+        'an — unli TOVUSH bilan boshlanadigan so‘zdan oldin: an engineer, an artist, an hour. a — undosh tovushdan oldin: a doctor, a university (“yu” tovushi).',
+        'Egalik: my (mening), your (sizning), his (uning — erkak), her (uning — ayol), our (bizning), their (ularning).',
+      ],
+      table: [
+        { form: 'a + undosh tovush', example: 'a teacher, a driver, a university' },
+        { form: 'an + unli tovush', example: 'an engineer, an office worker, an hour' },
+        { form: 'my / your / his / her / our / their', example: 'His sister is an artist.' },
+      ],
+      examples: [
+        { en: 'My father is an engineer.', uz: 'Otam muhandis.' },
+        { en: 'Her brother is a driver.', uz: 'Uning (qizning) akasi haydovchi.' },
+        { en: 'What is your job? — I’m a cook.', uz: 'Kasbingiz nima? — Men oshpazman.' },
+        { en: 'Their son is a student.', uz: 'Ularning o‘g‘li talaba.' },
+      ],
+      vocab: [{ en: 'engineer', uz: 'muhandis' }, { en: 'nurse', uz: 'hamshira' }, { en: 'driver', uz: 'haydovchi' }, { en: 'cook', uz: 'oshpaz' }],
+      practice: [
+        ch('She is ___ doctor.', ['a', 'an', '—'], 0, 'doctor undosh tovush bilan boshlanadi: a doctor.'),
+        ch('He is ___ engineer.', ['a', 'an', '—'], 1, 'engineer unli tovush bilan: an engineer.'),
+        ch('Malika is my sister. ___ job is interesting.', ['His', 'Her', 'Their'], 1, 'Malika — ayol, shuning uchun her.'),
+        gap('I am ___ student at a university.', ['a'], 'student — undosh: a student. “university” ham “yu” tovushi bilan boshlangani uchun a.'),
+        ord(['is', 'an', 'mother', 'My', 'artist'], 'My mother is an artist', 'artist unli tovush bilan: an artist.'),
+      ],
+      check: [
+        ch('I am ___ office worker.', ['a', 'an', '—'], 1, 'office — unli tovush: an office worker.'),
+        ch('Is your brother ___ pilot?', ['a', 'an', 'the'], 0, 'Kasb, bitta odam: a pilot.'),
+        ch('We have a son. ___ name is Timur.', ['His', 'Her', 'Our'], 0, 'O‘g‘il — erkak: his name.'),
+        ch('Choose the correct sentence.', ['She is teacher.', 'She is a teacher.', 'She a teacher.'], 1, 'Kasb oldida a, va “is” majburiy.'),
+        gap('This is my friend Lola. ___ father is a cook.', ['Her', 'her'], 'Lola — qiz: her father.'),
+        gap('It takes ___ hour to get there.', ['an'], 'hour — “h” o‘qilmaydi, unli tovush bilan boshlanadi: an hour.'),
+      ],
+    },
+  ],
+};
+
+export const A1_U2: Unit = {
+  id: 'a1-u2', level: 'A1', title: 'Daily life', titleUz: 'Kundalik hayot',
+  situationUz: 'Kun tartibingiz, odatlaringiz va oila a’zolaringiz nima qilishi haqida gapirish.',
+  status: 'pilot',
+  lessons: [
+    {
+      id: 'a1-u2-l1', title: 'My routine', titleUz: 'Kun tartibim — Present Simple',
+      objectiveUz: 'Har kuni nima qilishingizni Present Simple’da 5 ta gap bilan aytasiz.',
+      objective: 'Describe daily routines with the present simple (I/you/we/they).',
+      taxonomyIds: ['G.tense'], minutes: 10,
+      explanationUz: [
+        'Present Simple odatlar, har kuni takrorlanadigan ishlar va doimiy faktlar uchun ishlatiladi.',
+        'I, you, we, they bilan fe’lning oddiy shakli ishlatiladi: I get up at 7. They work in a bank.',
+        'Vaqt so‘zlari: every day (har kuni), usually (odatda), always (doim), never (hech qachon), at 8 o’clock, in the morning. Usually, always, never fe’ldan oldin turadi.',
+      ],
+      table: [
+        { form: 'I / you / we / they + fe’l', example: 'We have breakfast at 8.' },
+        { form: 'always / usually / never + fe’l', example: 'I usually walk to work.' },
+        { form: 'at + soat, in the morning', example: 'I go to bed at 11 o’clock.' },
+      ],
+      examples: [
+        { en: 'I get up at six thirty.', uz: 'Men oltiyu o‘ttizda turaman.' },
+        { en: 'We usually drink tea in the morning.', uz: 'Biz odatda ertalab choy ichamiz.' },
+        { en: 'They never work on Sunday.', uz: 'Ular yakshanba kuni hech qachon ishlamaydi.' },
+        { en: 'You live near the park.', uz: 'Siz bog‘ yaqinida yashaysiz.' },
+      ],
+      vocab: [{ en: 'get up', uz: 'o‘rnidan turmoq' }, { en: 'have breakfast', uz: 'nonushta qilmoq' }, { en: 'go to work', uz: 'ishga bormoq' }, { en: 'usually', uz: 'odatda' }],
+      practice: [
+        ch('I ___ to work by bus.', ['go', 'goes', 'going'], 0, 'I bilan fe’lning oddiy shakli: go.'),
+        ch('Choose the correct word order.', ['I drink usually coffee.', 'I usually drink coffee.', 'Usually I coffee drink.'], 1, 'usually fe’ldan oldin: I usually drink coffee.'),
+        ch('We have lunch ___ one o’clock.', ['in', 'on', 'at'], 2, 'Soat bilan at: at one o’clock.'),
+        gap('They ___ (live) in Fergana.', ['live'], 'They bilan oddiy shakl: live.'),
+        ord(['up', 'I', 'at', 'get', 'seven'], 'I get up at seven', 'Ega + fe’l + vaqt.'),
+      ],
+      check: [
+        ch('You ___ English every day.', ['study', 'studies', 'studying'], 0, 'You bilan oddiy shakl: study.'),
+        ch('We ___ watch TV in the morning.', ['never', 'are never', 'nevers'], 0, 'never fe’ldan oldin keladi, “are” kerak emas.'),
+        ch('I go to bed ___ the evening.', ['at', 'in', 'on'], 1, 'in the evening / in the morning.'),
+        gap('My friends and I ___ (play) football on Saturdays.', ['play'], 'My friends and I = we → oddiy shakl: play.'),
+        gap('I always ___ (have) breakfast at home.', ['have'], 'I bilan have.'),
+        ord(['usually', 'tea', 'They', 'drink'], 'They usually drink tea', 'usually — fe’l oldidan.'),
+      ],
+    },
+    {
+      id: 'a1-u2-l2', title: 'He works, she studies', titleUz: 'He / She / It: fe’lga -s qo‘shish',
+      objectiveUz: 'he, she, it bilan Present Simple’da fe’lga -s / -es / -ies ni to‘g‘ri qo‘shasiz.',
+      objective: 'Use third-person -s/-es/-ies forms in the present simple.',
+      taxonomyIds: ['G.sva', 'G.tense'], minutes: 10,
+      explanationUz: [
+        'He, she, it (yoki bitta odam: my brother, Ali) bilan Present Simple’da fe’lga -s qo‘shiladi: he works, she lives.',
+        '-s, -sh, -ch, -x, -o bilan tugasa -es: watches, goes, does, fixes. Undosh + y bilan tugasa y → ies: study → studies. Unli + y bo‘lsa faqat -s: play → plays.',
+        'have → has. Bu xatoni ko‘pchilik qiladi: “He have a car” — xato, “He has a car” — to‘g‘ri.',
+      ],
+      table: [
+        { form: 'odatiy: + s', example: 'work → works, read → reads' },
+        { form: '-s, -sh, -ch, -x, -o: + es', example: 'watch → watches, go → goes' },
+        { form: 'undosh + y: y → ies', example: 'study → studies (lekin play → plays)' },
+        { form: 'have → has', example: 'She has two brothers.' },
+      ],
+      examples: [
+        { en: 'My mother works in a hospital.', uz: 'Onam shifoxonada ishlaydi.' },
+        { en: 'He watches football every evening.', uz: 'U har kecha futbol ko‘radi.' },
+        { en: 'Ali studies at a college.', uz: 'Ali kollejda o‘qiydi.' },
+        { en: 'She has a cat.', uz: 'Uning mushugi bor.' },
+      ],
+      practice: [
+        ch('He ___ in an office.', ['work', 'works', 'workes'], 1, 'He + work + s.'),
+        ch('She ___ to school by bike.', ['gos', 'goes', 'go'], 1, 'go -o bilan tugaydi: goes.'),
+        ch('My brother ___ a new phone.', ['have', 'has', 'haves'], 1, 'have → has.'),
+        gap('Aziza ___ (study) medicine.', ['studies'], 'undosh + y: study → studies.'),
+        gap('He ___ (play) the guitar.', ['plays'], 'unli + y: play → plays (y o‘zgarmaydi).'),
+      ],
+      check: [
+        ch('It ___ a lot in April.', ['rain', 'rains', 'raines'], 1, 'It + rain + s.'),
+        ch('My father ___ the news every morning.', ['watch', 'watchs', 'watches'], 2, '-ch bilan tugaydi: watches.'),
+        ch('Choose the correct sentence.', ['She have two sisters.', 'She has two sisters.', 'She haves two sisters.'], 1, 'she + has.'),
+        gap('Timur ___ (fix) cars in a garage.', ['fixes'], '-x bilan tugaydi: fixes.'),
+        gap('Our teacher ___ (speak) three languages.', ['speaks'], 'Bitta odam (our teacher) + speaks.'),
+        gap('The baby ___ (cry) at night.', ['cries'], 'undosh + y: cry → cries.'),
+      ],
+    },
+    {
+      id: 'a1-u2-l3', title: 'Do you…? I don’t…', titleUz: 'do / does bilan savol va inkor',
+      objectiveUz: 'do / does yordamida Present Simple’da savol berasiz va don’t / doesn’t bilan inkor qilasiz.',
+      objective: 'Make present simple questions and negatives with do/does.',
+      taxonomyIds: ['G.tense', 'G.word_order'], minutes: 12,
+      explanationUz: [
+        'Present Simple’da savol va inkor uchun yordamchi fe’l kerak: do (I, you, we, they) yoki does (he, she, it).',
+        'Muhim qoida: does ishlatilganda asosiy fe’l -s olmaydi! “Does she works?” — xato, “Does she work?” — to‘g‘ri. -s allaqachon does da bor.',
+        'Inkor: don’t = do not, doesn’t = does not. Qisqa javob: Yes, I do. / No, she doesn’t.',
+      ],
+      table: [
+        { form: 'Do + I/you/we/they + fe’l?', example: 'Do you like tea?' },
+        { form: 'Does + he/she/it + fe’l (s siz)?', example: 'Does he live here?' },
+        { form: 'don’t / doesn’t + fe’l', example: 'She doesn’t eat meat.' },
+      ],
+      examples: [
+        { en: 'Do you speak Russian? — Yes, I do.', uz: 'Ruscha gapirasizmi? — Ha.' },
+        { en: 'Does your sister work? — No, she doesn’t.', uz: 'Opangiz ishlaydimi? — Yo‘q.' },
+        { en: 'I don’t like coffee.', uz: 'Men qahvani yoqtirmayman.' },
+        { en: 'He doesn’t drive.', uz: 'U mashina haydamaydi.' },
+      ],
+      practice: [
+        ch('___ you live in Tashkent?', ['Do', 'Does', 'Are'], 0, 'you bilan Do.'),
+        ch('Does he ___ English?', ['speak', 'speaks', 'speaking'], 0, 'does dan keyin fe’l -s siz: speak.'),
+        ch('She ___ like fish.', ['don’t', 'doesn’t', 'isn’t'], 1, 'she bilan inkor: doesn’t.'),
+        gap('We ___ (not / watch) TV in the morning.', ['don’t watch', "don't watch", 'do not watch'], 'we + don’t + fe’l.'),
+        ord(['your', 'Does', 'cook', 'father'], 'Does your father cook', 'Does + ega + fe’l (s siz).'),
+      ],
+      check: [
+        ch('___ your brother play football?', ['Do', 'Does', 'Is'], 1, 'your brother = he → Does.'),
+        ch('Choose the correct question.', ['Does she works here?', 'Does she work here?', 'Do she work here?'], 1, 'Does + she + work (s siz).'),
+        ch('Do they have a car? — No, they ___.', ['don’t', 'doesn’t', 'aren’t'], 0, 'they bilan qisqa javob: No, they don’t.'),
+        gap('My grandmother ___ (not / use) a smartphone.', ['doesn’t use', "doesn't use", 'does not use'], 'Bitta odam + doesn’t + fe’l -s siz.'),
+        gap('___ you like music? — Yes, I do.', ['Do', 'do'], 'you bilan Do.'),
+        ord(['don’t', 'I', 'meat', 'eat'], 'I don’t eat meat', 'Ega + don’t + fe’l + to‘ldiruvchi.'),
+      ],
+    },
+  ],
+};
