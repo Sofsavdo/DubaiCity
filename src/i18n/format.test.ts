@@ -21,7 +21,7 @@ assert.match(formatDate('en', Date.UTC(2026, 5, 3, 12), 'Asia/Tashkent'), /June 
 // day keys follow the user's time zone (Tashkent is UTC+5, no DST)
 assert.equal(dayKeyIn(Date.UTC(2026, 0, 1, 20, 0), 'Asia/Tashkent'), '2026-01-02');
 assert.equal(dayKeyIn(Date.UTC(2026, 0, 1, 20, 0), 'UTC'), '2026-01-01');
-for (const z of ['Asia/Tashkent', 'Asia/Almaty', 'Asia/Bishkek', 'Asia/Dushanbe', 'Asia/Ashgabat']) assert.ok(Intl.supportedValuesOf('timeZone').includes(z), z);
+for (const z of ['Asia/Tashkent', 'Asia/Almaty', 'Asia/Bishkek', 'Asia/Dushanbe', 'Asia/Ashgabat']) assert.ok((Intl as unknown as { supportedValuesOf(k: string): string[] }).supportedValuesOf('timeZone').includes(z), z);
 // settings
 const avail = ['uz'];
 assert.equal(pickLocale(['ru-RU', 'uz-UZ'], avail), 'uz'); assert.equal(pickLocale(['de'], ['en', 'uz']), 'en'); assert.equal(pickLocale(['de'], ['uz']), 'uz');
