@@ -1,4 +1,5 @@
-import { ArrowLeft, ArrowRight, CheckCircle2, RotateCcw, XCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle2, RotateCcw, Volume2, XCircle } from 'lucide-react';
+import { say, stopSpeaking, ttsSupported } from '../lib/speech';
 import { useMemo, useState } from 'react';
 import type { Item } from '../content/lessons/types';
 import { lessonById, lessonNodeId, ALL_LESSONS } from '../content/lessons';
@@ -59,6 +60,7 @@ export default function LessonPage({ id }: { id: string }) {
   const [cAns, setCAns] = useState<ItemAnswer[]>([]);
   const [result, setResult] = useState<ReturnType<typeof scoreCheck> | null>(null);
   const [round, setRound] = useState(0);
+  const tts = typeof window !== 'undefined' && ttsSupported();
   const next = useMemo(() => { const i = ALL_LESSONS.findIndex((x) => x.lesson.id === id); return i >= 0 ? ALL_LESSONS[i + 1] : undefined; }, [id]);
 
   if (!found) return <div className="card"><h2>Dars topilmadi</h2><a className="btn" href="#/learn">Darslar ro‘yxati</a></div>;
@@ -99,7 +101,8 @@ export default function LessonPage({ id }: { id: string }) {
             </table>
           )}
           <h3>Misollar</h3>
-          <ul>{lesson.examples.map((e) => <li key={e.en}><b>{e.en}</b> <span className="muted">— {e.uz}</span></li>)}</ul>
+          <ul>{lesson.examples.map((e) => <li key={e.en}>{tts && <button type="button" className="btn sm" aria-label={`Eshitish: ${e.en}`} style={{ padding: '2px 8px', marginRight: 6 }} onClick={() => { stopSpeaking(); void say(e.en, { cancelled: false }); }}><Volume2 size={14} /></button>}<b>{e.en}</b> <span className="muted">— {e.uz}</span></li>)}</ul>
+          {tts && <p className="muted" style={{ fontSize: 13 }}>Ovoz qurilmangiz brauzeridagi sintezator orqali o‘qiladi; sifat qurilmaga bog‘liq.</p>}
           {lesson.vocab && (<><h3>Yangi so‘zlar</h3><p className="row">{lesson.vocab.map((v) => <span key={v.en} className="pill">{v.en} · {v.uz}</span>)}</p></>)}
           <button className="btn primary" onClick={() => setStep('practice')}>Mashqqa o‘tish <ArrowRight size={14} /></button>
         </section>
