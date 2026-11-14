@@ -1,7 +1,8 @@
 import type { TaxonomyId } from '../../lib/adaptive/taxonomy';
 export type Level = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
 export const LEVELS: Level[] = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
-export type ReviewStatus = 'draft' | 'in_review' | 'approved' | 'published';
+/** 'legacy' = content that shipped before the review process existed: already live, NOT yet specialist-reviewed (flagged for review). */
+export type ReviewStatus = 'draft' | 'in_review' | 'approved' | 'published' | 'legacy';
 export type CurriculumSkill = 'grammar' | 'vocabulary' | 'reading' | 'listening' | 'speaking' | 'pronunciation' | 'writing' | 'everyday';
 
 /** One lesson/skill node in the curriculum graph. Only `approved`/`published` nodes may be shown to learners. */

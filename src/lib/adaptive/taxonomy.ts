@@ -1,7 +1,8 @@
 // Error taxonomy — stable ids (docs/audit/master-spec-v2/ADAPTIVE_LEARNING_SPEC.md). Never rename an id once data exists.
 export const TAXONOMY = {
   'G.tense': 'Grammar: tense', 'G.article': 'Grammar: articles', 'G.preposition': 'Grammar: prepositions', 'G.sva': 'Grammar: subject-verb agreement',
-  'G.word_order': 'Grammar: word order', 'G.modal': 'Grammar: modals', 'G.conditional': 'Grammar: conditionals', 'G.plural': 'Grammar: plurals',
+  'G.word_order': 'Grammar: word order', 'G.modal': 'Grammar: modals', 'G.conditional': 'Grammar: conditionals', 'G.plural': 'Grammar: plurals', 'G.pronoun': 'Grammar: pronouns and possessives', 'G.quantifier': 'Grammar: numbers and quantity', 'G.passive': 'Grammar: passive voice',
+  'G.relative_clause': 'Grammar: relative clauses', 'G.comparison': 'Grammar: comparison', 'G.gerund_infinitive': 'Grammar: gerund and infinitive', 'G.complex_structure': 'Grammar: complex structures',
   'V.word_choice': 'Vocabulary: word choice', 'V.collocation': 'Vocabulary: collocation', 'V.spelling': 'Vocabulary: spelling', 'V.form': 'Vocabulary: word form',
   'P.stress': 'Pronunciation: stress', 'P.phoneme': 'Pronunciation: phoneme', 'P.intonation': 'Pronunciation: intonation',
   'S.hesitation': 'Speaking: hesitation', 'S.fluency': 'Speaking: fluency', 'S.coherence': 'Speaking: coherence',

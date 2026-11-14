@@ -15,6 +15,7 @@ export interface LearnerState {
   recentErrors: TaxonomyId[];         // most recent last; only the last 10 are used
   goalTags: string[];                 // e.g. ['ielts-writing-2'] or ['general']
   examDate?: number;                  // ms
+  assumed?: string[];                 // node ids treated as known prerequisites (e.g. levels below the placement result)
   now: number;
 }
 export interface PlanOptions { minutes: number; allowStatuses?: ReviewStatus[] }
@@ -46,9 +47,10 @@ export function scoreNode(n: CurriculumNode, s: LearnerState): { score: number; 
 
 /** Build today's plan: due revisions first, then by score; at most 1 new node per 3 slots; prerequisites must be ≥ PREREQ_MIN; fills the minute budget. */
 export function planDay(nodes: CurriculumNode[], s: LearnerState, opt: PlanOptions): PlanTask[] {
-  const allowed = new Set<ReviewStatus>(opt.allowStatuses ?? ['approved', 'published']);
+  const allowed = new Set<ReviewStatus>(opt.allowStatuses ?? ['approved', 'published', 'legacy']);
   const byId = new Map(nodes.map((n) => [n.id, n]));
-  const ready = (n: CurriculumNode): boolean => n.prerequisites.every((p) => byId.has(p) && effectiveMastery(mOf(s, p), s.now) >= PREREQ_MIN);
+  const assumed = new Set(s.assumed ?? []);
+  const ready = (n: CurriculumNode): boolean => n.prerequisites.every((p) => byId.has(p) && (assumed.has(p) || effectiveMastery(mOf(s, p), s.now) >= PREREQ_MIN));
   const cands = nodes
     .filter((n) => allowed.has(n.reviewStatus) && ready(n))
     .map((n) => ({ n, ...scoreNode(n, s), isNew: mOf(s, n.id).attempts === 0, due: mOf(s, n.id).attempts > 0 && mOf(s, n.id).dueAt <= s.now }))

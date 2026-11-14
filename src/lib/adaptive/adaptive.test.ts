@@ -15,7 +15,7 @@ const att = (r: MasteryRecord, correct: boolean, t: number, d = 0.5) => update(r
 let seed = 12345; const rnd = (): number => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 2 ** 32; };
 
 // --- taxonomy
-assert.equal(TAXONOMY_IDS.length, 28); assert.ok(isTaxonomyId('G.article')); assert.ok(!isTaxonomyId('G.nope'));
+assert.equal(TAXONOMY_IDS.length, 35); assert.ok(isTaxonomyId('G.article')); assert.ok(!isTaxonomyId('G.nope'));
 
 // --- mastery: bounds, monotonicity, no instant mastery
 let r = newRecord(); assert.equal(stateOf(r, T0), 'new');
@@ -106,6 +106,9 @@ assert.equal(mp.filter((x) => x.isNew).length, Math.floor((mp.length + 2) / 3), 
 const examState = baseState({ mastery: { ...m }, goalTags: ['ielts-writing-2'], examDate: T0 + 10 * DAY });
 const w2 = scoreNode(PILOT.find((x) => x.id === 'b1.writing.opinion')!, examState);
 assert.ok(w2.score > scoreNode(PILOT.find((x) => x.id === 'b1.writing.opinion')!, baseState()).score);
+// assumed prerequisites unlock dependants without practice
+const asm = planDay(PILOT, baseState({ assumed: ['a1.be.present'] }), opt).map((x) => x.nodeId);
+assert.ok(asm.includes('a2.past.simple'));
 // load adjustment
 assert.deepEqual(adjustLoad({ slots: 4, difficultyStep: 0 }, 0.5, 0.9), { slots: 3, difficultyStep: 1 });
 assert.deepEqual(adjustLoad({ slots: 1, difficultyStep: 0 }, 0.1, 0.1), { slots: 1, difficultyStep: 0 });

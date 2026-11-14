@@ -3,6 +3,7 @@ import { BRAND } from '../brand';
 import { Mascot } from '../components/Mascot';
 import { DailyCards } from '../components/DailyCards';
 import { ProgressCard } from '../components/ProgressCard';
+import { PlanCard } from '../components/PlanCard';
 import { Tile } from '../components/Tile';
 import { grammar } from '../content/grammar';
 import { listeningTests } from '../content/listeningTests';
@@ -101,6 +102,8 @@ export default function Home() {
           <div className="row"><a className="btn sm primary" href="#/homework">Uyga vazifa</a><a className="btn sm" href="#/results">Natijalar</a><a className="btn sm" href="#/placement">Darajani qayta aniqlash</a></div>
         </section>
       )}
+
+      <PlanCard />
 
       <DailyCards />
 
