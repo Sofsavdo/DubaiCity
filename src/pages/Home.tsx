@@ -1,6 +1,7 @@
-import { ArrowRight, CalendarDays, Compass, Map as MapIcon, BookOpen, Brain, Flame, Gamepad2, Headphones, Languages, Mic, Plus, Puzzle, ShieldCheck, Star, Swords, Target, Timer, Zap } from 'lucide-react';
+import { ArrowRight, CalendarDays, PenLine, Compass, Map as MapIcon, BookOpen, Brain, Flame, Gamepad2, Headphones, Languages, Mic, Plus, Puzzle, ShieldCheck, Star, Swords, Target, Timer, Zap } from 'lucide-react';
 import { BRAND } from '../brand';
 import { Mascot } from '../components/Mascot';
+import { ProgressCard } from '../components/ProgressCard';
 import { Tile } from '../components/Tile';
 import { grammar } from '../content/grammar';
 import { listeningTests } from '../content/listeningTests';
@@ -29,6 +30,7 @@ export default function Home() {
   const started = p.xp > 0;
   const tests = readingTests.length + listeningTests.length;
   const lvl = p.level;
+  const todayKey = new Date().toISOString().slice(0, 10);
   const solved = new Set(loadResults().map((r) => r.title));
   const byDist = <T extends { level: typeof CEFR[number] }>(a: T[]) => [...a].sort((x, y) => Math.abs(levelIndex(x.level) - levelIndex(lvl)) - Math.abs(levelIndex(y.level) - levelIndex(lvl)));
   const nextRead = byDist(readingTests).find((t) => !solved.has(t.title)) ?? byDist(readingTests)[0];
@@ -36,11 +38,12 @@ export default function Home() {
   const daysLeft = p.examDate ? Math.ceil((new Date(p.examDate).getTime() - Date.now()) / 86400000) : null;
   const low = lvl === 'A1' || lvl === 'A2';
   const path = lvl ? [
-    { icon: Zap, title: 'So‘z o‘yini', text: due > 0 ? `${due} ta so‘z takrorlashga tayyor` : low ? 'A1–A2 so‘zlari bilan boshlang' : 'Yangi IELTS so‘zlari', href: '#/games/rush' },
-    { icon: Puzzle, title: 'Grammar', text: low ? 'Asoslar: to be, Present Simple, Past Simple' : '“Sizga mos” savollar', href: '#/grammar' },
-    { icon: BookOpen, title: 'Reading', text: nextRead.title.replace(/^Reading mini-test \d+: /, ''), href: `#/exam/reading/${nextRead.id}` },
-    { icon: Headphones, title: 'Listening', text: nextListen.title.replace(/^Listening mini-test \d+: /, ''), href: `#/exam/listening/${nextListen.id}` },
-    { icon: Mic, title: 'Speaking', text: low ? 'Sodda savollar, o‘zbekcha yordam bilan' : 'IELTS Part 1–3', href: '#/exam/speaking' },
+    { task: 'words', icon: Zap, title: 'So‘z o‘yini', text: due > 0 ? `${due} ta so‘z takrorlashga tayyor` : low ? 'A1–A2 so‘zlari bilan boshlang' : 'Yangi IELTS so‘zlari', href: '#/games/rush' },
+    { task: 'grammar', icon: Puzzle, title: 'Grammar', text: low ? 'Asoslar: to be, Present Simple, Past Simple' : '“Sizga mos” savollar', href: '#/grammar' },
+    { task: 'practice', icon: PenLine, title: 'Gap tuzish', text: low ? 'Tarjima va so‘z tartibi mashqlari' : 'Xatoni toping, gapni kuchaytiring', href: '#/practice' },
+    { task: 'reading', icon: BookOpen, title: 'Reading', text: nextRead.title.replace(/^Reading mini-test \d+: /, ''), href: `#/exam/reading/${nextRead.id}` },
+    { task: 'listening', icon: Headphones, title: 'Listening', text: nextListen.title.replace(/^Listening mini-test \d+: /, ''), href: `#/exam/listening/${nextListen.id}` },
+    { task: 'speaking', icon: Mic, title: 'Speaking', text: low ? 'Sodda savollar, o‘zbekcha yordam bilan' : 'IELTS Part 1–3', href: '#/exam/speaking' },
   ] : [];
 
   return (
@@ -88,7 +91,7 @@ export default function Home() {
           </div>
           <div className="path">
             {path.map((s, i) => (
-              <a key={s.title} className="path-step" href={s.href}>
+              <a key={s.title} className={`path-step ${p.today.day === todayKey && p.today.done.includes(s.task) ? 'done' : ''}`} href={s.href}>
                 <span className="pn">{i + 1}</span><s.icon size={22} /><b>{s.title}</b><span>{s.text}</span>
               </a>
             ))}
@@ -96,6 +99,8 @@ export default function Home() {
           <div className="row"><a className="btn sm" href="#/placement">Darajani qayta aniqlash</a></div>
         </section>
       )}
+
+      <ProgressCard />
 
       {started && (
         <div className="dash">

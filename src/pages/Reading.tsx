@@ -8,6 +8,7 @@ export default function Reading({ test: t }: { test: ReadingTest }) {
       key={t.id}
       kind="reading"
       title={t.title}
+      level={t.level}
       minutes={t.minutes}
       groups={t.groups}
       questions={t.questions}

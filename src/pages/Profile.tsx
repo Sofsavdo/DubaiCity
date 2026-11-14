@@ -9,6 +9,7 @@ import { PersonaPicker } from '../components/PersonaPicker';
 import { vocab } from '../content/vocab';
 import { isMastered } from '../lib/srs';
 import { Mascot } from '../components/Mascot';
+import { ProgressCard } from '../components/ProgressCard';
 
 export default function Profile() {
   const p = useProfile();
@@ -33,6 +34,8 @@ export default function Profile() {
           </div>
         </div>
       </div>
+
+      <ProgressCard />
 
       <div className="card">
         <h3>Yutuqlar</h3>

@@ -16,7 +16,7 @@ export default function Mocks() {
       <div className="grid">
         <Tile href="#/mocks/reading" icon={BookOpen} tone="blue" title="IELTS Reading mini-mocklar" text={`${readingTests.length} ta test · 13 savoldan`} badge={lock} />
         <Tile href="#/mocks/listening" icon={Headphones} tone="red" title="IELTS Listening mini-mocklar" text={`${listeningTests.length} ta test · 10 savoldan`} badge={lock} />
-        <Tile icon={FlaskConical} tone="purple" title="To‘liq IELTS mock" text="40 savollik Reading va Listening, to‘liq Writing va Speaking" badge={<span className="badge soon">tez orada</span>} />
+        <Tile href="#/mocks/full" icon={FlaskConical} tone="purple" title="To‘liq imtihon simulyatsiyasi" text="Listening → Reading → Writing → Speaking, taymer bilan, umumiy band" badge={lock} />
         <Tile icon={Ruler} tone="ink" title="SAT va CEFR mock" text="Alohida imtihon formatlari" badge={<span className="badge soon">tez orada</span>} />
       </div>
     </div>

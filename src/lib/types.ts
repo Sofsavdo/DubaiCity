@@ -37,6 +37,14 @@ export interface Profile {
   /** Imtihon sanasi (YYYY-MM-DD) yoki null */
   examDate: string | null;
   placementAt: string | null;
+  /** Birinchi daraja aniqlash natijasidan taxminiy boshlang'ich band */
+  baselineBand: number | null;
+  /** Daraja aniqlash natijalari tarixi (o'sishni ko'rsatish uchun) */
+  checkpoints: { at: string; level: Cefr; band: number }[];
+  /** Kunlar bo'yicha olingan XP (oxirgi 90 kun) */
+  activity: Record<string, number>;
+  /** Bugungi reja bajarilishi */
+  today: { day: string; done: string[] };
 }
 
 export const defaultProfile = (today: string): Profile => ({
@@ -60,4 +68,8 @@ export const defaultProfile = (today: string): Profile => ({
   target: 6.5,
   examDate: null,
   placementAt: null,
+  baselineBand: null,
+  checkpoints: [],
+  activity: {},
+  today: { day: today, done: [] },
 });

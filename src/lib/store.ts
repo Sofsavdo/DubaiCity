@@ -5,6 +5,7 @@ import { effectiveLevel } from './roast';
 import { defaultProfile, type Profile, type TrackId } from './types';
 import { FREE_GAMES_PER_DAY } from '../config';
 import type { Cefr } from './levels';
+import { LEVEL_BAND } from './progress';
 import { confetti, sfx } from './fx';
 
 const KEY = 'bandly.profile.v1';
@@ -71,7 +72,10 @@ export const useToasts = (): Toast[] =>
 export function addXp(amount: number): void {
   if (amount <= 0) return;
   const r = applyXp(state, amount, dayKey());
-  commit(r.profile);
+  const day = dayKey();
+  const act = { ...r.profile.activity, [day]: (r.profile.activity[day] ?? 0) + Math.round(amount) };
+  const keep = Object.keys(act).sort().slice(-90);
+  commit({ ...r.profile, activity: Object.fromEntries(keep.map((k) => [k, act[k]])) });
   pushToast(`+${Math.round(amount)} XP`, 'xp');
   if (r.levelUp) { pushToast(`Yangi daraja: ${r.levelUp}!`, 'level'); sfx('level'); confetti(90); }
   r.unlocked.forEach((a) => { pushToast(`Yutuq: ${a.title}`, 'ach'); if (!r.levelUp) { sfx('ach'); confetti(50); } });
@@ -79,7 +83,9 @@ export function addXp(amount: number): void {
 
 export function recordReview(wordId: string, correct: boolean): void {
   sfx(correct ? 'ok' : 'bad');
+  const task = /^g\d+$/.test(wordId) ? 'grammar' : /^p[tfugb]\d+$/.test(wordId) ? 'practice' : 'words';
   commit({ ...state, srs: { ...state.srs, [wordId]: review(state.srs[wordId], correct, Date.now()) } });
+  markDone(task);
 }
 
 export function hasAnyPlan(p: Profile = state): boolean {
@@ -111,8 +117,19 @@ export function setPersona(level: number, adult: boolean): void {
 }
 export const personaLevel = (p: Profile = state) => effectiveLevel(p.roastLevel, p.adult);
 export function setLevel(level: Cefr, target: number, examDate: string | null): void {
-  commit({ ...state, level, target, examDate, placementAt: new Date().toISOString(), dailyGoal: level === 'A1' || level === 'A2' ? 40 : 60 });
+  const band = LEVEL_BAND[level];
+  const at = new Date().toISOString();
+  commit({ ...state, level, target, examDate, placementAt: at, dailyGoal: level === 'A1' || level === 'A2' ? 40 : 60, baselineBand: state.baselineBand ?? band, checkpoints: [...state.checkpoints, { at, level, band }].slice(-20) });
 }
+/** Bugungi rejadagi vazifa bajarildi (bir martalik belgi). */
+export function markDone(task: string): void {
+  const key = TASK_BY_KIND[task] ?? task;
+  const today = dayKey();
+  const done = state.today.day === today ? state.today.done : [];
+  if (done.includes(key)) { if (state.today.day !== today) commit({ ...state, today: { day: today, done } }); return; }
+  commit({ ...state, today: { day: today, done: [...done, key] } });
+}
+const TASK_BY_KIND: Record<string, string> = { reading: 'reading', listening: 'listening', speaking: 'speaking', grammar: 'grammar', practice: 'practice' };
 export function setTarget(target: number, examDate: string | null): void {
   commit({ ...state, target, examDate });
 }

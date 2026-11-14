@@ -5,8 +5,11 @@ export interface ResultRecord {
   correct: number;
   total: number;
   band?: number;
+  level?: string;
   date: string;
 }
+
+import { markDone } from './store';
 
 const KEY = 'bandly.results.v1';
 
@@ -20,6 +23,7 @@ export function loadResults(): ResultRecord[] {
 }
 
 export function saveResult(r: Omit<ResultRecord, 'id' | 'date'>): void {
+  markDone(r.kind);
   try {
     const all = loadResults();
     all.unshift({ ...r, id: String(Date.now()), date: new Date().toISOString() });

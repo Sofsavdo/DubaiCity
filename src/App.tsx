@@ -11,6 +11,7 @@ import Mocks from './pages/Mocks';
 import Pricing from './pages/Pricing';
 import Placement from './pages/Placement';
 import Practice from './pages/Practice';
+import FullExam from './pages/FullExam';
 import Profile from './pages/Profile';
 import League from './pages/League';
 import DuelHub, { DuelRoom } from './pages/Duel';
@@ -35,6 +36,7 @@ const routes: Record<string, () => ReactNode> = {
   '#/exam/speaking': () => <Gate track="exam"><Speaking /></Gate>,
   '#/grammar': () => <Grammar />,
   '#/mocks': () => <Mocks />,
+  '#/mocks/full': () => <Gate track="mocks"><FullExam /></Gate>,
   '#/games': () => <GamesHub />,
   '#/games/rush': () => <WordRush />,
   '#/games/pairs': () => <Pairs />,

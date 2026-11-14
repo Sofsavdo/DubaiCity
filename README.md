@@ -118,3 +118,9 @@ npm run server           # AI holati ishga tushganda yoziladi: "(AI: anthropic)"
 ## O'zbekcha ovoz (ixtiyoriy)
 
 `/api/tts` Azure Speech orqali o'zbekcha neyron ovoz beradi (`TTS_KEY`, `TTS_REGION`, `.env.example`ga qarang). Javoblar diskda keshlanadi; har bir foydalanuvchiga kunlik limit bor. Kalit bo'lmasa xizmat o'chiq turadi.
+
+## O'sishni o'lchash va imtihon rejimi
+
+- `lib/progress.ts`: boshlang'ich band (daraja aniqlashdan) → hozirgi taxminiy band (so'nggi Reading/Listening/Speaking natijalaridan) → maqsad. Past darajali testda yuqori band ko'rsatilmaydi (`BAND_CAP`). Kunlik reja va kerakli soat (1 band ≈ 150 soat) hisoblanadi.
+- `#/mocks/full`: Listening → Reading → Writing → Speaking tartibidagi imtihon simulyatsiyasi va umumiy taxminiy band.
+- Barcha ballar taxminiy va qurilmada saqlangan natijalarga asoslangan, rasmiy IELTS balli emas va natija kafolatlanmaydi.

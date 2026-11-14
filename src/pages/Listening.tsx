@@ -104,6 +104,7 @@ export default function Listening({ test: t }: { test: ListeningTest }) {
       key={t.id}
       kind="listening"
       title={t.title}
+      level={t.level}
       minutes={t.minutes}
       groups={t.groups}
       questions={t.questions}

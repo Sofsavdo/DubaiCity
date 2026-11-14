@@ -4,6 +4,7 @@ import { Mascot } from '../components/Mascot';
 import { placement } from '../content/placement';
 import { CEFR, LEVEL_INFO, suggestedTarget, type Cefr } from '../lib/levels';
 import { evaluate, nextQuestion } from '../lib/placement';
+import { LEVEL_BAND } from '../lib/progress';
 import { addXp, setLevel, useProfile } from '../lib/store';
 import { confetti, sfx } from '../lib/fx';
 
@@ -104,6 +105,10 @@ export default function Placement() {
           </div>
         </div>
       </div>
+
+      {p.checkpoints.length > 0 && !saved && (
+        <div className="card"><b>Oldingi natija: {p.checkpoints[p.checkpoints.length - 1].level}</b> → <b>yangi: {lvl}</b>{LEVEL_BAND[lvl] > LEVEL_BAND[p.checkpoints[p.checkpoints.length - 1].level] ? <span className="ok"> · +{(LEVEL_BAND[lvl] - LEVEL_BAND[p.checkpoints[p.checkpoints.length - 1].level]).toFixed(1)} band o‘sdingiz</span> : null}</div>
+      )}
 
       <div className="card">
         <h3><Target size={18} style={{ verticalAlign: -3 }} /> Maqsadingiz: IELTS {t.toFixed(1)}</h3>
